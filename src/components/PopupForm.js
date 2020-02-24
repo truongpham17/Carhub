@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { ModalContainer } from 'Component';
+import ModalContainer from 'Components/ModalContainer';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
 import { X, getSvg } from 'Assets/svgs';

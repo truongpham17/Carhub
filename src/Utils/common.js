@@ -1,0 +1,2 @@
+const defaultFunction = () => {};
+export { defaultFunction };

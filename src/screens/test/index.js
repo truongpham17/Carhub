@@ -1,3 +1,3 @@
 import TestScreen from './TestScreen';
 
-export {TestScreen}
+export { TestScreen };

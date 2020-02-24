@@ -7,11 +7,13 @@ import {
 } from 'react-navigation';
 
 import { TestScreen } from './test';
+import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 
 const TestNavigator = createStackNavigator(
   {
     // SelectCarScreen,
-    TestScreen,
+    RentHistoryItemDetailScreen,
+    // TestScreen,
   },
   {
     headerMode: 'none',

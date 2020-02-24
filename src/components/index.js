@@ -13,5 +13,19 @@ import RadioButton from './RadioButton';
 import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
 
-
-export {AppGradient, Avatar, Button, ConfirmPopup, ErrorFeedback, Header, ImageSelector, InputForm, ListItem, ModalContainer, PopupForm, RadioButton, Tabbar,ViewContainer}
+export {
+  AppGradient,
+  Avatar,
+  Button,
+  ConfirmPopup,
+  ErrorFeedback,
+  Header,
+  ImageSelector,
+  InputForm,
+  ListItem,
+  ModalContainer,
+  PopupForm,
+  RadioButton,
+  Tabbar,
+  ViewContainer,
+};

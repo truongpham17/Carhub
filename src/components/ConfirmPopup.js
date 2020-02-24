@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { dimension } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
-import { themeType } from 'types/theme';
 import ModalContainer from './ModalContainer';
 
 type PropTypes = {
