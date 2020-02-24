@@ -4,7 +4,6 @@ import { NavigationType } from 'types';
 
 import { dimension, color, shadowStyle } from 'Constants';
 import { getSvg } from 'Assets/svgs';
-import { changeTab } from 'Utils/Navigation';
 
 const { SCREEN_WIDTH } = dimension;
 
@@ -60,7 +59,7 @@ class Tabbar extends React.PureComponent<PropTypes> {
           {routeConfig.map((item, idx) =>
             this.renderTabIcon({
               icon: item.icon,
-              onPress: () => changeTab('RootTabs', idx),
+              onPress: () => {},
               key: item.title,
               isCenter: item.isCenter,
               isSelected: index === idx,
