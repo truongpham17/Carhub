@@ -8,12 +8,16 @@ import {
 
 import { TestScreen } from './test';
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
+import HostScreen from './host-screen/HostScreen';
+import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
 
 const TestNavigator = createStackNavigator(
   {
     // SelectCarScreen,
-    RentHistoryItemDetailScreen,
+    // RentHistoryItemDetailScreen,
     // TestScreen,
+    HostScreen,
+    HostListCarScreen,
   },
   {
     headerMode: 'none',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { ViewContainer } from 'components';
+import { ViewContainer } from 'Components';
 
 const RentHistoryScreen = () => (
   <ViewContainer>
