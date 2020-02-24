@@ -2,7 +2,9 @@
  * @dev
  */
 // truong
-export const API_URL = 'http://192.168.1.105:5068/';
+// export const API_URL = 'http://192.168.1.105:5068/';
+// export const API_URL = 'http://192.168.56.1:5068/';
+export const API_URL = 'http://192.168.1.11:5068/';
 
 /**
  * @production
