@@ -8,15 +8,10 @@ import {
 
 import { TestScreen } from './test';
 
-import BookScreen from './book-screen/BookScreen';
-import AddBookScreen from './add-book-screen/AddBookScreen';
-
 const TestNavigator = createStackNavigator(
   {
     // SelectCarScreen,
-    // TestScreen,
-    BookScreen,
-    AddBookScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
