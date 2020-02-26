@@ -12,6 +12,22 @@ import PopupForm from './PopupForm';
 import RadioButton from './RadioButton';
 import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
+import DatePicker from './DatePicker';
 
-
-export {AppGradient, Avatar, Button, ConfirmPopup, ErrorFeedback, Header, ImageSelector, InputForm, ListItem, ModalContainer, PopupForm, RadioButton, Tabbar,ViewContainer}
+export {
+  AppGradient,
+  Avatar,
+  Button,
+  ConfirmPopup,
+  ErrorFeedback,
+  Header,
+  ImageSelector,
+  InputForm,
+  ListItem,
+  ModalContainer,
+  PopupForm,
+  RadioButton,
+  Tabbar,
+  ViewContainer,
+  DatePicker,
+};
