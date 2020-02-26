@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleHor(16),
     height: scaleVer(256),
     width: scaleHor(256),
+    borderRadius: 15,
   },
   itemContainer: {
     flex: 1,

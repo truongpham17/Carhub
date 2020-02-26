@@ -8,12 +8,15 @@ export type RentDetailType = {
   data: {
     image: String,
     name: String,
+    type: String,
     dateOfHire: Date,
+    dateDropOff: Date,
     duration: String,
     pricePerDay: Number,
     total: Number,
     store: String,
     daysleft: Number,
-    status: 'Current' | 'Pending',
+    isSharing: Boolean,
+    status: 'Current' | 'Waiting' | 'Overdue',
   },
 };

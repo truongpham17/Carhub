@@ -27,7 +27,7 @@ const RentHistoryItemDetailScreen = ({ navigation, rentDetail }: PropTypes) => {
 
   const { data } = rentDetail;
   const onBackPress = () => {
-    navigation.goBack();
+    navigation.pop();
   };
 
   const handleReturn = () => {};
@@ -48,7 +48,7 @@ const RentHistoryItemDetailScreen = ({ navigation, rentDetail }: PropTypes) => {
     <ViewContainer
       haveBackHeader
       title="Detail"
-      backAction={onBackPress}
+      onBackPress={onBackPress}
       scrollable
     >
       <Image

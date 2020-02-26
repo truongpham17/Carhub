@@ -10,46 +10,52 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
-// import { NavigationType } from 'types';
+import { RentDetailType } from 'types';
 
-const HistoryItem = () => {
-  const handleGoToDetail = () => {};
+type PropTypes = {
+  rentDetail: RentDetailType,
+  onGetDetail: () => void,
+};
+
+const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
+  const handleOnClick = () => {
+    onGetDetail(rentDetail.id);
+  };
   return (
-    <TouchableWithoutFeedback onPress={handleGoToDetail}>
+    <TouchableWithoutFeedback onPress={handleOnClick}>
       <View style={styles.container}>
         <View style={[styles.itemContainer, styles.firstItem]}>
           <View style={styles.inforContainer}>
-            <Text style={textStyle.widgetItem}>Camry 2019</Text>
+            <Text style={textStyle.widgetItem}>{rentDetail.data.name}</Text>
             <Text
               style={[
                 textStyle.label,
                 { marginBottom: scaleHor(10), color: colors.dark40 },
               ]}
             >
-              Exclusive car
+              {rentDetail.data.type}
             </Text>
             <Text style={[textStyle.bodyText, { color: colors.success }]}>
-              Mar 20 - Apr 20
+              {rentDetail.data.dateOfHire} - {rentDetail.data.dateDropOff}
             </Text>
           </View>
           <View style={styles.statusContainer}>
             <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
-              Waiting
+              {rentDetail.data.status}
             </Text>
           </View>
         </View>
         <View style={[styles.itemContainer, styles.secondItem]}>
           <Image
             source={{
-              uri:
-                'https://www.kindpng.com/picc/m/184-1840091_mclaren-logo-clipart-png-transparent-png.png',
+              uri: rentDetail.data.image,
             }}
             resizeMode="center"
             style={styles.imgContainer}
           />
           <View style={styles.dayCount}>
             <Text style={[textStyle.bodyText, { color: colors.white }]}>
-              3 days left
+              {rentDetail.data.daysleft} days left
             </Text>
           </View>
         </View>
@@ -101,4 +107,4 @@ const styles = StyleSheet.create({
   statusContainer: {},
 });
 
-export default HistoryItem;
+export default RentHistoryItem;
