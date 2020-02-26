@@ -6,19 +6,18 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 
-import { TestScreen } from './test';
-
-import BookScreen from './book-screen/BookScreen';
-import AddBookScreen from './add-book-screen/AddBookScreen';
 import SearchCarScreen from './search-car-screen/SearchCarScreen';
+import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 
 const TestNavigator = createStackNavigator(
   {
     // SelectCarScreen,
+    // RentHistoryItemDetailScreen,
     // TestScreen,
     // BookScreen,
     // AddBookScreen,
-    SearchCarScreen,
+    // SearchCarScreen,
+    SelectLocationScreen,
   },
   {
     headerMode: 'none',
