@@ -32,6 +32,7 @@ type PropTypes = {
   selectedItem: string,
   autoFocus?: boolean,
   error?: string,
+  onTextFocus: () => void,
 };
 
 const InputForm = ({
@@ -50,10 +51,13 @@ const InputForm = ({
   selectedItem,
   autoFocus = false,
   error,
+  onTextFocus = defaultFunction,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
   const handleTextInputFocus = () => {
     setInputHover(true);
+
+    onTextFocus();
   };
   const handleTextInputBlur = () => {
     setInputHover(false);
