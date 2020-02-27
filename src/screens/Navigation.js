@@ -6,23 +6,24 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 
-import SearchCarScreen from './search-car-screen/SearchCarScreen';
-import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
-import SelectMapScreen from './select-map-screen/SelectMapScreen';
-import SelectCarScreen from './select-car-screen/SelectCarScreen';
+import { TestScreen } from './test';
+import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
+import RentHistoryScreen from './rent-history-screen/RentHistoryScreen';
+import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 
 const TestNavigator = createStackNavigator(
   {
     // SelectCarScreen,
+    // RentHistoryScreen,
     // RentHistoryItemDetailScreen,
     // TestScreen,
     // BookScreen,
     // AddBookScreen,
-    SelectCarScreen,
-    SelectLocationScreen,
-
-    SearchCarScreen,
-    SelectMapScreen,
+    // SelectCarScreen,
+    // SelectLocationScreen,
+    // SearchCarScreen,
+    // SelectMapScreen,
+    RentalCarDetailScreen,
   },
   {
     headerMode: 'none',
