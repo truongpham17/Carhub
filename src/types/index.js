@@ -20,3 +20,23 @@ export type RentDetailType = {
     status: 'Current' | 'Waiting' | 'Overdue',
   },
 };
+export type RentailCarDetailType = {
+  id: String,
+  carData: {
+    name: SVGAnimatedString,
+    image: String,
+    type: String,
+    rating: 5,
+    pricePerDay: String,
+    total: String,
+    cancellationPolicy: String,
+    libertyMutial: [String],
+    description: String,
+  },
+  tripData: {
+    startDate: Date,
+    endDate: Date,
+    pickupLocation: String,
+    returnLocation: String,
+  },
+};
