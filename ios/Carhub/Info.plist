@@ -37,6 +37,10 @@
 			</dict>
 		</dict>
 	</dict>
+
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need access your location to hack your account</string>
+	
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UILaunchStoryboardName</key>
