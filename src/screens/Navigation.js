@@ -8,6 +8,8 @@ import {
 
 import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
+import SelectMapScreen from './select-map-screen/SelectMapScreen';
+import SelectCarScreen from './select-car-screen/SelectCarScreen';
 
 const TestNavigator = createStackNavigator(
   {
@@ -16,8 +18,11 @@ const TestNavigator = createStackNavigator(
     // TestScreen,
     // BookScreen,
     // AddBookScreen,
-    // SearchCarScreen,
+    SelectCarScreen,
     SelectLocationScreen,
+
+    SearchCarScreen,
+    SelectMapScreen,
   },
   {
     headerMode: 'none',

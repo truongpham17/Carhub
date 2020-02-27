@@ -50,7 +50,15 @@ type PropTypes = {
   showBackPopup?: boolean,
   haveBackHeader?: boolean,
   barStyle?: 'dark-content' | 'light-content',
+  safeArea?: boolean,
 } & BackTitleTypes;
+
+const SafeAreaViewFlex = ({ safe, children, style }) => {
+  if (safe) {
+    return <SafeAreaView style={style}>{children}</SafeAreaView>;
+  }
+  return <View style={style}>{children}</View>;
+};
 
 // eslint-disable-next-line react/display-name
 const ViewContainer = ({
@@ -72,6 +80,7 @@ const ViewContainer = ({
   onRightPress,
   backType = 'back',
   onBackPress,
+  safeArea = true,
   ...next
 }: PropTypes) => {
   const [isLoading, setLoading] = useState(false);
@@ -130,12 +139,15 @@ const ViewContainer = ({
         type={backType}
         onBackPress={onBackPress}
         backType={backType}
+        style={{
+          marginHorizontal: scaleHor(24),
+          // paddingTop: scaleVer(24),
+        }}
       />
     );
 
   const renderChildren = () => (
-    <View style={[styles.containerStyle, { flex: 1 }, style]}>
-      {renderBackTitle()}
+    <View style={[styles.contentContainerStyle, { flex: 1 }, style]}>
       {children}
     </View>
   );
@@ -152,11 +164,10 @@ const ViewContainer = ({
   const renderTabbarScroll = () => (
     <React.Fragment>
       <ScrollView
-        contentContainerStyle={[styles.containerStyle, style]}
+        contentContainerStyle={[styles.contentContainerStyle, style]}
         style={{ flex: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        {renderBackTitle()}
         {children}
       </ScrollView>
       {tabbarComponent}
@@ -165,11 +176,10 @@ const ViewContainer = ({
 
   const renderNoTabbarScroll = () => (
     <ScrollView
-      contentContainerStyle={[styles.containerStyle, style]}
+      contentContainerStyle={[styles.contentContainerStyle, style]}
       keyboardShouldPersistTaps="handled"
       style={{ flex: 1 }}
     >
-      {renderBackTitle()}
       {children}
     </ScrollView>
   );
@@ -189,23 +199,28 @@ const ViewContainer = ({
     }
   };
   return (
-    <SafeAreaView
-      style={[{ flex: 1, backgroundColor: colors.white }, containerStyle]}
+    <SafeAreaViewFlex
+      style={[styles.containerStyle, containerStyle]}
+      safe={safeArea}
     >
       <StatusBar barStyle="dark-content" />
       <SafeAreaView />
+      {renderBackTitle()}
       {renderComponent()}
       {renderLoading()}
       {errorData && (
         <ErrorFeedback onErrorPress={onErrorPress} {...errorData} />
       )}
-    </SafeAreaView>
+    </SafeAreaViewFlex>
   );
 };
 
 const styles = StyleSheet.create({
   containerStyle: {
-    paddingVertical: scaleVer(24),
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+  contentContainerStyle: {
     paddingHorizontal: scaleHor(24),
   },
   absoluteStyle: {
