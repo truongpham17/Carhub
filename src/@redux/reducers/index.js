@@ -4,6 +4,7 @@ import testReducer from './testReducer';
 import userTest from './userTest';
 import rentDetail from './rentDetail';
 import rentHistory from './rentHistory';
+import book from './book';
 
 export default combineReducers({
   user,
@@ -11,4 +12,5 @@ export default combineReducers({
   userTest,
   rentDetail,
   rentHistory,
+  book,
 });

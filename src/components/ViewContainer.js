@@ -10,14 +10,13 @@ import {
   ScrollView,
   StyleProp,
   ViewStyle,
-  BackHandler,
   StatusBar,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 import { loading as loadingAnimated } from 'Assets/animation';
 
-import { scaleVer, scaleHor } from 'Constants/dimensions';
+import { scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import ErrorFeedback from './ErrorFeedback';
 import FadedContainer from './FadedContainer';
@@ -152,33 +151,12 @@ const ViewContainer = ({
     </View>
   );
 
-  // const renderBackPopup = () => <FadedContainer visible={backVisible}></FadedContainer>;
-
-  const renderTabbarNoScroll = () => (
-    <React.Fragment>
-      {renderChildren()}
-      {tabbarComponent}
-    </React.Fragment>
-  );
-
-  const renderTabbarScroll = () => (
-    <React.Fragment>
-      <ScrollView
-        contentContainerStyle={[styles.contentContainerStyle, style]}
-        style={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        {children}
-      </ScrollView>
-      {tabbarComponent}
-    </React.Fragment>
-  );
-
   const renderNoTabbarScroll = () => (
     <ScrollView
       contentContainerStyle={[styles.contentContainerStyle, style]}
       keyboardShouldPersistTaps="handled"
       style={{ flex: 1 }}
+      showsVerticalScrollIndicator={false}
     >
       {children}
     </ScrollView>
@@ -188,14 +166,9 @@ const ViewContainer = ({
     if (!scrollable && !tabbarComponent) {
       return renderChildren();
     }
-    if (!scrollable && tabbarComponent) {
-      return renderTabbarNoScroll();
-    }
+
     if (scrollable && !tabbarComponent) {
       return renderNoTabbarScroll();
-    }
-    if (scrollable && tabbarComponent) {
-      return renderTabbarScroll();
     }
   };
   return (
@@ -204,7 +177,7 @@ const ViewContainer = ({
       safe={safeArea}
     >
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView />
+      {/* <SafeAreaView /> */}
       {renderBackTitle()}
       {renderComponent()}
       {renderLoading()}
