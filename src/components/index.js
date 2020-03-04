@@ -13,6 +13,7 @@ import RadioButton from './RadioButton';
 import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
 import DatePicker from './DatePicker';
+import SelectMapInput from './SelectMapInput';
 
 export {
   AppGradient,
@@ -30,4 +31,5 @@ export {
   Tabbar,
   ViewContainer,
   DatePicker,
+  SelectMapInput,
 };

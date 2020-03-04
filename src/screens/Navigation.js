@@ -26,7 +26,7 @@ const RentalStack = createStackNavigator(
 
 const LeaseStack = createStackNavigator(
   {
-    TestScreen,
+    SelectCarScreen,
   },
   {
     headerMode: 'none',
@@ -34,7 +34,7 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    TestScreen,
+    SelectCarScreen,
   },
   {
     headerMode: 'none',
@@ -42,7 +42,7 @@ const HistoryStack = createStackNavigator(
 );
 const ProfileStack = createStackNavigator(
   {
-    TestScreen,
+    SelectCarScreen,
   },
   {
     headerMode: 'none',
