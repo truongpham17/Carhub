@@ -26,9 +26,7 @@ const Item = ({ date, type, onItemPress }: ItemTypes) => {
     <View style={styles.itemContainer}>
       <Calendar />
       <TouchableOpacity onPress={() => onItemPress(type)} style={styles.button}>
-        <Text style={textStyle.bodyText}>
-          {type === 'start' ? 'From' : 'To'}
-        </Text>
+        <Text style={textStyle.bodyText}>From</Text>
         <Text style={textStyle.bodyTextBold}>
           {momentTime.format('Do MMM')}
         </Text>
