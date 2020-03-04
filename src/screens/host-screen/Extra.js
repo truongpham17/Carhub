@@ -13,9 +13,11 @@ const Extra = () => (
       justifyContent: 'space-between',
     }}
   >
-    <Text style={textStyle.bodyText}>Extras</Text>
+    <Text style={[textStyle.label, { color: colors.dark20 }]}>Extras</Text>
     <TouchableOpacity style={{}}>
-      <Text style={{ color: colors.successLight }}>ADD</Text>
+      <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
+        ADD
+      </Text>
     </TouchableOpacity>
   </View>
 );

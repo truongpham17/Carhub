@@ -19,6 +19,9 @@ const HostScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = () => {
+    navigation.navigate('HostHubScreen');
+  };
+  const handlePreviousCar = () => {
     navigation.navigate('HostListCarScreen');
   };
   const handleScan = () => {};
@@ -27,7 +30,7 @@ const HostScreen = ({ navigation }: PropTypes) => {
       scrollable
       haveBackHeader
       title="Host"
-      backAction={onPressBack}
+      onBackPress={onPressBack}
     >
       <TouchableOpacity style={styles.container} onPress={handleScan}>
         <Text style={textStyle.bodyTextBold}> Scan VIN Code </Text>
@@ -51,13 +54,14 @@ const HostScreen = ({ navigation }: PropTypes) => {
       <Extra />
       <TouchableOpacity
         style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
+        onPress={handlePreviousCar}
       >
         <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
           Choose your previous car >>
         </Text>
       </TouchableOpacity>
       <Button
-        style={{ marginTop: scaleVer(32) }}
+        style={{ marginVertical: scaleVer(32) }}
         label="Next step"
         onPress={handleNextStep}
       />

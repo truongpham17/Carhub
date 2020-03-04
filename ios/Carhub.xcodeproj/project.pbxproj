@@ -7,31 +7,51 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* CarhubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CarhubTests.m */; };
+		080556FD119D4E58822ACC9D /* HelveticaNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = A6D1660ECB9E453BB8F858F7 /* HelveticaNeue.otf */; };
+		0A1E32571B2B4BEC97C24EF8 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D9F193FE54AB2AD990635 /* FontAwesome5_Regular.ttf */; };
+		0A36CC527D6B4463A3ADD07F /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA51A7B5CF9E4B0E9B3F0866 /* FontAwesome5_Solid.ttf */; };
+		1066A2EE1B714D9F9C5C1309 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27CC73A86E43420DA9368481 /* Octicons.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A6C85AD255844F39913DF5C /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7039B3C4C3364129BF5C5113 /* Feather.ttf */; };
 		1B028E79964392482160054D /* libPods-Carhub-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212ADA8FDB5415E819B7A2D3 /* libPods-Carhub-tvOSTests.a */; };
+		2245C28ED7D049D9BA983115 /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D6FE41F8A9D2412DAA1FE5F5 /* Fontisto.ttf */; };
+		2424EC6CC4734187837B086D /* Montserrat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3098B6C3FFF4318AEFF469F /* Montserrat-Bold.ttf */; };
+		283B3DFF06DA406599B3C94B /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 793915FA6E0C48E0BAAF5D39 /* SimpleLineIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* CarhubTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CarhubTests.m */; };
 		3F1D528B07FDCEE519500907 /* libPods-Carhub.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8225498C02F745BF2AB4B9B7 /* libPods-Carhub.a */; };
+		44AC8DA64E9A4F399C8523E6 /* HelveticaNeue-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E995B377DF274AC2BE48992E /* HelveticaNeue-Bold.otf */; };
 		4C6388DBB1BD58EABC6C7263 /* libPods-Carhub-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0895617D3D03BC96F0F9A2D2 /* libPods-Carhub-tvOS.a */; };
+		5D2BCD727078445CB44DFDB5 /* SFUIDisplay-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = E5A3FA7C31534AABA2CE54FC /* SFUIDisplay-Regular.otf */; };
+		68DDE36D7BBE4FF1B179B39F /* Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 850D17CBE9D24E469CB7DF5D /* Text-Regular.otf */; };
+		70CA2A1218C14D6BAA7B0397 /* Quicksand-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1963FF09A08944CEA30D8C74 /* Quicksand-Bold.ttf */; };
+		837E3B0A3B164E76979D3FEC /* SFUIDisplay-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 45DCD40350D84D2F9A3C5151 /* SFUIDisplay-Black.otf */; };
+		9149CFC87E5848A5BC6DF208 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA9181FD0AFD4CF1B12F0D96 /* AntDesign.ttf */; };
 		9E37E3D723CD7E90002BBB2B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E37E3D623CD7E90002BBB2B /* GoogleService-Info.plist */; };
 		9E37E3DA23CD812C002BBB2B /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E37E3D923CD812C002BBB2B /* File.swift */; };
-		D445C7741D8F3BDF5D394F98 /* libPods-CarhubTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 816C5F69A571D80E691C974E /* libPods-CarhubTests.a */; };
+		9EE7C4328F7241C397871410 /* Quicksand-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48394AD5CCF94D66A660BC19 /* Quicksand-Regular.ttf */; };
+		9FF32EFD49A74D428EDA7515 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8FED038706CA4D6AB0326F50 /* MaterialIcons.ttf */; };
+		B19AFCF7F00E4B3F8DBBD0B8 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F73914997DA642C28F6364FC /* Ionicons.ttf */; };
+		B9E93FE30765411FA7580476 /* SFUIDisplay-Ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = C83F93ADF80F4A27A2FC7688 /* SFUIDisplay-Ultralight.otf */; };
+		C61F945D467F4315BBC0130E /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B0D891293EDA40829E92C74B /* MaterialCommunityIcons.ttf */; };
+		D0E244DEEDEA433AA59DDEDD /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 802EE24F775A47FE8D2184FF /* Entypo.ttf */; };
+		DE699FBBCFDD41C494CCCBC1 /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4C9534222AE1431189C28453 /* SFProText-Regular.ttf */; };
+		DF99107FD9434A8E97499E07 /* SFUIDisplay-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 67576FF3A0EA4622A9DB9D3B /* SFUIDisplay-Bold.otf */; };
+		E0AC058E0245460FB3E3F053 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F59330E111C4695A2B9ED8E /* FontAwesome.ttf */; };
+		E2A32E8DCDDA49E3B5682692 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE2A3E30A4AF48A6BC395AF6 /* EvilIcons.ttf */; };
+		E9F0E451C69E43B98454D884 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 85C313086F80482EB9A6D108 /* FontAwesome5_Brands.ttf */; };
+		FA0B4B65ADBC471BBCD76DD9 /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBE1C5B42FDE45BEB7C3B27C /* Montserrat-Regular.ttf */; };
+		FC409C5BD8F64F24896F3C5F /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD95F0F3D53D4128BE003245 /* Foundation.ttf */; };
+		FC45A96FD3384D239BDE0FE3 /* SFUIDisplay-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = E287646F97734957B9D78B52 /* SFUIDisplay-Light.otf */; };
+		FD094930B451482BAF8ABBD4 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBE0BBEB0FF44490966968BC /* Zocial.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = Carhub;
-		};
 		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
@@ -43,7 +63,6 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* CarhubTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarhubTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* CarhubTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CarhubTests.m; sourceTree = "<group>"; };
 		0895617D3D03BC96F0F9A2D2 /* libPods-Carhub-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Carhub-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,35 +73,53 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Carhub/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Carhub/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Carhub/main.m; sourceTree = "<group>"; };
+		1963FF09A08944CEA30D8C74 /* Quicksand-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Bold.ttf"; path = "../src/Assets/fonts/Quicksand-Bold.ttf"; sourceTree = "<group>"; };
 		212ADA8FDB5415E819B7A2D3 /* libPods-Carhub-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Carhub-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CC73A86E43420DA9368481 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* Carhub-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Carhub-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* Carhub-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Carhub-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		45DCD40350D84D2F9A3C5151 /* SFUIDisplay-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIDisplay-Black.otf"; path = "../src/Assets/fonts/SFUIDisplay-Black.otf"; sourceTree = "<group>"; };
+		48394AD5CCF94D66A660BC19 /* Quicksand-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Quicksand-Regular.ttf"; path = "../src/Assets/fonts/Quicksand-Regular.ttf"; sourceTree = "<group>"; };
+		4C9534222AE1431189C28453 /* SFProText-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFProText-Regular.ttf"; path = "../src/Assets/fonts/SFProText-Regular.ttf"; sourceTree = "<group>"; };
+		4F59330E111C4695A2B9ED8E /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		5389854B5C77E9FFC137A527 /* Pods-Carhub-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Carhub-tvOS/Pods-Carhub-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		816C5F69A571D80E691C974E /* libPods-CarhubTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CarhubTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		67576FF3A0EA4622A9DB9D3B /* SFUIDisplay-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIDisplay-Bold.otf"; path = "../src/Assets/fonts/SFUIDisplay-Bold.otf"; sourceTree = "<group>"; };
+		7039B3C4C3364129BF5C5113 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
+		793915FA6E0C48E0BAAF5D39 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
+		7A8D9F193FE54AB2AD990635 /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
+		802EE24F775A47FE8D2184FF /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		8225498C02F745BF2AB4B9B7 /* libPods-Carhub.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Carhub.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		850D17CBE9D24E469CB7DF5D /* Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Text-Regular.otf"; path = "../src/Assets/fonts/Text-Regular.otf"; sourceTree = "<group>"; };
+		85C313086F80482EB9A6D108 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		8FED038706CA4D6AB0326F50 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		9E37E3D623CD7E90002BBB2B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9E37E3D823CD812C002BBB2B /* Carhub-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Carhub-Bridging-Header.h"; sourceTree = "<group>"; };
 		9E37E3D923CD812C002BBB2B /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		A6D1660ECB9E453BB8F858F7 /* HelveticaNeue.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = HelveticaNeue.otf; path = ../src/Assets/fonts/HelveticaNeue.otf; sourceTree = "<group>"; };
+		AA9181FD0AFD4CF1B12F0D96 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
+		B0D891293EDA40829E92C74B /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		BA51A7B5CF9E4B0E9B3F0866 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
+		BBE0BBEB0FF44490966968BC /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		C09DED7DDFBBB7FCEAFE6F97 /* Pods-Carhub-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Carhub-tvOS/Pods-Carhub-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C40ADC0C4790A67462791AA9 /* Pods-Carhub.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub.debug.xcconfig"; path = "Target Support Files/Pods-Carhub/Pods-Carhub.debug.xcconfig"; sourceTree = "<group>"; };
+		C83F93ADF80F4A27A2FC7688 /* SFUIDisplay-Ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIDisplay-Ultralight.otf"; path = "../src/Assets/fonts/SFUIDisplay-Ultralight.otf"; sourceTree = "<group>"; };
 		C957F71A057EF813FAEE655C /* Pods-Carhub.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub.release.xcconfig"; path = "Target Support Files/Pods-Carhub/Pods-Carhub.release.xcconfig"; sourceTree = "<group>"; };
-		D0FBFD15604DF6ACD0FFD055 /* Pods-CarhubTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarhubTests.release.xcconfig"; path = "Target Support Files/Pods-CarhubTests/Pods-CarhubTests.release.xcconfig"; sourceTree = "<group>"; };
+		D6FE41F8A9D2412DAA1FE5F5 /* Fontisto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Fontisto.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
+		DD95F0F3D53D4128BE003245 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		DE2A3E30A4AF48A6BC395AF6 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		DFA17442758C715220345E29 /* Pods-Carhub-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Carhub-tvOSTests/Pods-Carhub-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
+		E287646F97734957B9D78B52 /* SFUIDisplay-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIDisplay-Light.otf"; path = "../src/Assets/fonts/SFUIDisplay-Light.otf"; sourceTree = "<group>"; };
+		E5A3FA7C31534AABA2CE54FC /* SFUIDisplay-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SFUIDisplay-Regular.otf"; path = "../src/Assets/fonts/SFUIDisplay-Regular.otf"; sourceTree = "<group>"; };
+		E995B377DF274AC2BE48992E /* HelveticaNeue-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HelveticaNeue-Bold.otf"; path = "../src/Assets/fonts/HelveticaNeue-Bold.otf"; sourceTree = "<group>"; };
 		EC6C710E7B478042E58A284A /* Pods-Carhub-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Carhub-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Carhub-tvOSTests/Pods-Carhub-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		F363AC26A2DB06A8293D5E8E /* Pods-CarhubTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarhubTests.debug.xcconfig"; path = "Target Support Files/Pods-CarhubTests/Pods-CarhubTests.debug.xcconfig"; sourceTree = "<group>"; };
+		F3098B6C3FFF4318AEFF469F /* Montserrat-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Bold.ttf"; path = "../src/Assets/fonts/Montserrat-Bold.ttf"; sourceTree = "<group>"; };
+		F73914997DA642C28F6364FC /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		FBE1C5B42FDE45BEB7C3B27C /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Montserrat-Regular.ttf"; path = "../src/Assets/fonts/Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		00E356EB1AD99517003FC87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D445C7741D8F3BDF5D394F98 /* libPods-CarhubTests.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,7 +189,6 @@
 				8225498C02F745BF2AB4B9B7 /* libPods-Carhub.a */,
 				0895617D3D03BC96F0F9A2D2 /* libPods-Carhub-tvOS.a */,
 				212ADA8FDB5415E819B7A2D3 /* libPods-Carhub-tvOSTests.a */,
-				816C5F69A571D80E691C974E /* libPods-CarhubTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -166,8 +202,6 @@
 				C09DED7DDFBBB7FCEAFE6F97 /* Pods-Carhub-tvOS.release.xcconfig */,
 				EC6C710E7B478042E58A284A /* Pods-Carhub-tvOSTests.debug.xcconfig */,
 				DFA17442758C715220345E29 /* Pods-Carhub-tvOSTests.release.xcconfig */,
-				F363AC26A2DB06A8293D5E8E /* Pods-CarhubTests.debug.xcconfig */,
-				D0FBFD15604DF6ACD0FFD055 /* Pods-CarhubTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -188,6 +222,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				4D3A7495408D0809240370D8 /* Pods */,
+				DBDA36C2D834451FA8DA5F26 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -198,35 +233,51 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* Carhub.app */,
-				00E356EE1AD99517003FC87E /* CarhubTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* Carhub-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* Carhub-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
+		DBDA36C2D834451FA8DA5F26 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E995B377DF274AC2BE48992E /* HelveticaNeue-Bold.otf */,
+				A6D1660ECB9E453BB8F858F7 /* HelveticaNeue.otf */,
+				F3098B6C3FFF4318AEFF469F /* Montserrat-Bold.ttf */,
+				FBE1C5B42FDE45BEB7C3B27C /* Montserrat-Regular.ttf */,
+				1963FF09A08944CEA30D8C74 /* Quicksand-Bold.ttf */,
+				48394AD5CCF94D66A660BC19 /* Quicksand-Regular.ttf */,
+				4C9534222AE1431189C28453 /* SFProText-Regular.ttf */,
+				45DCD40350D84D2F9A3C5151 /* SFUIDisplay-Black.otf */,
+				67576FF3A0EA4622A9DB9D3B /* SFUIDisplay-Bold.otf */,
+				E287646F97734957B9D78B52 /* SFUIDisplay-Light.otf */,
+				E5A3FA7C31534AABA2CE54FC /* SFUIDisplay-Regular.otf */,
+				C83F93ADF80F4A27A2FC7688 /* SFUIDisplay-Ultralight.otf */,
+				850D17CBE9D24E469CB7DF5D /* Text-Regular.otf */,
+				AA9181FD0AFD4CF1B12F0D96 /* AntDesign.ttf */,
+				802EE24F775A47FE8D2184FF /* Entypo.ttf */,
+				DE2A3E30A4AF48A6BC395AF6 /* EvilIcons.ttf */,
+				7039B3C4C3364129BF5C5113 /* Feather.ttf */,
+				4F59330E111C4695A2B9ED8E /* FontAwesome.ttf */,
+				85C313086F80482EB9A6D108 /* FontAwesome5_Brands.ttf */,
+				7A8D9F193FE54AB2AD990635 /* FontAwesome5_Regular.ttf */,
+				BA51A7B5CF9E4B0E9B3F0866 /* FontAwesome5_Solid.ttf */,
+				D6FE41F8A9D2412DAA1FE5F5 /* Fontisto.ttf */,
+				DD95F0F3D53D4128BE003245 /* Foundation.ttf */,
+				F73914997DA642C28F6364FC /* Ionicons.ttf */,
+				B0D891293EDA40829E92C74B /* MaterialCommunityIcons.ttf */,
+				8FED038706CA4D6AB0326F50 /* MaterialIcons.ttf */,
+				27CC73A86E43420DA9368481 /* Octicons.ttf */,
+				793915FA6E0C48E0BAAF5D39 /* SimpleLineIcons.ttf */,
+				BBE0BBEB0FF44490966968BC /* Zocial.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* CarhubTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "CarhubTests" */;
-			buildPhases = (
-				EAAB01FFF570AD3DBA0E15C3 /* [CP] Check Pods Manifest.lock */,
-				00E356EA1AD99517003FC87E /* Sources */,
-				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				00E356F51AD99517003FC87E /* PBXTargetDependency */,
-			);
-			name = CarhubTests;
-			productName = CarhubTests;
-			productReference = 00E356EE1AD99517003FC87E /* CarhubTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		13B07F861A680F5B00A75B9A /* Carhub */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Carhub" */;
@@ -293,13 +344,9 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					00E356ED1AD99517003FC87E = {
-						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 13B07F861A680F5B00A75B9A;
-					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 6WGKJAC3VM;
 						LastSwiftMigration = 1030;
@@ -330,7 +377,6 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* Carhub */,
-				00E356ED1AD99517003FC87E /* CarhubTests */,
 				2D02E47A1E0B4A5D006451C7 /* Carhub-tvOS */,
 				2D02E48F1E0B4A5D006451C7 /* Carhub-tvOSTests */,
 			);
@@ -338,13 +384,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -352,6 +391,35 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				9E37E3D723CD7E90002BBB2B /* GoogleService-Info.plist in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				44AC8DA64E9A4F399C8523E6 /* HelveticaNeue-Bold.otf in Resources */,
+				080556FD119D4E58822ACC9D /* HelveticaNeue.otf in Resources */,
+				2424EC6CC4734187837B086D /* Montserrat-Bold.ttf in Resources */,
+				FA0B4B65ADBC471BBCD76DD9 /* Montserrat-Regular.ttf in Resources */,
+				70CA2A1218C14D6BAA7B0397 /* Quicksand-Bold.ttf in Resources */,
+				9EE7C4328F7241C397871410 /* Quicksand-Regular.ttf in Resources */,
+				DE699FBBCFDD41C494CCCBC1 /* SFProText-Regular.ttf in Resources */,
+				837E3B0A3B164E76979D3FEC /* SFUIDisplay-Black.otf in Resources */,
+				DF99107FD9434A8E97499E07 /* SFUIDisplay-Bold.otf in Resources */,
+				FC45A96FD3384D239BDE0FE3 /* SFUIDisplay-Light.otf in Resources */,
+				5D2BCD727078445CB44DFDB5 /* SFUIDisplay-Regular.otf in Resources */,
+				B9E93FE30765411FA7580476 /* SFUIDisplay-Ultralight.otf in Resources */,
+				68DDE36D7BBE4FF1B179B39F /* Text-Regular.otf in Resources */,
+				9149CFC87E5848A5BC6DF208 /* AntDesign.ttf in Resources */,
+				D0E244DEEDEA433AA59DDEDD /* Entypo.ttf in Resources */,
+				E2A32E8DCDDA49E3B5682692 /* EvilIcons.ttf in Resources */,
+				1A6C85AD255844F39913DF5C /* Feather.ttf in Resources */,
+				E0AC058E0245460FB3E3F053 /* FontAwesome.ttf in Resources */,
+				E9F0E451C69E43B98454D884 /* FontAwesome5_Brands.ttf in Resources */,
+				0A1E32571B2B4BEC97C24EF8 /* FontAwesome5_Regular.ttf in Resources */,
+				0A36CC527D6B4463A3ADD07F /* FontAwesome5_Solid.ttf in Resources */,
+				2245C28ED7D049D9BA983115 /* Fontisto.ttf in Resources */,
+				FC409C5BD8F64F24896F3C5F /* Foundation.ttf in Resources */,
+				B19AFCF7F00E4B3F8DBBD0B8 /* Ionicons.ttf in Resources */,
+				C61F945D467F4315BBC0130E /* MaterialCommunityIcons.ttf in Resources */,
+				9FF32EFD49A74D428EDA7515 /* MaterialIcons.ttf in Resources */,
+				1066A2EE1B714D9F9C5C1309 /* Octicons.ttf in Resources */,
+				283B3DFF06DA406599B3C94B /* SimpleLineIcons.ttf in Resources */,
+				FD094930B451482BAF8ABBD4 /* Zocial.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +484,7 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Carhub/Pods-Carhub-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -435,6 +504,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
@@ -515,28 +585,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		EAAB01FFF570AD3DBA0E15C3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CarhubTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -578,14 +626,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		00E356EA1AD99517003FC87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				00E356F31AD99517003FC87E /* CarhubTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -616,11 +656,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* Carhub */;
-			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
-		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2D02E47A1E0B4A5D006451C7 /* Carhub-tvOS */;
@@ -641,51 +676,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00E356F61AD99517003FC87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F363AC26A2DB06A8293D5E8E /* Pods-CarhubTests.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = CarhubTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Carhub.app/Carhub";
-			};
-			name = Debug;
-		};
-		00E356F71AD99517003FC87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D0FBFD15604DF6ACD0FFD055 /* Pods-CarhubTests.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = CarhubTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-					"$(inherited)",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Carhub.app/Carhub";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C40ADC0C4790A67462791AA9 /* Pods-Carhub.debug.xcconfig */;
@@ -948,15 +938,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "CarhubTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00E356F61AD99517003FC87E /* Debug */,
-				00E356F71AD99517003FC87E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Carhub" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

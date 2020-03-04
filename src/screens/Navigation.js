@@ -10,6 +10,8 @@ import { TestScreen } from './test';
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 import HostScreen from './host-screen/HostScreen';
 import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
+import HostHubScreen from './host-hub-screen/HostHubScreen';
+import HostReviewScreen from './host-review-screen/HostReviewScreen';
 
 const TestNavigator = createStackNavigator(
   {
@@ -18,6 +20,8 @@ const TestNavigator = createStackNavigator(
     // TestScreen,
     HostScreen,
     HostListCarScreen,
+    HostHubScreen,
+    HostReviewScreen,
   },
   {
     headerMode: 'none',

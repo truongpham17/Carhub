@@ -12,6 +12,7 @@ import PopupForm from './PopupForm';
 import RadioButton from './RadioButton';
 import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
+import DatePicker from './DatePicker';
 
 export {
   AppGradient,
@@ -28,4 +29,5 @@ export {
   RadioButton,
   Tabbar,
   ViewContainer,
+  DatePicker,
 };

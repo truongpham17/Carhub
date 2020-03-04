@@ -8,6 +8,7 @@ import EditIcon from './EditIcon';
 import Calendar from './Calendar';
 import DownArrow from './DownArrow';
 import Error from './Error';
+import RightArrow from './RightArrow';
 
 export {
   RemoveIcon,
@@ -20,6 +21,7 @@ export {
   Calendar,
   DownArrow,
   Error,
+  RightArrow,
 };
 
 export function getSvg(svg) {
