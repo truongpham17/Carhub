@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { getTest } from '@redux/actions/user';
-import { Avatar } from 'react-native-elements';
 import { getUsers } from '@redux/actions/userTest';
 import { increaseCount } from '@redux/actions/testAction';
 
