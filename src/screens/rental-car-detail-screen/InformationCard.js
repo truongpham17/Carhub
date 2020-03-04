@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer } from 'Constants/dimensions';
 import Separator from 'Components/Separator';
+import { dimension } from 'Constants';
+import colors from 'Constants/colors';
 
 type PropsType = {
   title: String,
