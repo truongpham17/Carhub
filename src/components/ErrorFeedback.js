@@ -1,9 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { dimension, shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
 import { Error } from 'Assets/svgs';
-import Text from './TextTheme';
 
 type PropTypes = {
   errorType: 'server' | 'no-internet' | 'other',
