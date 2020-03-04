@@ -1,108 +1,93 @@
 import React from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { NavigationType } from 'types';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from 'react-native';
+import { withNavigation } from 'react-navigation';
+import { Icon } from 'react-native-elements';
+import { textStyle } from 'Constants/textStyles';
+import colors from 'Constants/colors';
+import { scaleVer } from 'Constants/dimensions';
 
-import { dimension, color, shadowStyle } from 'Constants';
-import { getSvg } from 'Assets/svgs';
-
-const { SCREEN_WIDTH } = dimension;
-
-type PropTypes = {
-  navigation: NavigationType,
-  index: number,
-};
-
-const height = 58;
-
+// navigation.state.routeName
+const TAB_NAME = ['RentalStack', 'LeaseStack', 'HistoryStack', 'ProfileStack'];
 const routeConfig = [
   {
-    icon: 'Home',
-    title: 'HomeScreen',
+    icon: 'paper-plane',
+    title: 'Rental',
   },
-  { icon: 'AppIcon', title: 'RollCallSwitchNavigation', isCenter: true },
   {
-    icon: 'Profile',
-    title: 'ProfileScreen',
+    icon: 'archive',
+    title: 'Lease',
+  },
+  {
+    icon: 'shopping-cart',
+    title: 'History',
+  },
+  {
+    icon: 'user',
+    title: 'Profile',
   },
 ];
 
-class Tabbar extends React.PureComponent<PropTypes> {
-  renderTabIcon = ({ icon, onPress, isCenter, isSelected, key }) => (
-    <TouchableWithoutFeedback onPress={onPress} key={key}>
-      <View
-        style={[
-          // isSelected ? { backgroundColor: '#304777' } : {},
-          styles.icon,
-          isCenter ? styles.center : {},
-          isSelected && isCenter ? styles.elevation : {},
-        ]}
-      >
-        {getSvg(icon, { isSelected })}
+class TabBar extends React.PureComponent {
+  renderTabIcon = ({ icon, title, onPress, color }) => (
+    <TouchableWithoutFeedback onPress={onPress} key={title}>
+      <View>
+        <Icon name={icon} type="entypo" size={20} color={color} />
+        <Text style={[textStyle.bodyText, { color }]}>{title}</Text>
       </View>
     </TouchableWithoutFeedback>
   );
 
   render() {
-    const { index } = this.props;
-    // const { index } = navigation.state;
-
+    const { navigation } = this.props;
+    const { index } = navigation.state;
+    const colorArr = TAB_NAME.map((item, idx) =>
+      idx === index ? colors.primary : colors.dark60
+    );
     return (
-      <View
+      // <View style={{ backgroundColor: colors.primaryLight }}>
+      <SafeAreaView
         style={{
-          height,
-          width: SCREEN_WIDTH,
-          backgroundColor: color.DARK_LIGHT_COLOR,
-          ...shadowStyle.ELEVATION_3,
+          backgroundColor: colors.white,
+          borderTopWidth: 1,
+          borderTopColor: colors.dark80,
+          marginTop: scaleVer(12),
         }}
       >
-        <View style={styles.content}>
+        <View style={styles.containerStyle}>
           {routeConfig.map((item, idx) =>
             this.renderTabIcon({
               icon: item.icon,
-              onPress: () => {},
-              key: item.title,
-              isCenter: item.isCenter,
-              isSelected: index === idx,
+              title: item.title,
+              onPress: () => navigation.navigate(TAB_NAME[idx]),
+              color: colorArr[idx],
             })
           )}
         </View>
-      </View>
+      </SafeAreaView>
+
+      // </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  tabbar: {
-    borderTopRightRadius: dimension.DEFAULT_BORDER_RADIUS,
-    borderTopLeftRadius: dimension.DEFAULT_BORDER_RADIUS,
-    overflow: 'hidden',
-  },
-  content: {
-    flex: 1,
-    // paddingHorizontal: dimension.DISTANCE_6,
-    justifyContent: 'space-around',
+  containerStyle: {
     flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 4,
-  },
-  center: {
-    marginBottom: height / 2,
-    width: height,
-    height,
-    borderRadius: height / 2,
-    backgroundColor: '#ffffff',
-  },
-  elevation: {
-    ...shadowStyle.ELEVATION_3,
+    paddingBottom: 6,
+    paddingTop: 12,
+    // borderTopRightRadius: 24,
+    // borderTopLeftRadius: 24,
+    overflow: 'hidden',
+    elevation: 12,
   },
 });
 
-export default Tabbar;
+export default withNavigation(TabBar);
