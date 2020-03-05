@@ -1,16 +1,14 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { ViewContainer, Button } from 'Components';
 import { RentailCarDetailType, NavigationType } from 'types';
-import { scaleVer, scaleHor } from 'Constants/dimensions';
+import { scaleVer } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import Separator from 'Components/Separator';
-import { dimension } from 'Constants';
+import FilterCarModal from '../select-car-screen/FilterCarModal';
 import AddressInformation from './AddressInformation';
-import Header from './Header';
 import InformationCard from './InformationCard';
-import ImageSlider from './ImageSlider';
 
 type PropsType = {
   rentalDetail: RentailCarDetailType,
@@ -21,16 +19,43 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
   const onBackPress = () => {
     navigation.goBack();
   };
-
   const handleChangeTripDate = () => {};
   const handleShowPickupLoc = () => {};
   const handleShowReturnLoc = () => {};
 
   const goToCheckOut = () => {};
   return (
-    <ViewContainer onBackPress={onBackPress} scrollable safeArea={false}>
-      <ImageSlider />
-      <Header />
+    <ViewContainer title="" onBackPress={onBackPress} scrollable>
+      <Image
+        source={{
+          uri:
+            'https://www.kindpng.com/picc/m/184-1840091_mclaren-logo-clipart-png-transparent-png.png',
+        }}
+        resizeMode="stretch"
+        style={styles.imageContainer}
+      />
+      <View style={styles.container}>
+        <View style={styles.itemContainer}>
+          <View>
+            <Text style={textStyle.widgetItem}>Audi V4</Text>
+            <Text style={[textStyle.label, { color: colors.dark40 }]}>
+              Exclusive Car
+            </Text>
+          </View>
+          <View>
+            <Text style={textStyle.widgetItem}>50$/day</Text>
+          </View>
+        </View>
+        <View style={styles.itemContainer}>
+          <Text>
+            <Text style={textStyle.bodyTextBold}>4.95 stars</Text> (46 trips)
+          </Text>
+          <Text>
+            Total: <Text style={textStyle.widgetItem}>500$</Text>
+          </Text>
+        </View>
+        <Separator />
+      </View>
 
       <InformationCard title="Trip dates" showSeparator>
         <View
@@ -103,6 +128,7 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
       </View>
+      <FilterCarModal />
     </ViewContainer>
   );
 };
@@ -110,9 +136,8 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
 const styles = StyleSheet.create({
   imageContainer: {
     height: scaleVer(250),
-    borderRadius: 8,
+    borderRadius: 15,
     marginBottom: scaleVer(20),
-    width: dimension.SCREEN_WIDTH,
   },
   itemContainer: {
     flex: 1,
