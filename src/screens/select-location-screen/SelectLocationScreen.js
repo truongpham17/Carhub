@@ -1,58 +1,59 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
-import { ViewContainer } from 'Components';
+import { ViewContainer, SearchMapInput } from 'Components';
 import { scaleHor } from 'Constants/dimensions';
-import { textStyleObject } from 'Constants/textStyles';
+import { textStyleObject, textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import { NavigationType } from 'types';
+import SearchItem from './SearchItem';
 
 type PropTypes = {
   navigation: NavigationType,
 };
 
-const data = [{}];
+const data = [
+  'Ho Chi Minh, District 1, 12 Quang Trung',
+  'Ho Chi Minh, District 2, 15 Nguyen Thanh',
+  'Ho Chi Minh, District 4, 12 Hoang Dai',
+];
 
 const SelectLocationScreen = ({ navigation }: PropTypes) => {
   const [search, setSearch] = useState('');
-  const [hover, setHover] = useState(false);
   const onChangeText = search => {
     setSearch(search);
   };
-  const onTextFocus = () => {
-    setHover(true);
-  };
-  const onTextBlur = () => {
-    setHover(false);
-  };
+  const onTextFocus = () => {};
   const onBackPress = () => {
     navigation.pop();
   };
 
+  const onSelectOnMap = () => {
+    navigation.navigate('SelectMapScreen');
+  };
+
   return (
-    <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
-      <TextInput
-        value={search}
+    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
+      <SearchMapInput
+        search={search}
         onChangeText={onChangeText}
-        style={[styles.textInput, hover ? { borderColor: colors.primary } : {}]}
-        placeholder="Enter location"
-        autoFocus
-        onFocus={onTextFocus}
-        onBlur={onTextBlur}
+        onTextFocus={onTextFocus}
       />
+
+      <SearchItem
+        label="Select on Maps"
+        textStyleProps={textStyle.bodyTextBold}
+        separator
+        onPress={onSelectOnMap}
+      />
+      {data.map((item, index) => (
+        <SearchItem
+          label={item}
+          separator={index !== data.length - 1}
+          key={index}
+        />
+      ))}
     </ViewContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    paddingHorizontal: scaleHor(8),
-    height: scaleHor(44),
-    borderRadius: 4,
-    borderWidth: 1,
-    ...textStyleObject.bodyText,
-    color: colors.dark20,
-    borderColor: colors.dark60,
-  },
-});
 
 export default SelectLocationScreen;
