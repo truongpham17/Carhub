@@ -8,7 +8,7 @@ type PropTypes = {
   navigation: NavigationType,
 };
 
-const SearchCarScreen = () => {
+const SearchCarScreen = ({ navigation }: PropTypes) => {
   const onBackPress = () => {};
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -19,6 +19,9 @@ const SearchCarScreen = () => {
       setEndDate(date);
     }
   };
+  const onSelectLocation = () => {
+    navigation.navigate('SelectLocationScreen');
+  };
 
   return (
     <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
@@ -27,11 +30,13 @@ const SearchCarScreen = () => {
           label="Pick up hub location"
           placeholder="Enter location"
           containerStyle={styles.input}
+          onTextFocus={onSelectLocation}
         />
         <InputForm
           label="Pick up hub location"
           placeholder="Enter location"
           containerStyle={styles.input}
+          onTextFocus={onSelectLocation}
         />
         <DatePicker
           startDate={startDate}
