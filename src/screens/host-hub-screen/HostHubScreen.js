@@ -28,6 +28,13 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = () => {
+    checkCarByVin(
+      { vin, usingYears, odometers },
+      {
+        onSuccess: () => navigation.navigate('HostHubScreen'),
+        onFailure: () => {},
+      }
+    );
     navigation.navigate('HostReviewScreen');
   };
   const handleChangeDate = (type, date) => {
@@ -57,6 +64,7 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
         value={address}
         onChangeText={handleChangeAddress}
         containerStyle={{ marginVertical: scaleVer(32) }}
+        onTextFocus={() => navigation.navigate('SelectMapScreen')}
       />
       <DatePicker
         startDate={startDate}

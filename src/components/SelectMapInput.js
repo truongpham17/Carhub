@@ -18,7 +18,7 @@ type PropTypes = {
   style: StyleProp<ViewStyle>,
 };
 
-const SearchMapInput = ({
+const SelectMapInput = ({
   search,
   onChangeText = defaultFunction,
   onTextFocus = defaultFunction,
@@ -49,7 +49,7 @@ const SearchMapInput = ({
   );
 };
 
-export default SearchMapInput;
+export default SelectMapInput;
 
 const styles = StyleSheet.create({
   textInput: {

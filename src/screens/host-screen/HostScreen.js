@@ -42,13 +42,14 @@ const HostScreen = ({ car, checkCarByVin, navigation, loading }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = () => {
-    checkCarByVin(
-      { vin, usingYears, odometers },
-      {
-        onSuccess: () => navigation.navigate('HostHubScreen'),
-        onFailure: () => {},
-      }
-    );
+    // checkCarByVin(
+    //   { vin, usingYears, odometers },
+    //   {
+    //     onSuccess: () => navigation.navigate('HostHubScreen'),
+    //     onFailure: () => {},
+    //   }
+    // );
+    navigation.navigate('HostHubScreen');
   };
   const handlePreviousCar = () => {
     navigation.navigate('HostListCarScreen');

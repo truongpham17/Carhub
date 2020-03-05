@@ -34,6 +34,7 @@ const LeaseStack = createStackNavigator(
     HostReviewScreen,
     HostHubScreen,
     HostListCarScreen,
+    SelectMapScreen,
   },
   {
     headerMode: 'none',

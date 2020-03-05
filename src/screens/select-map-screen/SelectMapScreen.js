@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, SafeAreaView } from 'react-native';
 import MapView from 'react-native-maps';
 import { NavigationType } from 'types';
-import SearchMapInput, { ViewContainer, Button } from 'Components';
+import { ViewContainer, Button, SelectMapInput } from 'Components';
 import { dimension } from 'Constants';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
@@ -32,7 +32,7 @@ const SelectMapScreen = ({ navigation }: PropTypes) => {
         paddingHorizontal: 0,
       }}
     >
-      <SearchMapInput
+      <SelectMapInput
         search={search}
         onChangeText={onChangeText}
         onTextFocus={onTextFocus}
