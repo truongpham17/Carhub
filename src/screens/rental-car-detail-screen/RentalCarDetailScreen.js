@@ -6,6 +6,7 @@ import { scaleVer } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import Separator from 'Components/Separator';
+import FilterCarModal from '../select-car-screen/FilterCarModal';
 import AddressInformation from './AddressInformation';
 import InformationCard from './InformationCard';
 
@@ -18,7 +19,6 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
   const onBackPress = () => {
     navigation.goBack();
   };
-
   const handleChangeTripDate = () => {};
   const handleShowPickupLoc = () => {};
   const handleShowReturnLoc = () => {};
@@ -128,6 +128,7 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
       </View>
+      <FilterCarModal />
     </ViewContainer>
   );
 };
