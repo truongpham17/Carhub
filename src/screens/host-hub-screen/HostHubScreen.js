@@ -19,20 +19,29 @@ type PropTypes = () => {
 };
 
 const HostHubScreen = ({ navigation }: PropTypes) => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [cardNumber, setCardNumber] = useState('');
+  const [address, setAddress] = useState('');
+
   const onPressBack = () => {
     navigation.pop();
   };
   const handleNextStep = () => {
     navigation.navigate('HostReviewScreen');
   };
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
       setStartDate(date);
     } else {
       setEndDate(date);
     }
+  };
+  const handleChangeCardNumber = cardNumber => {
+    setCardNumber(cardNumber);
+  };
+  const handleChangeAddress = address => {
+    setAddress(address);
   };
 
   return (
@@ -45,6 +54,8 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
       <InputForm
         label="Select hub address"
         placeholder="Enter location..."
+        value={address}
+        onChangeText={handleChangeAddress}
         containerStyle={{ marginVertical: scaleVer(32) }}
       />
       <DatePicker
@@ -57,6 +68,8 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
       </Text>
       <InputForm
         label="CARD NUMBER"
+        value={cardNumber}
+        onChangeText={handleChangeCardNumber}
         containerStyle={{ marginVertical: scaleVer(32) }}
       />
       <Button

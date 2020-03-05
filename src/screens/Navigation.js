@@ -11,6 +11,10 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
+import HostScreen from './host-screen/HostScreen';
+import HostReviewScreen from './host-review-screen/HostReviewScreen';
+import HostHubScreen from './host-hub-screen/HostHubScreen';
+import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -26,7 +30,10 @@ const RentalStack = createStackNavigator(
 
 const LeaseStack = createStackNavigator(
   {
-    SelectCarScreen,
+    HostScreen,
+    HostReviewScreen,
+    HostHubScreen,
+    HostListCarScreen,
   },
   {
     headerMode: 'none',

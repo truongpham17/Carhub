@@ -9,6 +9,7 @@ export const query = ({
   data = null,
   headers = {},
   params = {},
+  API_URL = API_URL,
 }) => {
   console.log(API_URL + endpoint);
   return axios({
