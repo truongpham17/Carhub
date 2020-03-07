@@ -38,6 +38,7 @@ const LeaseStack = createStackNavigator(
   },
   {
     headerMode: 'none',
+    initialRouteName: 'HostScreen',
   }
 );
 const HistoryStack = createStackNavigator(
@@ -66,7 +67,7 @@ const TabNavigation = createBottomTabNavigator(
   },
   {
     tabBarComponent: Tabbar,
-    initialRouteName: 'RentalStack',
+    initialRouteName: 'LeaseStack',
   }
 );
 

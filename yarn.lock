@@ -7130,6 +7130,11 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+vin-decode@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/vin-decode/-/vin-decode-0.2.0.tgz#4a8bf031d233e02a7d82dd9be40a6bb3a37252e6"
+  integrity sha512-flhiDNidm1pY/rVnXXbeacOJ63I7PowK6+O3/4H8uh7aWyIFp4KV+aP7huxoWB36peCi3qCKtx/t+8R4W0WIhA==
+
 vlq@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/vlq/-/vlq-1.0.1.tgz#c003f6e7c0b4c1edd623fd6ee50bbc0d6a1de468"

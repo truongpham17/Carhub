@@ -13,12 +13,19 @@ import { NavigationType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
+import { checkHostHubInfo } from '@redux/actions/hostHubInfo';
 
 type PropTypes = () => {
   navigation: NavigationType,
+  checkHostHubInfo: () => void,
+  loading: Boolean,
 };
 
-const HostHubScreen = ({ navigation }: PropTypes) => {
+const HostHubScreen = ({
+  checkHostHubInfo,
+  loading,
+  navigation,
+}: PropTypes) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [cardNumber, setCardNumber] = useState('');
@@ -28,14 +35,13 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = () => {
-    checkCarByVin(
-      { vin, usingYears, odometers },
+    checkHostHubInfo(
+      { startDate, endDate, cardNumber, address },
       {
-        onSuccess: () => navigation.navigate('HostHubScreen'),
+        onSuccess: () => navigation.navigate('HostReviewScreen'),
         onFailure: () => {},
       }
     );
-    navigation.navigate('HostReviewScreen');
   };
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
@@ -57,6 +63,7 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
+      loading={loading}
     >
       <InputForm
         label="Select hub address"
@@ -89,4 +96,10 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
   );
 };
 
-export default HostHubScreen;
+export default connect(
+  state => ({
+    hub: state.leaseRequest.hub,
+    loading: state.leaseRequest.loading,
+  }),
+  { checkHostHubInfo }
+)(HostHubScreen);
