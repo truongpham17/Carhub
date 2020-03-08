@@ -2,7 +2,7 @@
  * @dev
  */
 // truong
-export const API_URL = 'http://192.168.1.105:5068/';
+export const API_URL = 'http://192.168.1.106:5068/';
 
 /**
  * @production
@@ -33,6 +33,6 @@ export const ENDPOINTS = {
 };
 
 export const INITIAL_CALLBACK = {
-  success: () => null,
-  failure: () => null,
+  onSuccess: () => null,
+  onFailure: () => null,
 };

@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer } from 'Constants/dimensions';
 import Separator from 'Components/Separator';
-import { dimension } from 'Constants';
 import colors from 'Constants/colors';
+import { dimension } from 'Constants';
 
 type PropsType = {
   title: String,
@@ -34,7 +34,7 @@ const InformationCard = ({
         ))}
       </View>
       <View style={[styles.dateItem, { alignItems: 'flex-end' }]}>
-        <TouchableOpacity onPress={handleChangeTripDate}>
+        <TouchableOpacity onPress={() => {}}>
           <Text
             style={[
               textStyle.bodyTextBold,

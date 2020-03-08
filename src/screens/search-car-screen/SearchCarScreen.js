@@ -27,13 +27,13 @@ const SearchCarScreen = ({ navigation }: PropTypes) => {
     <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
       <View style={{ flex: 1 }}>
         <InputForm
-          label="Pick up hub location"
+          label="Pick up location"
           placeholder="Enter location"
           containerStyle={styles.input}
           onTextFocus={onSelectLocation}
         />
         <InputForm
-          label="Pick up hub location"
+          label="Pick off location"
           placeholder="Enter location"
           containerStyle={styles.input}
           onTextFocus={onSelectLocation}

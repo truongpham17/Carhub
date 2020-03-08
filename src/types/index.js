@@ -40,3 +40,52 @@ export type RentailCarDetailType = {
     returnLocation: String,
   },
 };
+
+export type UserType = {
+  username: string,
+  token: string,
+  role: 'CUSTOMER' | 'EMPLOYEE' | 'MANAGER',
+  isActive: Boolean,
+};
+
+export type GeoLocationType = {
+  geometry: {
+    lat: Number,
+    lng: Number,
+  },
+  address: String,
+};
+
+export type HubType = {
+  isActive: Boolean,
+  _id: String,
+  name: String,
+  address: String,
+  geometry: {
+    lat: Number,
+    lng: Number,
+  },
+  description: string,
+};
+
+export type CarType = {
+  isActive: Boolean,
+  _id: String,
+  carModel: CarModel | String,
+  customer: String,
+  hub: String,
+  currentHub: String,
+  images: [String],
+  description: String,
+  odometer: Number,
+  price: Number,
+  feature: String,
+};
+
+export type CarModel = {
+  fuelType: String,
+  name: String,
+  numberOfSeat: Number,
+  numberOfBag: Number,
+  type: String,
+};

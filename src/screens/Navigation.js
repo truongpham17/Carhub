@@ -11,6 +11,9 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
+import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
+import AuthScreen from './auth-screen/AuthScreen';
+import SignInScreen from './sign-in-screen/SignInScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -18,15 +21,17 @@ const RentalStack = createStackNavigator(
     SelectLocationScreen,
     SelectCarScreen,
     SelectMapScreen,
+    RentalCarDetailScreen,
   },
   {
     headerMode: 'none',
+    initialRouteName: 'RentalCarDetailScreen',
   }
 );
 
 const LeaseStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
@@ -34,7 +39,7 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
@@ -42,14 +47,14 @@ const HistoryStack = createStackNavigator(
 );
 const ProfileStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
   }
 );
 
-const TabNavigation = createBottomTabNavigator(
+const MainApp = createBottomTabNavigator(
   {
     RentalStack,
     LeaseStack,
@@ -62,5 +67,15 @@ const TabNavigation = createBottomTabNavigator(
   }
 );
 
-const App = createAppContainer(TabNavigation);
+const AuthStack = createStackNavigator({
+  SignInScreen,
+});
+
+const AppNavigation = createSwitchNavigator({
+  AuthScreen,
+  AuthStack,
+  MainApp,
+});
+
+const App = createAppContainer(AppNavigation);
 export default App;

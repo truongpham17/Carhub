@@ -1,57 +1,35 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import { ViewContainer, SearchMapInput } from 'Components';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Text, Platform } from 'react-native';
+import { ViewContainer, MapAutoCompleteSearch } from 'Components';
 import { scaleHor } from 'Constants/dimensions';
+import Geolocation from '@react-native-community/geolocation';
 import { textStyleObject, textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import { NavigationType } from 'types';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { requestPermission } from 'services/permission';
+import { getCurrentPosition } from 'services/maps';
 import SearchItem from './SearchItem';
+
+const SELECT_ON_MAPS = 'Select on Maps';
+
+const CURRENT_LOCATION = 'Current location';
 
 type PropTypes = {
   navigation: NavigationType,
 };
 
-const data = [
-  'Ho Chi Minh, District 1, 12 Quang Trung',
-  'Ho Chi Minh, District 2, 15 Nguyen Thanh',
-  'Ho Chi Minh, District 4, 12 Hoang Dai',
-];
-
 const SelectLocationScreen = ({ navigation }: PropTypes) => {
-  const [search, setSearch] = useState('');
-  const onChangeText = search => {
-    setSearch(search);
-  };
-  const onTextFocus = () => {};
   const onBackPress = () => {
     navigation.pop();
   };
 
-  const onSelectOnMap = () => {
-    navigation.navigate('SelectMapScreen');
-  };
-
   return (
     <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
-      <SearchMapInput
-        search={search}
-        onChangeText={onChangeText}
-        onTextFocus={onTextFocus}
+      <MapAutoCompleteSearch
+        onRequestMap={() => navigation.navigate('SelectMapScreen')}
+        onSelectLocation={location => console.log(location)}
       />
-
-      <SearchItem
-        label="Select on Maps"
-        textStyleProps={textStyle.bodyTextBold}
-        separator
-        onPress={onSelectOnMap}
-      />
-      {data.map((item, index) => (
-        <SearchItem
-          label={item}
-          separator={index !== data.length - 1}
-          key={index}
-        />
-      ))}
     </ViewContainer>
   );
 };

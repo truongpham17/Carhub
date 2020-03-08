@@ -12,6 +12,7 @@ import {
   ViewStyle,
   BackHandler,
   StatusBar,
+  Modal,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
 
@@ -63,7 +64,6 @@ const ViewContainer = ({
   requestError,
   onErrorPress,
   dismissLoading = true,
-  exposeTime = 10000,
   haveBackHeader = false,
   haveBack = true,
   title,
@@ -74,20 +74,7 @@ const ViewContainer = ({
   onBackPress,
   ...next
 }: PropTypes) => {
-  const [isLoading, setLoading] = useState(false);
   const [errorData, setError] = useState(null);
-
-  useEffect(() => {
-    if (isLoading === loading) return;
-    setLoading(loading);
-    if (dismissLoading) {
-      setTimeout(() => {
-        if (loading) {
-          setLoading(false);
-        }
-      }, exposeTime);
-    }
-  }, [loading]);
 
   useEffect(() => {
     if (!requestError) return;
@@ -114,9 +101,9 @@ const ViewContainer = ({
   }, [requestError]);
 
   const renderLoading = () => (
-    <FadedContainer visible={isLoading}>
+    <Modal visible={loading} transparent>
       <LottieView autoPlay source={loadingAnimated} />
-    </FadedContainer>
+    </Modal>
   );
 
   const renderBackTitle = () =>
