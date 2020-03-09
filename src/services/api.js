@@ -16,14 +16,13 @@ export const query = ({
     url: API_URL + endpoint,
     data,
     params,
-    headers,
-
-    // headers: store.getState().user.isLogged
-    //   ? {
-    //       ...headers,
-    //       token: store.getState().user.info.token,
-    //       'Content-Type': 'application/json',
-    //     }
-    //   : headers,
+    // headers,
+    headers: store.getState().user.token
+      ? {
+          ...headers,
+          Authorization: store.getState().user.token,
+          'Content-Type': 'application/json',
+        }
+      : headers,
   });
 };

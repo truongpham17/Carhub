@@ -3,15 +3,26 @@ import { View, StyleSheet } from 'react-native';
 import { ViewContainer, InputForm, DatePicker, Button } from 'Components';
 import { NavigationType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
+import { setRentalSearch } from '@redux/actions/car';
+import moment from 'moment';
+import { connect } from 'react-redux';
 
 type PropTypes = {
   navigation: NavigationType,
+  setRentalSearch: () => void,
 };
 
-const SearchCarScreen = ({ navigation }: PropTypes) => {
+const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
   const onBackPress = () => {};
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const today = new Date();
+  const [startDate, setStartDate] = useState(today);
+  const [startLocation, setStartLocation] = useState(null);
+  const [endLocation, setEndLocation] = useState(null);
+  const [endDate, setEndDate] = useState(
+    moment(today)
+      .add(3, 'day')
+      .toDate()
+  );
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
       setStartDate(date);
@@ -19,24 +30,50 @@ const SearchCarScreen = ({ navigation }: PropTypes) => {
       setEndDate(date);
     }
   };
-  const onSelectLocation = () => {
-    navigation.navigate('SelectLocationScreen');
+  const onSelectStartLocation = () => {
+    navigation.navigate('SelectLocationScreen', {
+      callback(location) {
+        setStartLocation(location);
+        if (!endLocation) {
+          setEndLocation(location);
+        }
+      },
+    });
   };
 
+  const onSelectEndLocation = () => {
+    navigation.navigate('SelectLocationScreen', {
+      callback(location) {
+        setEndLocation(location);
+      },
+    });
+  };
+
+  const onSearchPress = () => {
+    setRentalSearch({
+      startLocation,
+      endLocation,
+      startDate,
+      endDate,
+    });
+    navigation.navigate('SelectCarScreen');
+  };
   return (
     <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
       <View style={{ flex: 1 }}>
         <InputForm
-          label="Pick up hub location"
+          label="Pick up location"
           placeholder="Enter location"
           containerStyle={styles.input}
-          onTextFocus={onSelectLocation}
+          onTextFocus={onSelectStartLocation}
+          value={startLocation ? startLocation.address : ''}
         />
         <InputForm
-          label="Pick up hub location"
+          label="Pick off location"
           placeholder="Enter location"
           containerStyle={styles.input}
-          onTextFocus={onSelectLocation}
+          onTextFocus={onSelectEndLocation}
+          value={endLocation ? endLocation.address : ''}
         />
         <DatePicker
           startDate={startDate}
@@ -45,12 +82,16 @@ const SearchCarScreen = ({ navigation }: PropTypes) => {
         />
       </View>
 
-      <Button label="Search" />
+      <Button
+        label="Search"
+        onPress={onSearchPress}
+        // disable={!(startLocation && endLocation)}
+      />
     </ViewContainer>
   );
 };
 
-export default SearchCarScreen;
+export default connect(state => ({}), { setRentalSearch })(SearchCarScreen);
 
 const styles = StyleSheet.create({
   input: {

@@ -15,6 +15,9 @@ import HostScreen from './host-screen/HostScreen';
 import HostReviewScreen from './host-review-screen/HostReviewScreen';
 import HostHubScreen from './host-hub-screen/HostHubScreen';
 import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
+import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
+import AuthScreen from './auth-screen/AuthScreen';
+import SignInScreen from './sign-in-screen/SignInScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -22,9 +25,11 @@ const RentalStack = createStackNavigator(
     SelectLocationScreen,
     SelectCarScreen,
     SelectMapScreen,
+    RentalCarDetailScreen,
   },
   {
     headerMode: 'none',
+    initialRouteName: 'SearchCarScreen',
   }
 );
 
@@ -43,7 +48,7 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
@@ -51,14 +56,14 @@ const HistoryStack = createStackNavigator(
 );
 const ProfileStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
   }
 );
 
-const TabNavigation = createBottomTabNavigator(
+const MainApp = createBottomTabNavigator(
   {
     RentalStack,
     LeaseStack,
@@ -71,5 +76,20 @@ const TabNavigation = createBottomTabNavigator(
   }
 );
 
-const App = createAppContainer(TabNavigation);
+const AuthStack = createStackNavigator({
+  SignInScreen,
+});
+
+const AppNavigation = createSwitchNavigator(
+  {
+    AuthScreen,
+    AuthStack,
+    MainApp,
+  },
+  {
+    initialRouteName: 'AuthScreen',
+  }
+);
+
+const App = createAppContainer(AppNavigation);
 export default App;
