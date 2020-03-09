@@ -30,6 +30,7 @@ export const ENDPOINTS = {
   user: {
     get_test: 'user/test',
   },
+  rental: 'rental',
 };
 
 export const INITIAL_CALLBACK = {

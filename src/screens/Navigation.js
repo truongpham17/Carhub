@@ -11,6 +11,8 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
+import RequestListScreen from './request-list-screen/RequestListScreen';
+import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -55,6 +57,8 @@ const TabNavigation = createBottomTabNavigator(
     LeaseStack,
     HistoryStack,
     ProfileStack,
+    // RequestDetailScreen,
+    // RequestListScreen,
   },
   {
     tabBarComponent: Tabbar,
