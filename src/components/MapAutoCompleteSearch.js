@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import colors from 'Constants/colors';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { getCurrentPosition } from 'services/maps';
+import { GOOGLE_KEY } from 'Constants/api';
 
 const SELECT_ON_MAPS = 'Select on Maps';
 
@@ -36,8 +37,9 @@ const MapAutoCompleteSearch = ({
   }, []);
 
   const onSelect = (data, details) => {
+    console.log(data);
     if (data.description === SELECT_ON_MAPS) {
-      onRequestMap();
+      return onRequestMap();
     }
 
     if (data.description === CURRENT_LOCATION) {
@@ -67,7 +69,7 @@ const MapAutoCompleteSearch = ({
       getDefaultValue={() => ''}
       query={{
         // available options: https://developers.google.com/places/web-service/autocomplete
-        key: 'AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y',
+        key: GOOGLE_KEY,
         language: 'en', // language of the results
         types: 'geocode', // default: 'geocode'
       }}

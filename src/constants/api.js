@@ -4,6 +4,8 @@
 // truong
 export const API_URL = 'http://192.168.1.106:5068/';
 
+export const GOOGLE_KEY = 'AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y';
+
 /**
  * @production
  */

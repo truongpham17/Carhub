@@ -9,7 +9,7 @@ import {
 import { ViewContainer, Button } from 'Components';
 import { CarType, NavigationType } from 'types';
 
-import { getCarList } from '@redux/actions/car';
+import { getCarList, setSelectedCar } from '@redux/actions/car';
 
 import { textStyle } from 'Constants/textStyles';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
@@ -26,6 +26,8 @@ type PropTypes = {
   },
   carList: [CarType],
   getCarList: () => void,
+  loading: Boolean,
+  setSelectedCar: string => void,
 };
 
 const data = [
@@ -176,7 +178,13 @@ const data = [
   },
 ];
 
-const SelectCarScreen = ({ navigation, carList, getCarList }: PropTypes) => {
+const SelectCarScreen = ({
+  navigation,
+  carList,
+  getCarList,
+  loading,
+  setSelectedCar,
+}: PropTypes) => {
   useEffect(() => {
     getCarList();
   }, []);
@@ -184,9 +192,17 @@ const SelectCarScreen = ({ navigation, carList, getCarList }: PropTypes) => {
     navigation.pop();
   };
 
+  const handleCarPress = _id => {
+    setSelectedCar(_id);
+    navigation.navigate('RentalCarDetailScreen');
+  };
+
   const formatData = () =>
     carList.map(car => ({
-      image: car.images,
+      // image: car.images,
+      _id: car._id,
+      image:
+        'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
       name: car.carModel.name,
       type: car.carModel.type,
       rating: 3,
@@ -214,12 +230,19 @@ const SelectCarScreen = ({ navigation, carList, getCarList }: PropTypes) => {
       ],
     }));
 
-  const renderItem = ({ item, index }) => <SelectCarItem {...item} />;
+  const renderItem = ({ item, index }) => (
+    <SelectCarItem {...item} onItemPress={handleCarPress} />
+  );
 
   const keyExtractor = (item, index) => `${index}`;
 
   return (
-    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
+    <ViewContainer
+      haveBackHeader
+      title="Search Car"
+      onBackPress={onBackPress}
+      loading={loading}
+    >
       <Header />
       <FlatList
         data={formatData()}
@@ -238,5 +261,6 @@ export default connect(
   }),
   {
     getCarList,
+    setSelectedCar,
   }
 )(SelectCarScreen);

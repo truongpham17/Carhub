@@ -5,25 +5,32 @@ import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import Separator from 'Components/Separator';
 
-const Header = () => (
+type PropTypes = {
+  name: String,
+  type: String,
+  price: Number,
+  star: Number,
+  trip: Number,
+  total: Number,
+};
+
+const Header = ({ name, type, price, star, trip, total }: PropTypes) => (
   <View style={styles.container}>
     <View style={styles.itemContainer}>
       <View>
-        <Text style={textStyle.widgetItem}>Audi V4</Text>
-        <Text style={[textStyle.label, { color: colors.dark40 }]}>
-          Exclusive Car
-        </Text>
+        <Text style={textStyle.widgetItem}>{name}</Text>
+        <Text style={[textStyle.label, { color: colors.dark40 }]}>{type}</Text>
       </View>
       <View>
-        <Text style={textStyle.widgetItem}>50$/day</Text>
+        <Text style={textStyle.widgetItem}>{price}$/day</Text>
       </View>
     </View>
     <View style={styles.itemContainer}>
       <Text>
-        <Text style={textStyle.bodyTextBold}>4.95 stars</Text> (46 trips)
+        <Text style={textStyle.bodyTextBold}>{star} stars</Text> ({trip} trips)
       </Text>
       <Text>
-        Total: <Text style={textStyle.widgetItem}>500$</Text>
+        Total: <Text style={textStyle.widgetItem}>{total}$</Text>
       </Text>
     </View>
   </View>

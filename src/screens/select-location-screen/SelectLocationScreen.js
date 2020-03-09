@@ -5,7 +5,7 @@ import { scaleHor } from 'Constants/dimensions';
 import Geolocation from '@react-native-community/geolocation';
 import { textStyleObject, textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
-import { NavigationType } from 'types';
+import { NavigationType, GeoLocationType } from 'types';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { requestPermission } from 'services/permission';
 import { getCurrentPosition } from 'services/maps';
@@ -24,11 +24,23 @@ const SelectLocationScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
 
+  const { callback } = navigation.state.params;
+
   return (
     <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
       <MapAutoCompleteSearch
-        onRequestMap={() => navigation.navigate('SelectMapScreen')}
-        onSelectLocation={location => console.log(location)}
+        onRequestMap={() =>
+          navigation.navigate('SelectMapScreen', {
+            callback(location) {
+              callback(location);
+              navigation.pop(2);
+            },
+          })
+        }
+        onSelectLocation={location => {
+          callback(location);
+          navigation.pop();
+        }}
       />
     </ViewContainer>
   );

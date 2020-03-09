@@ -1,10 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ViewContainer, Button } from 'Components';
-import { RentailCarDetailType, NavigationType } from 'types';
+import {
+  RentailCarDetailType,
+  NavigationType,
+  CarType,
+  GeoLocationType,
+  HubType,
+} from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
 import { dimension } from 'Constants';
+import { connect } from 'react-redux';
+import moment from 'moment';
 import Header from './Header';
 import ImageSlider from './ImageSlider';
 import Item from './Item';
@@ -14,62 +22,126 @@ import Description from './Description';
 type PropsType = {
   rentalDetail: RentailCarDetailType,
   navigation: NavigationType,
+  carList: [CarType],
+  loading: Boolean,
+  id: String,
+  rentalSearch: {
+    startDate: Date,
+    endDate: Date,
+    startLocation: GeoLocationType,
+    endLocation: GeoLocationType,
+  },
 };
 
-const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
+const RentalCarDetailScreen = ({
+  rentalDetail,
+  navigation,
+  carList,
+  loading,
+  id,
+  rentalSearch,
+}: PropsType) => {
+  const [returnHub, setReturnHub]: [HubType] = useState();
+
   const onBackPress = () => {
     navigation.goBack();
   };
+
+  const car = carList.find(item => item._id === id);
 
   const handleChangeTripDate = () => {};
   const handleShowPickupLoc = () => {};
   const handleShowReturnLoc = () => {};
 
   const goToCheckOut = () => {};
+
+  const onSelectReturnHub = () => {
+    navigation.navigate('SelectMapScreen', {
+      callback(hub) {
+        setReturnHub(hub);
+        navigation.pop();
+      },
+      type: 'hub',
+      location: rentalSearch.endLocation.geometry,
+    });
+  };
+
+  const onShowPickUpLocation = () => {
+    navigation.navigate('SelectMapScreen', {
+      type: 'none',
+      location: rentalSearch.startLocation.geometry,
+    });
+  };
+
   return (
     <ViewContainer onBackPress={onBackPress} scrollable safeArea={false}>
-      <ImageSlider />
-      <Header />
+      <ImageSlider images={car.images} />
+      <Header
+        name={car.carModel.name}
+        type={car.carModel.type}
+        star={4}
+        trip={20}
+        price={car.price}
+        total={500}
+      />
       <Item
         title="Trip dates"
         data={[
-          { value: '12 Aug 2020, 10:00 AM' },
-          { value: '15 Aug 2020, 10:00 AM' },
+          {
+            value: `Start date: ${moment(rentalSearch.startDate).format(
+              'DD MMM YYYY'
+            )}, 10:00 AM`,
+          },
+          {
+            value: `End date: ${moment(rentalSearch.endDate).format(
+              'DD MMM YYYY'
+            )}, 10:00 AM`,
+          },
         ]}
       />
 
       <Item
         title="PICK UP LOCATION"
-        data={[{ value: 'Ho Chi Minh, District 1, 16 Nam Ky Khoi Nghia' }]}
+        data={[{ value: car.currentHub.address }]}
         showAction
         actionLabel="SHOW"
-        onActionPress={() => {}}
+        onActionPress={onShowPickUpLocation}
       />
       <Item
-        title="PICK UP LOCATION"
-        data={[{ value: 'Ho Chi Minh, District 1, 16 Nam Ky Khoi Nghia' }]}
+        title="PICK OFF LOCATION"
+        data={[{ value: (returnHub && returnHub.address) || '' }]}
         showAction
-        actionLabel="SHOW"
-        onActionPress={() => {}}
+        actionLabel="SELECT HUB"
+        onActionPress={onSelectReturnHub}
       />
 
       <Item
         title="Cancellation policy"
         data={[
           { value: 'Free cancellation', style: textStyle.bodyTextBold },
-          { value: 'Full refund before 18 Feb, 10:00 AM' },
+          {
+            value: `Full refund before ${moment(rentalSearch)
+              .add(3, 'day')
+              .format('DD MMM')}, 10:00 AM`,
+          },
         ]}
       />
       <Liberty
         data={[
-          { icon: { name: 'users' }, value: '4 seats' },
-          { icon: { name: 'briefcase' }, value: '6 bags' },
-          { icon: { name: 'filter' }, value: 'Gas' },
-          { icon: { name: 'radio' }, value: 'Automatic' },
+          {
+            icon: { name: 'users' },
+            value: `${car.carModel.numberOfSeat} seats`,
+          },
+          {
+            icon: { name: 'briefcase' },
+            value: `${car.carModel.numberOfBag} bags`,
+          },
+          { icon: { name: 'filter' }, value: `${car.carModel.fuelType}` },
+          { icon: { name: 'radio' }, value: `${car.carModel.wheel}` },
         ]}
       />
 
-      <Description description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consequat metus in nibh ultricies laoreet. Aenean ac nibh quis urna laoreet tempus. Aliquam pharetra felis leo, at faucibus erat malesuada ut. Ut aliquam lectus in porttitor imperdiet. Maecenas eu porttitor libero. Donec non suscipit nulla. Aenean vitae nisi eu urna dignissim mattis. Maecenas semper facilisis cursus. Etiam lorem mi, venenatis ut leo et, commodo gravida magna." />
+      <Description description={car.description} />
 
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
@@ -112,4 +184,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RentalCarDetailScreen;
+export default connect(state => ({
+  carList: state.car.data,
+  loading: state.car.loading,
+  id: state.car.selectedCar,
+  rentalSearch: state.car.rentalSearch,
+}))(RentalCarDetailScreen);

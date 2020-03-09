@@ -10,6 +10,7 @@ import { dimension } from 'Constants';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { connect } from 'react-redux';
 import { MarkerIcon } from 'Assets/svgs';
+import { GOOGLE_KEY } from 'Constants/api';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -42,6 +43,10 @@ const SelectMapScreen = ({
     longitudeDelta: 0.0421,
   });
 
+  const [selectedHub, setSelectedHub] = useState(null);
+
+  const { callback, type = 'location' } = navigation.state.params;
+
   const [region, setRegion] = useState({
     latitude: 10.866093,
     longitude: 106.781972,
@@ -53,6 +58,13 @@ const SelectMapScreen = ({
     lat: 10.866093,
     lng: 106.781972,
   });
+
+  useEffect(() => {
+    const { location } = navigation.state.params;
+    if (location) {
+      setRegion({ ...region, latitude: location.lat, longitude: location.lng });
+    }
+  }, []);
 
   const renderSelectMarker = () => {
     if (!selectPosition) return null;
@@ -111,6 +123,49 @@ const SelectMapScreen = ({
     }));
   };
 
+  const onSearch = () => {
+    switch (type) {
+      case 'location': {
+        fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${selectPosition.lat},${selectPosition.lng}&key=${GOOGLE_KEY}`
+        ).then(response => {
+          response.json().then(data => {
+            console.log(data);
+            callback({
+              geometry: selectPosition,
+              address: data.results[0].formatted_address,
+            });
+          });
+        });
+        return;
+      }
+      case 'hub': {
+        if (selectedHub) {
+          callback(selectedHub);
+        }
+        return;
+      }
+      case 'none': {
+        navigation.pop();
+        return;
+      }
+      default:
+        return null;
+    }
+  };
+
+  const getSubmitLabel = () => {
+    switch (type) {
+      case 'location':
+        return 'Select location';
+      case 'hub':
+        return 'Select hub';
+      case 'none':
+        return 'Return';
+      default:
+        return 'Select';
+    }
+  };
   const renderHubMarker = (hub: HubType) => {
     const coordinate = {
       latitude: hub.geometry.lat,
@@ -122,14 +177,9 @@ const SelectMapScreen = ({
         coordinate={coordinate}
         title={hub.name}
         description={hub.description}
+        onPress={() => setSelectedHub(hub)}
       />
     );
-  };
-
-  const onSearch = () => {
-    navigation.navigate('SelectCarScreen', {
-      geometry: selectPosition,
-    });
   };
 
   return (
@@ -179,7 +229,7 @@ const SelectMapScreen = ({
           paddingHorizontal: scaleHor(24),
         }}
       >
-        <Button label="Select" onPress={onSearch} />
+        <Button label={getSubmitLabel()} onPress={onSearch} />
       </View>
     </View>
   );

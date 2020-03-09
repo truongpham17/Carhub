@@ -71,10 +71,10 @@ export type HubType = {
 export type CarType = {
   isActive: Boolean,
   _id: String,
-  carModel: CarModel | String,
+  carModel: CarModel,
   customer: String,
-  hub: String,
-  currentHub: String,
+  hub: HubType,
+  currentHub: HubType,
   images: [String],
   description: String,
   odometer: Number,

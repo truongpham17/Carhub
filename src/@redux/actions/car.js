@@ -4,6 +4,8 @@ import {
   GET_CAR_FAILURE,
   GET_CAR_REQUEST,
   GET_CAR_SUCCESS,
+  SET_RENTAL_SEARCH,
+  SET_SELECTED_CAR,
 } from '../constants/car';
 
 export function getCarList(_, callback = INITIAL_CALLBACK) {
@@ -31,5 +33,19 @@ export function getCarList(_, callback = INITIAL_CALLBACK) {
       dispatch({ type: GET_CAR_FAILURE, payload: error });
       callback.onFailure();
     }
+  };
+}
+
+export function setRentalSearch(data) {
+  return {
+    type: SET_RENTAL_SEARCH,
+    payload: data,
+  };
+}
+
+export function setSelectedCar(_id) {
+  return {
+    type: SET_SELECTED_CAR,
+    payload: _id,
   };
 }
