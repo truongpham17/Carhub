@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { ViewContainer, InputForm, Button } from 'Components';
+import { ViewContainer, InputForm, Button, ProgressStep } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import { signIn } from '@redux/actions/user';
 
