@@ -51,7 +51,15 @@ type PropTypes = {
   showBackPopup?: boolean,
   haveBackHeader?: boolean,
   barStyle?: 'dark-content' | 'light-content',
+  safeArea?: boolean,
 } & BackTitleTypes;
+
+const SafeAreaViewFlex = ({ safe, children, style }) => {
+  if (safe) {
+    return <SafeAreaView style={style}>{children}</SafeAreaView>;
+  }
+  return <View style={style}>{children}</View>;
+};
 
 // eslint-disable-next-line react/display-name
 const ViewContainer = ({
@@ -64,6 +72,7 @@ const ViewContainer = ({
   requestError,
   onErrorPress,
   dismissLoading = true,
+  exposeTime = 10000,
   haveBackHeader = false,
   haveBack = true,
   title,
@@ -72,6 +81,7 @@ const ViewContainer = ({
   onRightPress,
   backType = 'back',
   onBackPress,
+  safeArea = true,
   ...next
 }: PropTypes) => {
   const [errorData, setError] = useState(null);
@@ -102,7 +112,9 @@ const ViewContainer = ({
 
   const renderLoading = () => (
     <Modal visible={loading} transparent>
-      <LottieView autoPlay source={loadingAnimated} />
+      <View style={{ backgroundColor: 'rgba(0,0,0,0.3)', flex: 1 }}>
+        <LottieView autoPlay source={loadingAnimated} />
+      </View>
     </Modal>
   );
 
@@ -117,46 +129,27 @@ const ViewContainer = ({
         type={backType}
         onBackPress={onBackPress}
         backType={backType}
+        style={{
+          marginHorizontal: scaleHor(24),
+          // paddingTop: scaleVer(24),
+        }}
       />
     );
 
   const renderChildren = () => (
-    <View style={[styles.containerStyle, { flex: 1 }, style]}>
-      {renderBackTitle()}
+    <View style={[styles.contentContainerStyle, { flex: 1 }, style]}>
       {children}
     </View>
   );
 
   // const renderBackPopup = () => <FadedContainer visible={backVisible}></FadedContainer>;
 
-  const renderTabbarNoScroll = () => (
-    <React.Fragment>
-      {renderChildren()}
-      {tabbarComponent}
-    </React.Fragment>
-  );
-
-  const renderTabbarScroll = () => (
-    <React.Fragment>
-      <ScrollView
-        contentContainerStyle={[styles.containerStyle, style]}
-        style={{ flex: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        {renderBackTitle()}
-        {children}
-      </ScrollView>
-      {tabbarComponent}
-    </React.Fragment>
-  );
-
   const renderNoTabbarScroll = () => (
     <ScrollView
-      contentContainerStyle={[styles.containerStyle, style]}
+      contentContainerStyle={[styles.contentContainerStyle, style]}
       keyboardShouldPersistTaps="handled"
       style={{ flex: 1 }}
     >
-      {renderBackTitle()}
       {children}
     </ScrollView>
   );
@@ -165,34 +158,33 @@ const ViewContainer = ({
     if (!scrollable && !tabbarComponent) {
       return renderChildren();
     }
-    if (!scrollable && tabbarComponent) {
-      return renderTabbarNoScroll();
-    }
+
     if (scrollable && !tabbarComponent) {
       return renderNoTabbarScroll();
     }
-    if (scrollable && tabbarComponent) {
-      return renderTabbarScroll();
-    }
   };
   return (
-    <SafeAreaView
-      style={[{ flex: 1, backgroundColor: colors.white }, containerStyle]}
+    <SafeAreaViewFlex
+      style={[styles.containerStyle, containerStyle]}
+      safe={safeArea}
     >
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView />
+      {renderBackTitle()}
       {renderComponent()}
       {renderLoading()}
       {errorData && (
         <ErrorFeedback onErrorPress={onErrorPress} {...errorData} />
       )}
-    </SafeAreaView>
+    </SafeAreaViewFlex>
   );
 };
 
 const styles = StyleSheet.create({
   containerStyle: {
-    paddingVertical: scaleVer(24),
+    flex: 1,
+    backgroundColor: colors.white,
+  },
+  contentContainerStyle: {
     paddingHorizontal: scaleHor(24),
   },
   absoluteStyle: {

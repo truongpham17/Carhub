@@ -25,7 +25,7 @@ const RentalStack = createStackNavigator(
   },
   {
     headerMode: 'none',
-    initialRouteName: 'RentalCarDetailScreen',
+    initialRouteName: 'SearchCarScreen',
   }
 );
 
@@ -71,11 +71,16 @@ const AuthStack = createStackNavigator({
   SignInScreen,
 });
 
-const AppNavigation = createSwitchNavigator({
-  AuthScreen,
-  AuthStack,
-  MainApp,
-});
+const AppNavigation = createSwitchNavigator(
+  {
+    AuthScreen,
+    AuthStack,
+    MainApp,
+  },
+  {
+    initialRouteName: 'AuthScreen',
+  }
+);
 
 const App = createAppContainer(AppNavigation);
 export default App;

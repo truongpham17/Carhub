@@ -1,21 +1,8 @@
 import React, { useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
-import { ViewContainer, Button } from 'Components';
+import { StyleSheet, Image, FlatList } from 'react-native';
 import { RentailCarDetailType, NavigationType } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
-import { textStyle } from 'Constants/textStyles';
-import colors from 'Constants/colors';
-import Separator from 'Components/Separator';
 import { dimension } from 'Constants';
-import AddressInformation from './AddressInformation';
-import InformationCard from './InformationCard';
 
 type PropsType = {
   rentalDetail: RentailCarDetailType,
@@ -34,13 +21,13 @@ const ImageSlider = ({ rentalDetail, navigation }: PropsType) => {
     viewAreaCoveragePercentThreshold: 20,
   });
 
-  const itemIndex = useRef(0);
-
-  const handleItemChanged = ({ changed }) => {
+  const handleItemChanged = useRef(({ changed }) => {
     if (changed[0].isViewable) {
       itemIndex.current = changed[0].index;
     }
-  };
+  });
+
+  const itemIndex = useRef(0);
 
   const moveToIndex = index => {
     flatlistRef.current.scrollToIndex({ index });
@@ -53,13 +40,13 @@ const ImageSlider = ({ rentalDetail, navigation }: PropsType) => {
       horizontal
       ref={ref => (flatlistRef.current = ref)}
       showsHorizontalScrollIndicator={false}
-      onViewableItemsChanged={handleItemChanged}
+      onViewableItemsChanged={handleItemChanged.current}
       data={[1, 2, 3]}
       renderItem={() => (
         <Image
           source={{
             uri:
-              'https://www.kindpng.com/picc/m/184-1840091_mclaren-logo-clipart-png-transparent-png.png',
+              'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
           }}
           resizeMode="stretch"
           style={styles.imageContainer}

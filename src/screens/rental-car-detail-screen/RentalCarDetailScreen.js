@@ -4,13 +4,12 @@ import { ViewContainer, Button } from 'Components';
 import { RentailCarDetailType, NavigationType } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
-import colors from 'Constants/colors';
-import Separator from 'Components/Separator';
 import { dimension } from 'Constants';
-import AddressInformation from './AddressInformation';
 import Header from './Header';
-import InformationCard from './InformationCard';
 import ImageSlider from './ImageSlider';
+import Item from './Item';
+import Liberty from './Liberty';
+import Description from './Description';
 
 type PropsType = {
   rentalDetail: RentailCarDetailType,
@@ -31,75 +30,47 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
     <ViewContainer onBackPress={onBackPress} scrollable safeArea={false}>
       <ImageSlider />
       <Header />
-
-      {/* <InformationCard title="Trip dates" showSeparator>
-        <View
-          style={[styles.itemContainer, { justifyContent: 'space-around' }]}
-        >
-          <View style={[styles.dateItem, { alignItems: 'flex-start' }]}>
-            <Text style={[textStyle.bodyText, { marginBottom: scaleVer(5) }]}>
-              Wed 19 Feb, 10:00
-            </Text>
-            <Text style={textStyle.bodyText}>Wed 29 Feb, 10:00</Text>
-          </View>
-          <View style={[styles.dateItem, { alignItems: 'flex-end' }]}>
-            <TouchableOpacity onPress={handleChangeTripDate}>
-              <Text
-                style={[
-                  textStyle.bodyTextBold,
-                  { color: colors.success, justifyContent: 'center' },
-                ]}
-              >
-                CHANGE
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </InformationCard> */}
-
-      <AddressInformation
-        title="PICKUP LOCATION"
-        buttonTitle="SHOW"
-        onPress={handleShowPickupLoc}
-        text="Nha cua Truong"
+      <Item
+        title="Trip dates"
+        data={[
+          { value: '12 Aug 2020, 10:00 AM' },
+          { value: '15 Aug 2020, 10:00 AM' },
+        ]}
       />
 
-      <AddressInformation
-        title="RETURN LOCATION"
-        buttonTitle="SHOW"
-        text="Nha cua Tri"
-        onPress={handleShowReturnLoc}
+      <Item
+        title="PICK UP LOCATION"
+        data={[{ value: 'Ho Chi Minh, District 1, 16 Nam Ky Khoi Nghia' }]}
+        showAction
+        actionLabel="SHOW"
+        onActionPress={() => {}}
+      />
+      <Item
+        title="PICK UP LOCATION"
+        data={[{ value: 'Ho Chi Minh, District 1, 16 Nam Ky Khoi Nghia' }]}
+        showAction
+        actionLabel="SHOW"
+        onActionPress={() => {}}
       />
 
-      {/* <InformationCard title="Cancellation policy" showSeparator>
-        <View>
-          <Text style={textStyle.bodyTextBold}>Free cancellation</Text>
-          <Text style={{ marginTop: scaleVer(8) }}>
-            Full refund before Jan 1, 2020
-          </Text>
-        </View>
-      </InformationCard> */}
+      <Item
+        title="Cancellation policy"
+        data={[
+          { value: 'Free cancellation', style: textStyle.bodyTextBold },
+          { value: 'Full refund before 18 Feb, 10:00 AM' },
+        ]}
+      />
+      <Liberty
+        data={[
+          { icon: { name: 'users' }, value: '4 seats' },
+          { icon: { name: 'briefcase' }, value: '6 bags' },
+          { icon: { name: 'filter' }, value: 'Gas' },
+          { icon: { name: 'radio' }, value: 'Automatic' },
+        ]}
+      />
 
-      {/* <InformationCard title="Liberty mutial" showSeparator>
-        <View style={styles.libertyContainer}>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-        </View>
-      </InformationCard>
+      <Description description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc consequat metus in nibh ultricies laoreet. Aenean ac nibh quis urna laoreet tempus. Aliquam pharetra felis leo, at faucibus erat malesuada ut. Ut aliquam lectus in porttitor imperdiet. Maecenas eu porttitor libero. Donec non suscipit nulla. Aenean vitae nisi eu urna dignissim mattis. Maecenas semper facilisis cursus. Etiam lorem mi, venenatis ut leo et, commodo gravida magna." />
 
-      <InformationCard title="Description">
-        <Text>ABC XYZ</Text>
-      </InformationCard> */}
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
       </View>

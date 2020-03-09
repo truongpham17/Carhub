@@ -26,7 +26,6 @@ const Header = () => (
         Total: <Text style={textStyle.widgetItem}>500$</Text>
       </Text>
     </View>
-    <Separator />
   </View>
 );
 
@@ -36,6 +35,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: scaleVer(5),
+  },
+  container: {
+    paddingBottom: scaleVer(12),
+    borderBottomWidth: 1,
+    borderColor: colors.dark80,
   },
 
   libertyContainer: {
