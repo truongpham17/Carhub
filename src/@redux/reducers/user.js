@@ -1,13 +1,25 @@
-import { GET_TEST_REQUEST, GET_TEST_SUCCESS } from '@redux/constants/user';
+import {
+  SIGN_IN_FAILURE,
+  SIGN_IN_REQUEST,
+  SIGN_IN_SUCCESS,
+} from '../constants/user';
 
 const INITIAL_STATE = {
-  isSuccess: false,
+  username: '',
+  token: '',
+  role: '',
+  isActive: false,
+  loading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case GET_TEST_SUCCESS:
-      return { ...state, isSuccess: action.payload.success };
+    case SIGN_IN_REQUEST:
+      return { ...state, loading: true };
+    case SIGN_IN_SUCCESS:
+      return { ...state, ...action.payload, loading: false };
+    case SIGN_IN_FAILURE:
+      return { ...state, loading: false };
     default:
       return { ...state };
   }
