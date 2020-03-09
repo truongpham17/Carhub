@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dark90,
     width: '100%',
     alignSelf: 'center',
-    marginVertical: scaleVer(18),
   },
 });
 
