@@ -7,12 +7,15 @@ import {
   StyleProp,
   ViewStyle,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import { textStyleObject } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { Calendar, DownArrow } from 'Assets/svgs';
 import { defaultFunction } from 'Utils/common';
 import LinearGradient from 'react-native-linear-gradient';
+
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { pure } from 'recompose';
 import colors from 'Constants/colors';
 
@@ -46,7 +49,6 @@ const InputForm = ({
   type = 'textinput',
   onAction = defaultFunction,
   dropDownList = [],
-  showDropList = false,
   onDropItemPress,
   selectedItem,
   autoFocus = false,
@@ -54,6 +56,8 @@ const InputForm = ({
   onTextFocus = defaultFunction,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
+  const [showDropList, setShowDropDownList] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState(false);
   const handleTextInputFocus = () => {
     setInputHover(true);
 
@@ -68,7 +72,10 @@ const InputForm = ({
         styles.dropDownItem,
         index === dropDownList.length - 1 ? { borderBottomWidth: 0 } : {},
       ]}
-      onPress={() => onDropItemPress(item.key)}
+      onPress={() => {
+        onChangeText(item);
+        setShowDropDownList(false);
+      }}
       key={item.key}
     >
       {item.key === selectedItem ? (
@@ -109,16 +116,32 @@ const InputForm = ({
         );
       case 'calendar':
         return (
-          <TouchableOpacity style={styles.contentContainer} onPress={onAction}>
-            <Text style={styles.text}>{value}</Text>
-            <Calendar />
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity
+              style={styles.contentContainer}
+              onPress={() => setDatePickerVisible(visible => !visible)}
+            >
+              <Text style={styles.text}>{value}</Text>
+              <Calendar />
+            </TouchableOpacity>
+
+            <DateTimePickerModal
+              isVisible={datePickerVisible}
+              mode="date"
+              onConfirm={date => {
+                onChangeText(date);
+                setDatePickerVisible(false);
+              }}
+              date={new Date()}
+              onCancel={() => setDatePickerVisible(false)}
+            />
+          </View>
         );
       case 'dropdown':
         return (
           <TouchableOpacity
             style={{ backgroundColor: 'white' }}
-            onPress={onAction}
+            onPress={() => setShowDropDownList(showDropList => !showDropList)}
           >
             <View
               style={[
@@ -133,7 +156,11 @@ const InputForm = ({
             </View>
             {showDropList && (
               <View style={styles.dropDownList}>
-                {dropDownList.map((item, index) => renderDropItem(item, index))}
+                <FlatList
+                  data={dropDownList}
+                  renderItem={({ item, index }) => renderDropItem(item, index)}
+                />
+                {/* {dropDownList.map((item, index) => renderDropItem(item, index))} */}
               </View>
             )}
           </TouchableOpacity>
@@ -196,6 +223,7 @@ const styles = StyleSheet.create({
     borderStartWidth: 1,
     borderEndWidth: 1,
     borderColor: colors.dark60,
+    height: scaleHor(160),
   },
   text: {
     ...textStyleObject.bodyText,

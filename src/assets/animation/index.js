@@ -1,3 +1,4 @@
 const loading = require('./loading');
+const position = require('./position');
 
-export { loading };
+export { loading, position };

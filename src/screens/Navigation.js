@@ -11,6 +11,12 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
+import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
+import AuthScreen from './auth-screen/AuthScreen';
+import SignInScreen from './sign-in-screen/SignInScreen';
+import RentBookingReview from './rent-booking-review/RentBookingReview';
+import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
+import LicenseScreen from './license-screen/LicenseScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -18,15 +24,20 @@ const RentalStack = createStackNavigator(
     SelectLocationScreen,
     SelectCarScreen,
     SelectMapScreen,
+    RentalCarDetailScreen,
+    RentBookingReview,
+    InfoExplainScreen,
+    LicenseScreen,
   },
   {
     headerMode: 'none',
+    initialRouteName: 'SearchCarScreen',
   }
 );
 
 const LeaseStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
@@ -34,7 +45,7 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
@@ -42,14 +53,14 @@ const HistoryStack = createStackNavigator(
 );
 const ProfileStack = createStackNavigator(
   {
-    SelectCarScreen,
+    TestScreen,
   },
   {
     headerMode: 'none',
   }
 );
 
-const TabNavigation = createBottomTabNavigator(
+const MainApp = createBottomTabNavigator(
   {
     RentalStack,
     LeaseStack,
@@ -62,5 +73,20 @@ const TabNavigation = createBottomTabNavigator(
   }
 );
 
-const App = createAppContainer(TabNavigation);
+const AuthStack = createStackNavigator({
+  SignInScreen,
+});
+
+const AppNavigation = createSwitchNavigator(
+  {
+    AuthScreen,
+    AuthStack,
+    MainApp,
+  },
+  {
+    // initialRouteName: 'MainApp',
+  }
+);
+
+const App = createAppContainer(AppNavigation);
 export default App;

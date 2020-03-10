@@ -1,134 +1,161 @@
-import React from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ViewContainer, Button } from 'Components';
-import { RentailCarDetailType, NavigationType } from 'types';
-import { scaleVer } from 'Constants/dimensions';
+import {
+  RentailCarDetailType,
+  NavigationType,
+  CarType,
+  GeoLocationType,
+  HubType,
+} from 'types';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
+import { setPickOffHub } from '@redux/actions/car';
 import { textStyle } from 'Constants/textStyles';
-import colors from 'Constants/colors';
-import Separator from 'Components/Separator';
-import FilterCarModal from '../select-car-screen/FilterCarModal';
-import AddressInformation from './AddressInformation';
-import InformationCard from './InformationCard';
+import { dimension } from 'Constants';
+import { connect } from 'react-redux';
+import moment from 'moment';
+import Header from './Header';
+import ImageSlider from './ImageSlider';
+import Item from './Item';
+import Liberty from './Liberty';
+import Description from './Description';
 
 type PropsType = {
   rentalDetail: RentailCarDetailType,
   navigation: NavigationType,
+  carList: [CarType],
+  loading: Boolean,
+  id: String,
+  rentalSearch: {
+    startDate: Date,
+    endDate: Date,
+    startLocation: GeoLocationType,
+    endLocation: GeoLocationType,
+  },
+  setPickOffHub: (hub: HubType) => void,
 };
 
-const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
+const RentalCarDetailScreen = ({
+  rentalDetail,
+  navigation,
+  carList,
+  loading,
+  id,
+  rentalSearch,
+  setPickOffHub,
+}: PropsType) => {
+  const [returnHub, setReturnHub]: [HubType] = useState();
+
   const onBackPress = () => {
     navigation.goBack();
   };
+
+  const car = carList.find(item => item._id === id);
+
   const handleChangeTripDate = () => {};
   const handleShowPickupLoc = () => {};
   const handleShowReturnLoc = () => {};
 
-  const goToCheckOut = () => {};
+  const goToCheckOut = () => {
+    if (!returnHub) return;
+
+    setPickOffHub(returnHub);
+
+    navigation.navigate('RentBookingReview');
+  };
+
+  const onSelectReturnHub = () => {
+    navigation.navigate('SelectMapScreen', {
+      callback(hub) {
+        console.log(hub);
+        setReturnHub(hub);
+        navigation.pop();
+      },
+      type: 'hub',
+      location: rentalSearch.endLocation.geometry,
+    });
+  };
+
+  const onShowPickUpLocation = () => {
+    navigation.navigate('SelectMapScreen', {
+      type: 'none',
+      location: rentalSearch.startLocation.geometry,
+    });
+  };
+
   return (
-    <ViewContainer title="" onBackPress={onBackPress} scrollable>
-      <Image
-        source={{
-          uri:
-            'https://www.kindpng.com/picc/m/184-1840091_mclaren-logo-clipart-png-transparent-png.png',
-        }}
-        resizeMode="stretch"
-        style={styles.imageContainer}
+    <ViewContainer onBackPress={onBackPress} scrollable safeArea={false}>
+      <ImageSlider images={car.images} />
+      <Header
+        name={car.carModel.name}
+        type={car.carModel.type}
+        star={4}
+        trip={20}
+        price={car.price}
+        total={500}
       />
-      <View style={styles.container}>
-        <View style={styles.itemContainer}>
-          <View>
-            <Text style={textStyle.widgetItem}>Audi V4</Text>
-            <Text style={[textStyle.label, { color: colors.dark40 }]}>
-              Exclusive Car
-            </Text>
-          </View>
-          <View>
-            <Text style={textStyle.widgetItem}>50$/day</Text>
-          </View>
-        </View>
-        <View style={styles.itemContainer}>
-          <Text>
-            <Text style={textStyle.bodyTextBold}>4.95 stars</Text> (46 trips)
-          </Text>
-          <Text>
-            Total: <Text style={textStyle.widgetItem}>500$</Text>
-          </Text>
-        </View>
-        <Separator />
-      </View>
-
-      <InformationCard title="Trip dates" showSeparator>
-        <View
-          style={[styles.itemContainer, { justifyContent: 'space-around' }]}
-        >
-          <View style={[styles.dateItem, { alignItems: 'flex-start' }]}>
-            <Text style={[textStyle.bodyText, { marginBottom: scaleVer(5) }]}>
-              Wed 19 Feb, 10:00
-            </Text>
-            <Text style={textStyle.bodyText}>Wed 29 Feb, 10:00</Text>
-          </View>
-          <View style={[styles.dateItem, { alignItems: 'flex-end' }]}>
-            <TouchableOpacity onPress={handleChangeTripDate}>
-              <Text
-                style={[
-                  textStyle.bodyTextBold,
-                  { color: colors.success, justifyContent: 'center' },
-                ]}
-              >
-                CHANGE
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </InformationCard>
-
-      <AddressInformation
-        title="PICKUP LOCATION"
-        buttonTitle="SHOW"
-        onPress={handleShowPickupLoc}
-        text="Nha cua Truong"
+      <Item
+        title="Trip dates"
+        data={[
+          {
+            value: `Start date: ${moment(rentalSearch.startDate).format(
+              'DD MMM YYYY'
+            )}, 10:00 AM`,
+          },
+          {
+            value: `End date: ${moment(rentalSearch.endDate).format(
+              'DD MMM YYYY'
+            )}, 10:00 AM`,
+          },
+        ]}
       />
 
-      <AddressInformation
-        title="RETURN LOCATION"
-        buttonTitle="SHOW"
-        text="Nha cua Tri"
-        onPress={handleShowReturnLoc}
+      <Item
+        title="PICK UP LOCATION"
+        data={[{ value: car.currentHub.address }]}
+        showAction
+        actionLabel="SHOW"
+        onActionPress={onShowPickUpLocation}
+      />
+      <Item
+        title="PICK OFF LOCATION"
+        data={[{ value: (returnHub && returnHub.address) || '' }]}
+        showAction
+        actionLabel="SELECT HUB"
+        onActionPress={onSelectReturnHub}
       />
 
-      <InformationCard title="Cancellation policy" showSeparator>
-        <View>
-          <Text style={textStyle.bodyTextBold}>Free cancellation</Text>
-          <Text style={{ marginTop: scaleVer(8) }}>
-            Full refund before Jan 1, 2020
-          </Text>
-        </View>
-      </InformationCard>
+      <Item
+        title="Cancellation policy"
+        data={[
+          { value: 'Free cancellation', style: textStyle.bodyTextBold },
+          {
+            value: `Full refund before ${moment(rentalSearch)
+              .add(3, 'day')
+              .format('DD MMM')}, 10:00 AM`,
+          },
+        ]}
+      />
+      <Liberty
+        data={[
+          {
+            icon: { name: 'users' },
+            value: `${car.carModel.numberOfSeat} seats`,
+          },
+          {
+            icon: { name: 'briefcase' },
+            value: `${car.carModel.numberOfBag} bags`,
+          },
+          { icon: { name: 'filter' }, value: `${car.carModel.fuelType}` },
+          { icon: { name: 'radio' }, value: `${car.carModel.wheel}` },
+        ]}
+      />
 
-      <InformationCard title="Liberty mutial" showSeparator>
-        <View style={styles.libertyContainer}>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-          <View style={styles.libertyItem}>
-            <Text>4 seats</Text>
-          </View>
-        </View>
-      </InformationCard>
+      <Description description={car.description} />
 
-      <InformationCard title="Description">
-        <Text>ABC XYZ</Text>
-      </InformationCard>
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
       </View>
-      <FilterCarModal />
     </ViewContainer>
   );
 };
@@ -136,8 +163,9 @@ const RentalCarDetailScreen = ({ rentalDetail, navigation }: PropsType) => {
 const styles = StyleSheet.create({
   imageContainer: {
     height: scaleVer(250),
-    borderRadius: 15,
+    borderRadius: 8,
     marginBottom: scaleVer(20),
+    width: dimension.SCREEN_WIDTH,
   },
   itemContainer: {
     flex: 1,
@@ -166,4 +194,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RentalCarDetailScreen;
+export default connect(
+  state => ({
+    carList: state.car.data,
+    loading: state.car.loading,
+    id: state.car.selectedCar,
+    rentalSearch: state.car.rentalSearch,
+  }),
+  { setPickOffHub }
+)(RentalCarDetailScreen);
