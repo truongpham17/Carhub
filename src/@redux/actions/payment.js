@@ -6,7 +6,7 @@ import {
   ADD_PAYMENT_FAILURE,
 } from '../constants/payment';
 
-export function getHubList(data, callback = INITIAL_CALLBACK) {
+export function addPayment(data, callback = INITIAL_CALLBACK) {
   return async dispatch => {
     try {
       dispatch({ type: ADD_PAYMENT_REQUEST });
@@ -16,10 +16,10 @@ export function getHubList(data, callback = INITIAL_CALLBACK) {
         data,
       });
 
-      if (result.status === STATUS.OK) {
+      if (result.status === STATUS.CREATED) {
         dispatch({
           type: ADD_PAYMENT_SUCCESS,
-          payload: { hubs: result.data.hubs, total: result.data.total },
+          payload: result.data,
         });
         callback.onSuccess();
       } else {

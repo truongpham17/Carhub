@@ -16,6 +16,7 @@ import Seperator from './Seperator';
 type PropTypes = {
   navigation: NavigationType,
   addLicense: () => void,
+  loading: boolean,
 };
 
 const data = [
@@ -57,7 +58,7 @@ const data = [
   { key: 'dateOfBirth', label: 'Date of birth', type: 'calendar' },
 ];
 
-const LicenseScreen = ({ navigation, addLicense }: PropTypes) => {
+const LicenseScreen = ({ navigation, addLicense, loading }: PropTypes) => {
   const [license, setLicense] = useState({});
   const onBackPress = () => {
     navigation.pop();
@@ -94,10 +95,11 @@ const LicenseScreen = ({ navigation, addLicense }: PropTypes) => {
     console.log(data);
     addLicense(data, {
       onSuccess() {
-        console.log('success');
-        // navigation.navigate('')
+        navigation.pop(2);
       },
-      onFailure() {},
+      onFailure() {
+        console.log('ERROR!');
+      },
     });
   };
 
@@ -107,6 +109,7 @@ const LicenseScreen = ({ navigation, addLicense }: PropTypes) => {
       title="Driver's License"
       onBackPress={onBackPress}
       scrollable
+      loading={loading}
     >
       <Text
         style={[
@@ -143,7 +146,9 @@ const LicenseScreen = ({ navigation, addLicense }: PropTypes) => {
   );
 };
 
-export default connect(state => ({}), { addLicense })(LicenseScreen);
+export default connect(state => ({ loading: state.user.loadingLicense }), {
+  addLicense,
+})(LicenseScreen);
 const styles = StyleSheet.create({
   button: {
     height: scaleHor(48),
