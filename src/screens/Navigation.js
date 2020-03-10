@@ -19,8 +19,9 @@ import SignInScreen from './sign-in-screen/SignInScreen';
 import RentBookingReview from './rent-booking-review/RentBookingReview';
 import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
 import LicenseScreen from './license-screen/LicenseScreen';
-import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
+// import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
 import HistoryScreen from './history-screen/HistoryScreen';
+import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
 
 const RentalStack = createStackNavigator(
   {
@@ -32,10 +33,11 @@ const RentalStack = createStackNavigator(
     RentBookingReview,
     InfoExplainScreen,
     LicenseScreen,
+    SuccessBookingRental,
   },
   {
     headerMode: 'none',
-    initialRouteName: 'SearchCarScreen',
+    // initialRouteName: 'SuccessBookingDetail',
   }
 );
 

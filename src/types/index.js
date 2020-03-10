@@ -42,6 +42,7 @@ export type RentailCarDetailType = {
 };
 
 export type UserType = {
+  _id: String,
   username: string,
   token: string,
   role: 'CUSTOMER' | 'EMPLOYEE' | 'MANAGER',
