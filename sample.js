@@ -2,13 +2,15 @@
 // import { View, StyleSheet } from 'react-native';
 // import { ViewContainer } from 'Components';
 
+// import { connect } from 'react-redux';
+
 // import { NavigationType } from 'types';
 
 // type PropTypes = {
 //   navigation: NavigationType,
 // };
 
-// const SelectCarScreen = ({ navigation }: PropTypes) => {
+// const Test = ({ navigation }: PropTypes) => {
 //   const onBackPress = () => {
 //     navigation.pop();
 //   };
@@ -22,4 +24,5 @@
 //   );
 // };
 
+// export default connect(state => ({}), {})(Test);
 // const styles = StyleSheet.create({});

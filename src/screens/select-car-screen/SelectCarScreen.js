@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,16 +7,27 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { ViewContainer, Button } from 'Components';
+import { CarType, NavigationType } from 'types';
 
-import { NavigationType } from 'types';
+import { getCarList, setSelectedCar } from '@redux/actions/car';
+
 import { textStyle } from 'Constants/textStyles';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
+import { connect } from 'react-redux';
 import SelectCarItem from './SelectCarItem';
 import Header from './Header';
 
 type PropTypes = {
   navigation: NavigationType,
+  geometry: {
+    lat: Number,
+    lng: Number,
+  },
+  carList: [CarType],
+  getCarList: () => void,
+  loading: Boolean,
+  setSelectedCar: string => void,
 };
 
 const data = [
@@ -167,20 +178,74 @@ const data = [
   },
 ];
 
-const SelectCarScreen = ({ navigation }: PropTypes) => {
+const SelectCarScreen = ({
+  navigation,
+  carList,
+  getCarList,
+  loading,
+  setSelectedCar,
+}: PropTypes) => {
+  useEffect(() => {
+    getCarList();
+  }, []);
   const onBackPress = () => {
     navigation.pop();
   };
 
-  const renderItem = ({ item, index }) => <SelectCarItem {...item} />;
+  const handleCarPress = _id => {
+    setSelectedCar(_id);
+    navigation.navigate('RentalCarDetailScreen');
+  };
+
+  const formatData = () =>
+    carList.map(car => ({
+      // image: car.images,
+      _id: car._id,
+      image:
+        'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
+      name: car.carModel.name,
+      type: car.carModel.type,
+      rating: 3,
+      configs: [
+        {
+          icon: 'users',
+          type: 'passenger',
+          value: `${car.carModel.numberOfSeat} Passengers`,
+        },
+        {
+          icon: 'truck',
+          type: 'provided',
+          value: car.hub ? 'Provide hub' : 'Shared',
+        },
+        {
+          icon: 'briefcase',
+          type: 'bag',
+          value: `${car.carModel.numberOfBag || 6} Bags`,
+        },
+        {
+          icon: 'dollar-sign',
+          type: 'price',
+          value: `${car.price}$/day`,
+        },
+      ],
+    }));
+
+  const renderItem = ({ item, index }) => (
+    <SelectCarItem {...item} onItemPress={handleCarPress} />
+  );
 
   const keyExtractor = (item, index) => `${index}`;
 
   return (
-    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
+    <ViewContainer
+      haveBackHeader
+      title="Search Car"
+      onBackPress={onBackPress}
+      loading={loading}
+    >
       <Header />
       <FlatList
-        data={data}
+        data={formatData()}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
@@ -189,4 +254,13 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
   );
 };
 
-export default SelectCarScreen;
+export default connect(
+  state => ({
+    carList: state.car.data,
+    loading: state.car.loading,
+  }),
+  {
+    getCarList,
+    setSelectedCar,
+  }
+)(SelectCarScreen);

@@ -1,58 +1,49 @@
-import React, { useState } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
-import { ViewContainer } from 'Components';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, StyleSheet, Text, Platform } from 'react-native';
+import { ViewContainer, MapAutoCompleteSearch } from 'Components';
 import { scaleHor } from 'Constants/dimensions';
-import { textStyleObject } from 'Constants/textStyles';
+import Geolocation from '@react-native-community/geolocation';
+import { textStyleObject, textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
-import { NavigationType } from 'types';
+import { NavigationType, GeoLocationType } from 'types';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { requestPermission } from 'services/permission';
+import { getCurrentPosition } from 'services/maps';
+import SearchItem from './SearchItem';
+
+const SELECT_ON_MAPS = 'Select on Maps';
+
+const CURRENT_LOCATION = 'Current location';
 
 type PropTypes = {
   navigation: NavigationType,
 };
 
-const data = [{}];
-
 const SelectLocationScreen = ({ navigation }: PropTypes) => {
-  const [search, setSearch] = useState('');
-  const [hover, setHover] = useState(false);
-  const onChangeText = search => {
-    setSearch(search);
-  };
-  const onTextFocus = () => {
-    setHover(true);
-  };
-  const onTextBlur = () => {
-    setHover(false);
-  };
   const onBackPress = () => {
     navigation.pop();
   };
 
+  const { callback } = navigation.state.params;
+
   return (
-    <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
-      <TextInput
-        value={search}
-        onChangeText={onChangeText}
-        style={[styles.textInput, hover ? { borderColor: colors.primary } : {}]}
-        placeholder="Enter location"
-        autoFocus
-        onFocus={onTextFocus}
-        onBlur={onTextBlur}
+    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
+      <MapAutoCompleteSearch
+        onRequestMap={() =>
+          navigation.navigate('SelectMapScreen', {
+            callback(location) {
+              callback(location);
+              navigation.pop(2);
+            },
+          })
+        }
+        onSelectLocation={location => {
+          callback(location);
+          navigation.pop();
+        }}
       />
     </ViewContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  textInput: {
-    paddingHorizontal: scaleHor(8),
-    height: scaleHor(44),
-    borderRadius: 4,
-    borderWidth: 1,
-    ...textStyleObject.bodyText,
-    color: colors.dark20,
-    borderColor: colors.dark60,
-  },
-});
 
 export default SelectLocationScreen;

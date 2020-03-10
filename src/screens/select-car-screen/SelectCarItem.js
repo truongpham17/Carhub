@@ -19,6 +19,8 @@ type PropTypes = {
       value: string,
     }
   ],
+  _id: String,
+  onItemPress: () => void,
 };
 
 const ConfigItem = ({ icon, value }) => (
@@ -32,24 +34,40 @@ const ConfigItem = ({ icon, value }) => (
   </View>
 );
 
-const SelectCarItem = ({ image, name, type, rating, configs }: PropTypes) => (
+const SelectCarItem = ({
+  image,
+  name,
+  type,
+  rating,
+  configs,
+  onItemPress,
+  _id,
+}: PropTypes) => (
   <View style={styles.container}>
     <Image source={{ uri: image }} resizeMode="cover" style={styles.image} />
-    <TouchableOpacity style={styles.contentContainer}>
+    <TouchableOpacity
+      style={styles.contentContainer}
+      onPress={() => onItemPress(_id)}
+    >
       <View style={styles.title}>
         <View>
           <Text style={textStyle.widgetItem}>{name}</Text>
           <Text style={textStyle.label}>{type}</Text>
         </View>
-        <View style={styles.rating}>
-          <Text style={textStyle.widgetItem}>{rating}</Text>
+        <View style={{ alignItems: 'flex-end' }}>
+          <View style={styles.rating}>
+            <Text style={textStyle.widgetItem}>{rating}</Text>
 
-          <Rating
-            imageSize={20}
-            readonly
-            startingValue={rating}
-            style={{ paddingStart: scaleHor(8) }}
-          />
+            <Rating
+              imageSize={20}
+              readonly
+              startingValue={rating}
+              style={{ paddingStart: scaleHor(8) }}
+            />
+          </View>
+          <Text style={textStyle.bodyText}>
+            Distance: <Text style={textStyle.bodyTextBold}>3.5 Km</Text>
+          </Text>
         </View>
       </View>
 

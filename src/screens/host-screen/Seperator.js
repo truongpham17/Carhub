@@ -9,7 +9,7 @@ const Seperator = () => (
     style={{
       flexDirection: 'row',
       alignSelf: 'stretch',
-      marginTop: scaleVer(32),
+      marginVertical: scaleVer(16),
       alignItems: 'center',
     }}
   >
