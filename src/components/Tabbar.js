@@ -56,7 +56,7 @@ class TabBar extends React.PureComponent {
           backgroundColor: colors.white,
           borderTopWidth: 1,
           borderTopColor: colors.dark80,
-          marginTop: scaleVer(12),
+          // marginTop: scaleVer(12),
         }}
       >
         <View style={styles.containerStyle}>

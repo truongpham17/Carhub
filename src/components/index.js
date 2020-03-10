@@ -14,6 +14,8 @@ import Tabbar from './Tabbar';
 import ViewContainer from './ViewContainer';
 import DatePicker from './DatePicker';
 import SelectMapInput from './SelectMapInput';
+import ProgressStep from './ProgressStep';
+import MapAutoCompleteSearch from './MapAutoCompleteSearch';
 
 export {
   AppGradient,
@@ -32,4 +34,6 @@ export {
   ViewContainer,
   DatePicker,
   SelectMapInput,
+  MapAutoCompleteSearch,
+  ProgressStep,
 };
