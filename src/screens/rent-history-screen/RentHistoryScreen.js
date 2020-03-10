@@ -3,8 +3,8 @@ import { FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
 import { connect } from 'react-redux';
-// import HistoryItem from 'Components/HistoryItem';
-import RentHistoryItem from './RentHistoryItem';
+import HistoryItem from 'Components/HistoryItem';
+// import RentHistoryItem from './RentHistoryItem';
 
 type PropsType = {
   rentList: [RentDetailType],
@@ -17,26 +17,25 @@ const RentHistoryScreen = ({ rentList, navigation }: PropsType) => {
     navigation.navigate('RentHistoryItemDetailScreen');
   };
   // eslint-disable-next-line react/prop-types
-  const handleRenderItem = ({ item }) => (
-    <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
-  );
-  // const data = ['1', '2', '3', '4'];
+  // const handleRenderItem = ({ item }) => (
+  //   <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
+  // );
+  const data = ['1', '2', '3', '4'];
 
-  // const handleRenderItem = () => <HistoryItem />;
+  const handleRenderItem = () => <HistoryItem />;
 
   const handleKeyExtractor = (item, index) => index.toString();
   return (
-    <ViewContainer>
-      <FlatList
-        data={rentList}
-        renderItem={handleRenderItem}
-        keyExtractor={handleKeyExtractor}
-      />
-    </ViewContainer>
+    <FlatList
+      data={data}
+      renderItem={handleRenderItem}
+      keyExtractor={handleKeyExtractor}
+      showsVerticalScrollIndicator={false}
+    />
   );
 };
 
 export default connect(state => ({
-  rentList: state.rentHistory.data,
+  rentList: [],
 }))(RentHistoryScreen);
 // export default RentHistoryScreen;

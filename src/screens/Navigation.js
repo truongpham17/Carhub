@@ -11,17 +11,20 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
-import RentHistoryScreen from './rent-history-screen/RentHistoryScreen';
 import HostScreen from './host-screen/HostScreen';
 import HostReviewScreen from './host-review-screen/HostReviewScreen';
 import HostHubScreen from './host-hub-screen/HostHubScreen';
 import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
+// import RequestListScreen from './request-list-screen/RequestListScreen';
+// import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
 import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 import AuthScreen from './auth-screen/AuthScreen';
 import SignInScreen from './sign-in-screen/SignInScreen';
 import RentBookingReview from './rent-booking-review/RentBookingReview';
 import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
 import LicenseScreen from './license-screen/LicenseScreen';
+// import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
+import HistoryScreen from './history-screen/HistoryScreen';
 import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
 
 const RentalStack = createStackNavigator(
@@ -57,7 +60,7 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    RentHistoryScreen,
+    HistoryScreen,
   },
   {
     headerMode: 'none',
@@ -78,6 +81,8 @@ const MainApp = createBottomTabNavigator(
     LeaseStack,
     HistoryStack,
     ProfileStack,
+    // RequestDetailScreen,
+    // RequestListScreen,
   },
   {
     tabBarComponent: Tabbar,
@@ -100,5 +105,14 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-const App = createAppContainer(AppNavigation);
+const scanScreen = createStackNavigator(
+  {
+    HistoryScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
+const App = createAppContainer(scanScreen);
 export default App;
