@@ -5,6 +5,7 @@ import userTest from './userTest';
 import leaseRequest from './leaseRequest';
 import hub from './hub';
 import car from './car';
+import payment from './payment';
 
 export default combineReducers({
   user,
@@ -13,4 +14,5 @@ export default combineReducers({
   leaseRequest,
   hub,
   car,
+  payment,
 });

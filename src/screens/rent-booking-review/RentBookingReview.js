@@ -3,7 +3,8 @@ import { View, StyleSheet } from 'react-native';
 import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 
 import { connect } from 'react-redux';
-
+import { addPayment } from '@redux/actions/payment';
+import { addRentRequest } from '@redux/actions/car';
 import { NavigationType, CarType, HubType, UserType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
@@ -15,6 +16,11 @@ type PropTypes = {
   toDate: Date,
   pickOffHub: HubType,
   user: UserType,
+  addPayment: () => void,
+  loading: Boolean,
+  loadingRental: Boolean,
+  payment: { _id: string },
+  addRentRequest: () => void,
 };
 
 const RentBookingReview = ({
@@ -24,10 +30,15 @@ const RentBookingReview = ({
   toDate,
   pickOffHub,
   user,
+  addPayment,
+  loading,
+  loadingRental,
+  payment,
+  addRentRequest,
 }: PropTypes) => {
   const momentFromDate = moment(fromDate);
   const momentToDate = moment(toDate);
-  const duration = momentToDate.diff(momentToDate, 'days');
+  const duration = momentToDate.diff(momentFromDate, 'days');
   const data = [
     { label: 'Car name', value: car.carModel.name },
     { label: 'From date', value: momentFromDate.format('DD MMM YYYY') },
@@ -49,8 +60,43 @@ const RentBookingReview = ({
   const handleNextStep = () => {
     if (!user.license) {
       navigation.navigate('InfoExplainScreen');
+    } else {
+      addPayment(
+        {
+          type: 'Rental',
+          amount: duration * car.price,
+          note: 'Rental transaction',
+        },
+        {
+          onSuccess() {
+            console.log('come here!!!!');
+            // navigation.navigate('SuccessBookingRental');
+            addRentRequest(
+              {
+                car: car._id,
+                customer: user._id,
+                type: 'hub',
+                startDate: fromDate.toISOString(),
+                endDate: toDate.toISOString(),
+                pickupHub: car.currentHub._id,
+                pickoffHub: pickOffHub._id,
+                price: car.price,
+                totalCost: duration * car.price,
+                description: 'Rental booking',
+                payment: payment._id,
+              },
+              {
+                onSuccess() {
+                  navigation.navigate('SuccessBookingRental');
+                },
+                onFailure() {},
+              }
+            );
+          },
+          onFailure() {},
+        }
+      );
     }
-    console.log('paypal implementation');
   };
 
   return (
@@ -59,6 +105,7 @@ const RentBookingReview = ({
       title="Booking"
       onBackPress={onBackPress}
       scrollable
+      loading={loading || loadingRental}
     >
       <ProgressStep
         labels={['Review', 'Payment', 'Complete']}
@@ -79,7 +126,7 @@ const RentBookingReview = ({
       </View>
       <Button
         label="Next"
-        style={{ marginTop: scaleVer(16) }}
+        style={{ marginVertical: scaleVer(16) }}
         onPress={handleNextStep}
       />
     </ViewContainer>
@@ -89,11 +136,14 @@ const RentBookingReview = ({
 export default connect(
   state => ({
     car: state.car.data.find(item => item._id === state.car.selectedCar),
-    fromDate: state.car.rentalSearch.fromDate,
-    toDate: state.car.rentalSearch.toDate,
+    fromDate: state.car.rentalSearch.startDate,
+    toDate: state.car.rentalSearch.endDate,
     pickOffHub: state.car.pickOffHub,
     user: state.user,
+    loading: state.payment.loading,
+    loadingRental: state.car.loading,
+    payment: state.payment,
   }),
-  {}
+  { addPayment, addRentRequest }
 )(RentBookingReview);
 const styles = StyleSheet.create({});
