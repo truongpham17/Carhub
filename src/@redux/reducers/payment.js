@@ -1,26 +1,26 @@
 import {
-  GET_HUB_FAILURE,
-  GET_HUB_REQUEST,
-  GET_HUB_SUCCESS,
-} from '../constants/hub';
+  ADD_PAYMENT_FAILURE,
+  ADD_PAYMENT_REQUEST,
+  ADD_PAYMENT_SUCCESS,
+} from '../constants/payment';
 
 const INITIAL_STATE = {
-  data: [],
-  total: 0,
+  loading: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case GET_HUB_REQUEST:
+    case ADD_PAYMENT_REQUEST:
       return { ...state, loading: true };
-    case GET_HUB_SUCCESS:
+    case ADD_PAYMENT_SUCCESS:
       return {
         ...state,
-        data: [...state.data, ...action.payload.hubs],
-        total: action.payload.total,
+        ...action.payload,
+        loading: false,
       };
-    case GET_HUB_FAILURE:
+    case ADD_PAYMENT_FAILURE:
       return { ...state, loading: false };
+
     default:
       return { ...state };
   }

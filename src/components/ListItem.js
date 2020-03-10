@@ -9,7 +9,7 @@ import {
   StyleProp,
 } from 'react-native';
 import { defaultFunction } from 'Utils/common';
-import { scaleHor } from 'Constants/dimensions';
+import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { getSvg } from 'Assets/svgs';
 import { textStyle, textStyleObject } from 'Constants/textStyles';
 import colors from 'Constants/colors';
@@ -45,8 +45,22 @@ const ListItem = ({
         return <Switch value />;
       case 'detail':
         return (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={styles.detail}>{detail}</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              flex: 1,
+            }}
+          >
+            <Text
+              style={[
+                styles.detail,
+                nextIcon ? { marginEnd: scaleHor(8) } : {},
+              ]}
+            >
+              {detail}
+              {/* {detail.length > 20 ? `${detail.substr(0, 19)}...` : detail} */}
+            </Text>
             {getSvg(nextIcon, { fill: colors.dark20 })}
           </View>
         );
@@ -81,7 +95,8 @@ export default ListItem;
 
 const styles = StyleSheet.create({
   container: {
-    height: scaleHor(60),
+    // minHeight: scaleHor(60),
+    paddingVertical: scaleHor(20),
     paddingHorizontal: scaleHor(8),
     alignItems: 'center',
     flexDirection: 'row',
@@ -89,8 +104,9 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   label: {
-    ...textStyle.bodyTextBold,
+    ...textStyleObject.bodyTextBold,
     color: colors.dark20,
+    marginEnd: 12,
   },
   labelContainer: {
     flexDirection: 'row',
@@ -99,7 +115,8 @@ const styles = StyleSheet.create({
   detail: {
     ...textStyleObject.bodyText,
     color: colors.dark20,
-    marginEnd: scaleHor(8),
+    textAlign: 'right',
+    flex: 1,
   },
   separator: {
     borderBottomWidth: 1,
