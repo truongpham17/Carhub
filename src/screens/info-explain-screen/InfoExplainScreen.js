@@ -37,7 +37,11 @@ const InfoExplainScreen = ({ navigation }: PropTypes) => {
       <Text style={[textStyle.bodyText, { textAlign: 'center' }]}>
         Your information is stored securely
       </Text>
-      <Button label="Continue" style={{ marginVertical: scaleVer(16) }} />
+      <Button
+        label="Continue"
+        style={{ marginVertical: scaleVer(16) }}
+        onPress={() => navigation.navigate('LicenseScreen')}
+      />
     </ViewContainer>
   );
 };

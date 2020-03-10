@@ -46,6 +46,13 @@ export type UserType = {
   token: string,
   role: 'CUSTOMER' | 'EMPLOYEE' | 'MANAGER',
   isActive: Boolean,
+  license: LicenseType,
+  fullName: string,
+  avatar: String,
+  dateOfBirth: Date,
+  email: String,
+  phone: String,
+  account: String,
 };
 
 export type GeoLocationType = {
@@ -80,6 +87,19 @@ export type CarType = {
   odometer: Number,
   price: Number,
   feature: String,
+};
+
+export type LicenseType = {
+  number: string,
+  fullname: string,
+  dateOfBirth: Date,
+  nationality: string,
+  address: string,
+  rank: string,
+  expires: Date,
+  image: string,
+  isActive: boolean,
+  // numb
 };
 
 export type CarModel = {

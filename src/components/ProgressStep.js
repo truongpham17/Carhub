@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, StyleProp, ViewStyle } from 'react-native';
 import colors from 'Constants/colors';
 import { Tick } from 'Assets/svgs';
 import { textStyle } from 'Constants/textStyles';
@@ -8,10 +8,11 @@ import { dimension } from 'Constants';
 type PropTypes = {
   currentStep: Number,
   labels: [String],
+  style: StyleProp<ViewStyle>,
 };
 
-const ProgressStep = ({ currentStep, labels }: PropTypes) => (
-  <View style={{ width: '100%', alignItems: 'center' }}>
+const ProgressStep = ({ currentStep, labels, style }: PropTypes) => (
+  <View style={[{ width: '100%', alignItems: 'center' }, style]}>
     <View style={styles.container}>
       <View style={{ flexDirection: 'row' }}>
         {labels.map((item, index) => (
@@ -65,7 +66,7 @@ const ProgressStep = ({ currentStep, labels }: PropTypes) => (
         {labels.map((item, index) => (
           <Text
             style={[
-              currentStep > index ? textStyle.bodyText : textStyle.bodyTextBold,
+              currentStep < index ? textStyle.bodyText : textStyle.bodyTextBold,
               { fontSize: 20 },
             ]}
           >

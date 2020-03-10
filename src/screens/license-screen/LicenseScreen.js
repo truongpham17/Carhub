@@ -9,20 +9,19 @@ import { textStyle } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
+import { addLicense } from '@redux/actions/user';
 import moment from 'moment';
 import Seperator from './Seperator';
 
 type PropTypes = {
   navigation: NavigationType,
+  addLicense: () => void,
 };
 
 const data = [
-  { key: 'firstName', label: 'First Name' },
-
-  { key: 'middleName', label: 'Middle Name' },
-  { key: 'lastName', label: 'Last Name' },
+  { key: 'fullname', label: 'Full Name' },
   {
-    key: 'country',
+    key: 'nationality',
     label: 'Country',
     type: 'dropdown',
     dropDownList: [
@@ -52,18 +51,14 @@ const data = [
       },
     ],
   },
-  { key: 'licenseNumber', label: 'License Number' },
-  { key: 'date', label: 'Created Date', type: 'calendar' },
+  { key: 'number', label: 'License Number' },
+  { key: 'expires', label: 'Expired Date', type: 'calendar' },
+  { key: 'address', label: 'Address' },
+  { key: 'dateOfBirth', label: 'Date of birth', type: 'calendar' },
 ];
 
-const LicenseScreen = ({ navigation }: PropTypes) => {
-  const [license, setLicense] = useState({
-    firstName: null,
-    middleName: null,
-    country: null,
-    licenseNumber: null,
-    date: null,
-  });
+const LicenseScreen = ({ navigation, addLicense }: PropTypes) => {
+  const [license, setLicense] = useState({});
   const onBackPress = () => {
     navigation.pop();
   };
@@ -87,7 +82,24 @@ const LicenseScreen = ({ navigation }: PropTypes) => {
     return !nullData;
   };
 
-  const onSubmitLicense = () => {};
+  const onSubmitLicense = () => {
+    const data = {
+      fullname: license.fullname,
+      nationality: license.nationality.value,
+      number: license.number,
+      expires: license.expires.toISOString(),
+      address: license.address,
+      dateOfBirth: license.dateOfBirth.toISOString(),
+    };
+    console.log(data);
+    addLicense(data, {
+      onSuccess() {
+        console.log('success');
+        // navigation.navigate('')
+      },
+      onFailure() {},
+    });
+  };
 
   return (
     <ViewContainer
@@ -131,7 +143,7 @@ const LicenseScreen = ({ navigation }: PropTypes) => {
   );
 };
 
-export default connect(state => ({}), {})(LicenseScreen);
+export default connect(state => ({}), { addLicense })(LicenseScreen);
 const styles = StyleSheet.create({
   button: {
     height: scaleHor(48),

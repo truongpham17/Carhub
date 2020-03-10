@@ -4,8 +4,9 @@ import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 
 import { connect } from 'react-redux';
 
-import { NavigationType, CarType, HubType } from 'types';
+import { NavigationType, CarType, HubType, UserType } from 'types';
 import moment from 'moment';
+import { scaleVer } from 'Constants/dimensions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -13,14 +14,16 @@ type PropTypes = {
   fromDate: Date,
   toDate: Date,
   pickOffHub: HubType,
+  user: UserType,
 };
 
-const RentBookingDetail = ({
+const RentBookingReview = ({
   navigation,
   car,
   fromDate,
   toDate,
   pickOffHub,
+  user,
 }: PropTypes) => {
   const momentFromDate = moment(fromDate);
   const momentToDate = moment(toDate);
@@ -43,9 +46,25 @@ const RentBookingDetail = ({
     navigation.pop();
   };
 
+  const handleNextStep = () => {
+    if (!user.license) {
+      navigation.navigate('InfoExplainScreen');
+    }
+    console.log('paypal implementation');
+  };
+
   return (
-    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
-      <ProgressStep labels={['Review', 'Payment', 'Complete']} />
+    <ViewContainer
+      haveBackHeader
+      title="Booking"
+      onBackPress={onBackPress}
+      scrollable
+    >
+      <ProgressStep
+        labels={['Review', 'Payment', 'Complete']}
+        currentStep={0}
+        style={{ marginBottom: scaleVer(16) }}
+      />
       <View style={{ flex: 1 }}>
         {data.map((item, index) => (
           <ListItem
@@ -58,18 +77,23 @@ const RentBookingDetail = ({
           />
         ))}
       </View>
-      <Button label="Next" />
+      <Button
+        label="Next"
+        style={{ marginTop: scaleVer(16) }}
+        onPress={handleNextStep}
+      />
     </ViewContainer>
   );
 };
 
 export default connect(
   state => ({
-    car: state.car.selectedCar,
+    car: state.car.data.find(item => item._id === state.car.selectedCar),
     fromDate: state.car.rentalSearch.fromDate,
     toDate: state.car.rentalSearch.toDate,
     pickOffHub: state.car.pickOffHub,
+    user: state.user,
   }),
   {}
-)(RentBookingDetail);
+)(RentBookingReview);
 const styles = StyleSheet.create({});
