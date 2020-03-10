@@ -19,6 +19,9 @@ import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
 import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 import AuthScreen from './auth-screen/AuthScreen';
 import SignInScreen from './sign-in-screen/SignInScreen';
+import RentBookingReview from './rent-booking-review/RentBookingReview';
+import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
+import LicenseScreen from './license-screen/LicenseScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -27,6 +30,9 @@ const RentalStack = createStackNavigator(
     SelectCarScreen,
     SelectMapScreen,
     RentalCarDetailScreen,
+    RentBookingReview,
+    InfoExplainScreen,
+    LicenseScreen,
   },
   {
     headerMode: 'none',
@@ -88,7 +94,7 @@ const AppNavigation = createSwitchNavigator(
     MainApp,
   },
   {
-    initialRouteName: 'AuthScreen',
+    // initialRouteName: 'MainApp',
   }
 );
 

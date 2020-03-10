@@ -6,6 +6,7 @@ import {
 
 const INITIAL_STATE = {
   data: [],
+  total: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {

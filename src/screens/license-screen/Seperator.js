@@ -20,7 +20,7 @@ const Seperator = () => (
         width: '45%',
       }}
     />
-    <Text style={textStyle.bodyText}>OR</Text>
+    <Text style={textStyle.bodyText}>or</Text>
     <View
       style={{
         backgroundColor: colors.dark60,

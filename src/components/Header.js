@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  SafeAreaView,
+} from 'react-native';
 import { textStyleObject } from 'Constants/textStyles';
 import { ArrowReturn, getSvg, X } from 'Assets/svgs';
 import { scaleVer } from 'Constants/dimensions';
@@ -16,6 +22,7 @@ type PropTypes = {
   animation: 'leftToRight' | 'normal',
   backType: 'back' | 'exit',
   onBackPress: () => void,
+  style: {},
 };
 
 const BackTitle = ({
@@ -26,8 +33,10 @@ const BackTitle = ({
   onRightPress,
   onBackPress,
   backType = 'back',
+  style,
 }: PropTypes) => (
-  <View style={styles.title}>
+  <View style={[styles.title, style]}>
+    <SafeAreaView />
     {haveBack && (
       <TouchableOpacity onPress={onBackPress} style={styles.arrow}>
         {backType === 'back' ? <ArrowReturn fill={colors.dark20} /> : <X />}

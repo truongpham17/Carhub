@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { ViewContainer, InputForm, Button } from 'Components';
+import { ViewContainer, InputForm, Button, ProgressStep } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import { signIn } from '@redux/actions/user';
 
 import { NavigationType } from 'types';
 import { connect } from 'react-redux';
+import { scaleVer } from 'Constants/dimensions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -43,17 +44,27 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
 
   return (
     <ViewContainer loading={loading} requestError={error}>
-      <Text style={textStyle.sectionHeading}>Sign in</Text>
-      <InputForm
-        label="Username"
-        onChangeText={onChangeUserName}
-        value={username}
-      />
-      <InputForm
-        label="Password"
-        onChangeText={onChangePassword}
-        value={password}
-      />
+      <View style={{ flex: 1 }}>
+        <Text
+          style={[
+            textStyle.sectionHeading,
+            { textAlign: 'center', marginBottom: scaleVer(48) },
+          ]}
+        >
+          Sign in
+        </Text>
+        <InputForm
+          label="Username"
+          onChangeText={onChangeUserName}
+          value={username}
+          containerStyle={{ marginBottom: scaleVer(16) }}
+        />
+        <InputForm
+          label="Password"
+          onChangeText={onChangePassword}
+          value={password}
+        />
+      </View>
 
       <Button label="Sign in" onPress={handleUserLogin} />
     </ViewContainer>

@@ -9,6 +9,7 @@ import {
   HubType,
 } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
+import { setPickOffHub } from '@redux/actions/car';
 import { textStyle } from 'Constants/textStyles';
 import { dimension } from 'Constants';
 import { connect } from 'react-redux';
@@ -31,6 +32,7 @@ type PropsType = {
     startLocation: GeoLocationType,
     endLocation: GeoLocationType,
   },
+  setPickOffHub: (hub: HubType) => void,
 };
 
 const RentalCarDetailScreen = ({
@@ -40,6 +42,7 @@ const RentalCarDetailScreen = ({
   loading,
   id,
   rentalSearch,
+  setPickOffHub,
 }: PropsType) => {
   const [returnHub, setReturnHub]: [HubType] = useState();
 
@@ -53,11 +56,18 @@ const RentalCarDetailScreen = ({
   const handleShowPickupLoc = () => {};
   const handleShowReturnLoc = () => {};
 
-  const goToCheckOut = () => {};
+  const goToCheckOut = () => {
+    if (!returnHub) return;
+
+    setPickOffHub(returnHub);
+
+    navigation.navigate('RentBookingReview');
+  };
 
   const onSelectReturnHub = () => {
     navigation.navigate('SelectMapScreen', {
       callback(hub) {
+        console.log(hub);
         setReturnHub(hub);
         navigation.pop();
       },
@@ -184,9 +194,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(state => ({
-  carList: state.car.data,
-  loading: state.car.loading,
-  id: state.car.selectedCar,
-  rentalSearch: state.car.rentalSearch,
-}))(RentalCarDetailScreen);
+export default connect(
+  state => ({
+    carList: state.car.data,
+    loading: state.car.loading,
+    id: state.car.selectedCar,
+    rentalSearch: state.car.rentalSearch,
+  }),
+  { setPickOffHub }
+)(RentalCarDetailScreen);

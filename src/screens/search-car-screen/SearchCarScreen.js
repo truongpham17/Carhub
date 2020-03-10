@@ -85,6 +85,7 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
       <Button
         label="Search"
         onPress={onSearchPress}
+        style={{ marginBottom: scaleVer(16) }}
         // disable={!(startLocation && endLocation)}
       />
     </ViewContainer>

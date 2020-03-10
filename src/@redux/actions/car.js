@@ -6,6 +6,7 @@ import {
   GET_CAR_SUCCESS,
   SET_RENTAL_SEARCH,
   SET_SELECTED_CAR,
+  SET_PICK_OFF_HUB,
 } from '../constants/car';
 
 export function getCarList(_, callback = INITIAL_CALLBACK) {
@@ -47,5 +48,12 @@ export function setSelectedCar(_id) {
   return {
     type: SET_SELECTED_CAR,
     payload: _id,
+  };
+}
+
+export function setPickOffHub(hub) {
+  return {
+    type: SET_PICK_OFF_HUB,
+    payload: hub,
   };
 }

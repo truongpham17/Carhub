@@ -10,6 +10,8 @@ import DownArrow from './DownArrow';
 import Error from './Error';
 import RightArrow from './RightArrow';
 import MarkerIcon from './MarkerIcon';
+import Tick from './Tick';
+import SecurityDraw from './SecurityDraw';
 
 export {
   RemoveIcon,
@@ -24,6 +26,8 @@ export {
   Error,
   RightArrow,
   MarkerIcon,
+  Tick,
+  SecurityDraw,
 };
 
 export function getSvg(svg) {

@@ -2,6 +2,9 @@ import {
   SIGN_IN_FAILURE,
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
+  ADD_LICENSE_REQUEST,
+  ADD_LICENSE_SUCCESS,
+  ADD_LICENSE_FAILURE,
 } from '../constants/user';
 
 const INITIAL_STATE = {
@@ -10,6 +13,8 @@ const INITIAL_STATE = {
   role: '',
   isActive: false,
   loading: false,
+  license: null,
+  loadingLicense: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -20,6 +25,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...action.payload, loading: false };
     case SIGN_IN_FAILURE:
       return { ...state, loading: false };
+    case ADD_LICENSE_REQUEST:
+      return { ...state, loadingLicense: true };
+    case ADD_LICENSE_SUCCESS:
+      return { ...state, license: action.payload, loadingLicense: false };
+    case ADD_LICENSE_FAILURE:
+      return { ...state, loadingLicense: false };
     default:
       return { ...state };
   }

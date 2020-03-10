@@ -41,6 +41,22 @@
 	<string>We need to access your location to hack your account</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need access your location to hack your account</string>
+	<key>NSCameraUsageDescription</key>
+<string>Your own description of the purpose</string>
+
+<!-- Required with iOS 11 and higher: include this only if you are planning to use the camera roll -->
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>Your message to user when the photo library is accessed for the first time</string>
+
+<!-- Include this only if you are planning to use the camera roll -->
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Your message to user when the photo library is accessed for the first time</string>
+
+<!-- Include this only if you are planning to use the microphone for video recording -->
+<key>NSMicrophoneUsageDescription</key>
+<string>Your message to user when the microphone is accessed for the first time</string>
+
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>HelveticaNeue-Bold.otf</string>
