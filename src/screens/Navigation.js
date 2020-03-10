@@ -11,14 +11,16 @@ import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
-import RequestListScreen from './request-list-screen/RequestListScreen';
-import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
+// import RequestListScreen from './request-list-screen/RequestListScreen';
+// import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
 import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 import AuthScreen from './auth-screen/AuthScreen';
 import SignInScreen from './sign-in-screen/SignInScreen';
 import RentBookingReview from './rent-booking-review/RentBookingReview';
 import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
 import LicenseScreen from './license-screen/LicenseScreen';
+import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
+import HistoryScreen from './history-screen/HistoryScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -92,5 +94,14 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-const App = createAppContainer(AppNavigation);
+const scanScreen = createStackNavigator(
+  {
+    HistoryScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
+const App = createAppContainer(scanScreen);
 export default App;
