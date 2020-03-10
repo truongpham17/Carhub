@@ -16,21 +16,9 @@ export function getHubList(_, callback = INITIAL_CALLBACK) {
       });
 
       if (result.status === STATUS.OK) {
-        console.log(result.data);
-        const hubs = result.data.hubs.map(hub => {
-          const geo = hub.geoLocation.split(',');
-          return {
-            ...hub,
-            geometry: {
-              lat: Number(geo[0]),
-              lng: Number(geo[1]),
-            },
-          };
-        });
-
         dispatch({
           type: GET_HUB_SUCCESS,
-          payload: { hubs, total: result.data.total },
+          payload: { hubs: result.data.hubs, total: result.data.total },
         });
         callback.onSuccess();
       } else {
