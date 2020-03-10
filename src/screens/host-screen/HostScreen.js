@@ -42,12 +42,15 @@ const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
   const handleAddImage = () => {
     selectImage(image => setImages([...images, image]));
   };
+  const handleRemoveImage = uri => {
+    setImages(images => images.filter(image => image !== uri));
+  };
   const onPressBack = () => {
     navigation.pop();
   };
   const handleNextStep = () => {
     checkCarByVin(
-      { vin, usingYears, odometers, images },
+      { vin, usingYears, odometers, images: images.filter((_, i) => i > 0) },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
         onFailure: () => {},
@@ -93,7 +96,11 @@ const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
       />
       <View style={{ flexDirection: 'row' }}>
         {images.map((item, index) => (
-          <ImageSelector data={item} onAddPress={handleAddImage} />
+          <ImageSelector
+            data={item}
+            onAddPress={handleAddImage}
+            onRemovePress={handleRemoveImage}
+          />
         ))}
       </View>
       <TouchableOpacity

@@ -1,5 +1,6 @@
 import { query } from 'services/api';
 import { METHODS } from 'Constants/api';
+import axios from 'axios';
 
 export const GET_VIN_CAR_REQUEST = 'get-vin-car-request';
 export const GET_VIN_CAR_SUCCESS = 'get-vin-car-success';
@@ -7,20 +8,22 @@ export const GET_VIN_CAR_FAILURE = 'get-vin-car-failure';
 
 export const checkCarByVin = (car, callback) => async dispatch => {
   try {
-    // dispatch({ type: GET_VIN_CAR_REQUEST });
-    // const data = await query({
-    //   // endpoint: `http://api.carmd.com/v3.0/decode?vin=${car.vin}`,
-    //   endpoint: `http://api.carmd.com/v3.0/decode?vin=1GNALDEK9FZ108495`,
-    //   headers: {
-    //     authorization: 'Basic Yjc4NTY0NjctYWIwZC00MjY0LWI3NTktNjdhYmI0ZDM1ZmE4',
-    //     'partner-token': 'ac3a64c3a9804e389479839cfda3d42b',
-    //   },
-    //   method: METHODS.get,
-    //   API_URL: '',
-    // });
+    dispatch({ type: GET_VIN_CAR_REQUEST });
+    const result = await axios({
+      // url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${car.vin}?format=json`,
+      url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/SAJWA1C78D8V38055?format=json`,
+    });
+    const valueData = [];
+    const codes = [24, 26, 27, 28, 29, 39, 75];
+    codes.forEach(code => {
+      const item = result.data.Results.find(data => data.VariableId === code);
+      if (item) {
+        valueData.push({ key: item.Variable, value: item.Value });
+      }
+    });
     dispatch({
       type: GET_VIN_CAR_SUCCESS,
-      payload: { ...car },
+      payload: { ...car, valueData },
     });
     callback.onSuccess();
     // console.log(data.data);

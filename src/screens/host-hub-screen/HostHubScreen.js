@@ -68,10 +68,18 @@ const HostHubScreen = ({
       <InputForm
         label="Select hub address"
         placeholder="Enter location..."
-        value={address}
+        value={address.address}
         onChangeText={handleChangeAddress}
         containerStyle={{ marginVertical: scaleVer(32) }}
-        onTextFocus={() => navigation.navigate('SelectMapScreen')}
+        onTextFocus={() =>
+          navigation.navigate('SelectMapScreen', {
+            callback(location) {
+              setAddress(location);
+              navigation.pop(1);
+            },
+            type: 'hub',
+          })
+        }
       />
       <DatePicker
         startDate={startDate}

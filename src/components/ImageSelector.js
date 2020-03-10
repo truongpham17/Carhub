@@ -13,6 +13,7 @@ import { Remove, AddImage } from 'Assets/svgs';
 import { shadowStyle } from 'Constants';
 import { textStyleObject } from 'Constants/textStyles';
 import colors from 'Constants/colors';
+import { defaultFunction } from 'Utils/common';
 
 type PropTypes = {
   style: StyleProp<ViewStyle>,
@@ -24,11 +25,11 @@ type PropTypes = {
 const ImageSelector = ({
   style,
   data,
-  onRemovePress,
+  onRemovePress = defaultFunction,
   onAddPress,
 }: PropTypes) => {
   const handleRemovePress = () => {
-    onRemovePress(data.key);
+    onRemovePress(data);
   };
   if (!data) {
     return (
@@ -43,11 +44,7 @@ const ImageSelector = ({
   return (
     <View style={[styles.container, style]}>
       <View style={styles.img}>
-        <Image
-          source={{ uri: data.uri }}
-          style={{ flex: 1 }}
-          resizeMode="cover"
-        />
+        <Image source={{ uri: data }} style={{ flex: 1 }} resizeMode="cover" />
       </View>
 
       <TouchableOpacity style={styles.remove} onPress={handleRemovePress}>
