@@ -16,11 +16,11 @@ const CarItem = ({ data }: PropTypes) => {
   const handleCarDetail = () => {};
   return (
     <View style={styles.container}>
-      {/* <Image
-      source={{ uri: data.carModel.images[0] }}
-      resizeMode="cover"
-      style={styles.image}
-    /> */}
+      <Image
+        source={{ uri: data.images[0] }}
+        resizeMode="cover"
+        style={styles.image}
+      />
       <TouchableOpacity
         style={styles.contentContainer}
         onPress={handleCarDetail}

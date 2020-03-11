@@ -74,15 +74,15 @@ const HostScreen = ({
     );
   };
   const handlePreviousCar = () => {
-    // getCustomerCarList(
-    //   { id: user._id },
-    //   {
-    //     onSuccess: () => navigation.navigate('HostListCarScreen'),
-    //     onFailure: () => {
-    //       console.log('error');
-    //     },
-    //   }
-    // );
+    getCustomerCarList(
+      { id: user._id },
+      {
+        onSuccess: () => navigation.navigate('HostListCarScreen'),
+        onFailure: () => {
+          console.log('error');
+        },
+      }
+    );
   };
   const handleScan = () => {};
   return (
