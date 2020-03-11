@@ -31,7 +31,7 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
         <View style={[styles.itemContainer, styles.firstItem]}>
           <View style={styles.inforContainer}>
             <Text style={textStyle.widgetItem}>
-              {rentDetail.car.carModel.name || 'Camry'}
+              {rentDetail.carModel.name || 'Camry'}
             </Text>
             <Text
               style={[
@@ -39,7 +39,7 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
                 { marginBottom: scaleHor(10), color: colors.dark40 },
               ]}
             >
-              {rentDetail.car.carModel.type}
+              {rentDetail.carModel.type}
             </Text>
             <Text style={[textStyle.bodyText, { color: colors.success }]}>
               {startDateFormat} - {endDateFormat}
@@ -54,7 +54,7 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
         <View style={[styles.itemContainer, styles.secondItem]}>
           <Image
             source={{
-              uri: rentDetail.car.images[0],
+              uri: rentDetail.carModel.images[0],
             }}
             resizeMode="center"
             style={styles.imgContainer}

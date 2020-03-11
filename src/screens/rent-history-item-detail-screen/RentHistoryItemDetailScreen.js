@@ -8,6 +8,7 @@ import moment from 'moment';
 import { subtractDate } from 'Utils/common';
 import { getSpecificRental } from '@redux/actions/rentItemDetail';
 import PriceSelectModal from './PriceSelectModal';
+import QRCodeGenModal from './QRCodeGenModal';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -29,31 +30,39 @@ const RentHistoryItemDetailScreen = ({
   const duration = subtractDate(rentDetail.startDate, rentDetail.endDate);
   const daysleft = subtractDate(new Date(), rentDetail.endDate);
   const showAttr = [
-    { value: rentDetail.car.carModel.name, label: 'Name' },
+    { value: rentDetail.carModel.name, label: 'Name' },
     { value: startDateFormat, label: 'Date Of Hire' },
     { value: `${duration} days`, label: 'Duration' },
     { value: `${rentDetail.price} $`, label: 'Price Per Day' },
     { value: `${rentDetail.totalCost} $`, label: 'Total' },
-    { value: rentDetail.pickupHub.name, label: 'Store' },
+    { value: 'rentDetail.pickupHub.name', label: 'Store' },
     { value: daysleft, label: 'Days left' },
     { value: rentDetail.status, label: 'Status' },
   ];
+  const maximumValue = daysleft >= 3 ? daysleft * rentDetail.price : 10;
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [priceModalVisible, setPriceModalVisible] = useState(false);
+  const [returnModalVisible, setReturnModalVisible] = useState(false);
 
   // const { data } = rentDetail;
   const onBackPress = () => {
     navigation.pop();
   };
 
-  const handleReturn = () => {};
-
-  const onShowModal = () => {
-    setModalVisible(true);
+  const handleReturn = () => {
+    setReturnModalVisible(true);
   };
 
-  const onCloseModal = () => {
-    setModalVisible(false);
+  const onShowPriceModal = () => {
+    setPriceModalVisible(true);
+  };
+
+  const onCloseReturnModal = () => {
+    setReturnModalVisible(false);
+  };
+
+  const onClosePriceModal = () => {
+    setPriceModalVisible(false);
   };
 
   const handleSubmitSharing = value => {
@@ -66,9 +75,12 @@ const RentHistoryItemDetailScreen = ({
       title="Detail"
       onBackPress={onBackPress}
       scrollable
+      style={{ paddingBottom: scaleVer(16) }}
     >
       <Image
-        source={{ uri: rentDetail.car.images[0] }}
+        source={{
+          uri: rentDetail.carModel.images[0],
+        }}
         style={styles.imageContainer}
         resizeMode="stretch"
       />
@@ -83,15 +95,25 @@ const RentHistoryItemDetailScreen = ({
         />
       ))}
       <Button label="RETURN" onPress={handleReturn} style={styles.button} />
-      <Button
-        label="SHARE TO OTHER"
-        onPress={onShowModal}
-        style={styles.button}
+      <QRCodeGenModal
+        itemID={rentDetail._id}
+        visible={returnModalVisible}
+        onClose={onCloseReturnModal}
       />
+      {daysleft >= 3 && rentDetail.status === 'CURRENT' && (
+        <Button
+          label="SHARE TO OTHER"
+          onPress={onShowPriceModal}
+          style={styles.button}
+        />
+      )}
       <PriceSelectModal
-        visible={modalVisible}
-        onClose={onCloseModal}
+        visible={priceModalVisible}
+        onClose={onClosePriceModal}
         onSubmit={handleSubmitSharing}
+        suggestCost={maximumValue * 0.6}
+        maximumCost={maximumValue}
+        minimumCost={maximumValue * 0.3}
       />
     </ViewContainer>
   );

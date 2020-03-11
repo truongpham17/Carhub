@@ -2,8 +2,8 @@
  * @dev
  */
 // truong
-// export const API_URL = 'http://192.168.1.33:5068/';
-export const API_URL = 'http://192.168.1.11:5068/';
+export const API_URL = 'http://192.168.1.33:5068/';
+// export const API_URL = 'http://192.168.1.11:5068/';
 
 export const GOOGLE_KEY = 'AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y';
 

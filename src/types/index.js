@@ -11,7 +11,7 @@ export type RentDetailType = {
   totalCost: Number,
   description: String,
   _id: String,
-  car: CarType,
+  carModel: CarModel,
   pickupHub: HubType,
   status: String,
   type: String,
@@ -104,6 +104,8 @@ export type CarModel = {
   fuelType: String,
   name: String,
   numberOfSeat: Number,
-  numberOfBag: Number,
   type: String,
+  price: Number,
+  description: String,
+  images: [String],
 };
