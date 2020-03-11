@@ -119,14 +119,14 @@ const HostReviewScreen = ({
 
     // addLease(
     //   {
-    //     odometers: car.odometers,
+    //     odometer: car.odometers,
     //     images: snapshot.downloadURL,
     //     startDate: hub.startDate,
     //     endDate: hub.endDate,
     //     name: `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`,
     //     VIN: car.vin,
-    //     customerID: user._id,
-    //     hubID: hub._id,
+    //     customer: user._id,
+    //     hub: hub._id,
     //   },
     //   {
     //     onSuccess: () => navigation.navigate('HostScreen'),

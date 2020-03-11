@@ -6,7 +6,7 @@ export const ADD_LEASE_SUCCESS = 'add-lease-success';
 export const ADD_LEASE_FAILURE = 'add-lease-failure';
 
 export const addLease = (
-  { odometers, images, startDate, endDate, name, VIN, customerID, hubID },
+  { odometer, images, startDate, endDate, name, VIN, customer, hub },
   callback
 ) => async dispatch => {
   try {
@@ -14,20 +14,20 @@ export const addLease = (
     const carModel = await query({
       endpoint: 'carModel',
       method: METHODS.post,
-      data: { name, VIN },
+      data: { name },
     });
 
     if (carModel.status === 201) {
       const car = await query({
         endpoint: 'car',
         method: METHODS.post,
-        data: { customerID, hubID, odometers, images },
+        data: { customer, hub, odometer, images, VIN, carModel: carModel._id },
       });
       if (car.status === 201) {
         const lease = await query({
           endpoint: 'lease',
           method: METHODS.post,
-          data: { customerID, hubID, startDate, endDate },
+          data: { customer, hub, startDate, endDate, car: car._id },
         });
         if (lease.status === 201) {
           dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
