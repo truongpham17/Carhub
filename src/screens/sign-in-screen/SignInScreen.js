@@ -28,7 +28,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
       url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/1GNALDEK9FZ108495?format=json`,
     });
 
-    console.log(result.data);
+    // console.log(result.data);
     const valueData = [];
     const codes = [24, 26, 27, 28, 29, 39, 75];
 
@@ -39,7 +39,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
       }
     });
 
-    console.log(valueData);
+    // console.log(valueData);
   };
 
   const onChangeUserName = username => {
@@ -51,7 +51,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   };
 
   const handleUserLogin = () => {
-    console.log('come here');
+    // console.log('come here');
     signIn(
       { username, password },
       {

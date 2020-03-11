@@ -16,6 +16,7 @@ import DatePicker from './DatePicker';
 import SelectMapInput from './SelectMapInput';
 import ProgressStep from './ProgressStep';
 import MapAutoCompleteSearch from './MapAutoCompleteSearch';
+import ButtonGroup from './ButtonGroup';
 
 export {
   AppGradient,
@@ -36,4 +37,5 @@ export {
   SelectMapInput,
   MapAutoCompleteSearch,
   ProgressStep,
+  ButtonGroup,
 };

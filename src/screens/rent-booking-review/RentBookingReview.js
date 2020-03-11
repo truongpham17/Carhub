@@ -69,7 +69,7 @@ const RentBookingReview = ({
         },
         {
           onSuccess() {
-            console.log('come here!!!!');
+            // console.log('come here!!!!');
             // navigation.navigate('SuccessBookingRental');
             addRentRequest(
               {
