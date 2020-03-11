@@ -9,3 +9,7 @@ export const SET_PICK_OFF_HUB = 'set-pick-off-hub';
 export const ADD_RENTAL_REQUEST = 'add-rental-request';
 export const ADD_RENTAL_SUCCESS = 'add-rental-success';
 export const ADD_RENTAL_FAILURE = 'add-rental-failure';
+
+export const SEARCH_CAR_MODEL_REQUEST = 'search-car-request';
+export const SEARCH_CAR_MODEL_FAILURE = 'search-car-failure';
+export const SEARCH_CAR_MODEL_SUCCESS = 'search-car-success';
