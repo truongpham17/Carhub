@@ -4,21 +4,18 @@ export type NavigationType = {
   goBack: () => void,
 };
 export type RentDetailType = {
-  id: String,
-  data: {
-    image: String,
-    name: String,
-    type: String,
-    dateOfHire: Date,
-    dateDropOff: Date,
-    duration: String,
-    pricePerDay: Number,
-    total: Number,
-    store: String,
-    daysleft: Number,
-    isSharing: Boolean,
-    status: 'Current' | 'Waiting' | 'Overdue',
-  },
+  leaser: UserType,
+  startDate: Date,
+  endDate: Date,
+  price: Number,
+  totalCost: Number,
+  description: String,
+  _id: String,
+  car: CarType,
+  pickupHub: HubType,
+  status: String,
+  type: String,
+  __v: 0,
 };
 export type RentailCarDetailType = {
   id: String,

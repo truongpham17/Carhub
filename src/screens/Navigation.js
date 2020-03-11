@@ -3,7 +3,7 @@ import {
   createAppContainer,
   createBottomTabNavigator,
   createStackNavigator,
-  createDrawerNavigator,
+  // createDrawerNavigator,
 } from 'react-navigation';
 import { Tabbar } from 'Components';
 import { TestScreen } from './test';
@@ -22,6 +22,7 @@ import LicenseScreen from './license-screen/LicenseScreen';
 // import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
 import HistoryScreen from './history-screen/HistoryScreen';
 import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
+import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -51,7 +52,8 @@ const LeaseStack = createStackNavigator(
 );
 const HistoryStack = createStackNavigator(
   {
-    TestScreen,
+    HistoryScreen,
+    RentHistoryItemDetailScreen,
   },
   {
     headerMode: 'none',
@@ -96,14 +98,14 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-const scanScreen = createStackNavigator(
-  {
-    HistoryScreen,
-  },
-  {
-    headerMode: 'none',
-  }
-);
+// const scanScreen = createStackNavigator(
+//   {
+//     HistoryScreen,
+//   },
+//   {
+//     headerMode: 'none',
+//   }
+// );
 
-const App = createAppContainer(scanScreen);
+const App = createAppContainer(AppNavigation);
 export default App;

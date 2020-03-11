@@ -7,6 +7,7 @@ import rentalsList from './rentalsList';
 import hub from './hub';
 import car from './car';
 import payment from './payment';
+import rentItemDetail from './rentItemDetail';
 
 export default combineReducers({
   user,
@@ -17,4 +18,5 @@ export default combineReducers({
   hub,
   car,
   payment,
+  rentItemDetail,
 });

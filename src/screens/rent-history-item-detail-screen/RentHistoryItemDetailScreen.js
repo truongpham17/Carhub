@@ -1,31 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import { ViewContainer, ListItem, Button } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
 import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
+import moment from 'moment';
+import { subtractDate } from 'Utils/common';
+import { getSpecificRental } from '@redux/actions/rentItemDetail';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
   navigation: NavigationType,
   rentDetail: RentDetailType,
+  getSpecificRental: () => void,
 };
 
-const showAttr = [
-  { att: 'name', label: 'Name' },
-  { att: 'dateOfHire', label: 'Date Of Hire' },
-  { att: 'duration', label: 'Duration' },
-  { att: 'pricePerDay', label: 'Price Per Day' },
-  { att: 'total', label: 'Total' },
-  { att: 'store', label: 'Store' },
-  { att: 'daysleft', label: 'Days left' },
-  { att: 'status', label: 'Status' },
-];
+const RentHistoryItemDetailScreen = ({
+  navigation,
+  rentDetail,
+  getSpecificRental,
+}: PropTypes) => {
+  useEffect(() => {
+    const id = navigation.getParam('itemID', '');
+    getSpecificRental({ id });
+    // console.log('Getting data!!!');
+  }, []);
+  const startDateFormat = moment(rentDetail.startDate).format('D MMMM, YYYY');
+  const duration = subtractDate(rentDetail.startDate, rentDetail.endDate);
+  const daysleft = subtractDate(new Date(), rentDetail.endDate);
+  const showAttr = [
+    { value: rentDetail.car.carModel.name, label: 'Name' },
+    { value: startDateFormat, label: 'Date Of Hire' },
+    { value: `${duration} days`, label: 'Duration' },
+    { value: `${rentDetail.price} $`, label: 'Price Per Day' },
+    { value: `${rentDetail.totalCost} $`, label: 'Total' },
+    { value: rentDetail.pickupHub.name, label: 'Store' },
+    { value: daysleft, label: 'Days left' },
+    { value: rentDetail.status, label: 'Status' },
+  ];
 
-const RentHistoryItemDetailScreen = ({ navigation, rentDetail }: PropTypes) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { data } = rentDetail;
+  // const { data } = rentDetail;
   const onBackPress = () => {
     navigation.pop();
   };
@@ -52,15 +68,15 @@ const RentHistoryItemDetailScreen = ({ navigation, rentDetail }: PropTypes) => {
       scrollable
     >
       <Image
-        source={{ uri: rentDetail.data.image }}
+        source={{ uri: rentDetail.car.images[0] }}
         style={styles.imageContainer}
         resizeMode="stretch"
       />
       {showAttr.map((item, index) => (
         <ListItem
-          key={item.att}
+          key={index.toString()}
           label={item.label}
-          detail={data[item.att]}
+          detail={item.value}
           type="detail"
           pressable={false}
           showSeparator={index !== showAttr.length - 1}
@@ -91,6 +107,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(state => ({
-  rentDetail: state.rentDetail,
-}))(RentHistoryItemDetailScreen);
+export default connect(
+  state => ({
+    rentDetail: state.rentItemDetail.data,
+  }),
+  { getSpecificRental }
+)(RentHistoryItemDetailScreen);

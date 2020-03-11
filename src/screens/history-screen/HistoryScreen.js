@@ -53,10 +53,10 @@ const HistoryScreen = ({ navigation }: PropTypes) => {
         ref={ref => (viewPagerRef.current = ref)}
       >
         <View key="1" style={{ paddingHorizontal: scaleHor(24) }}>
-          <RentHistoryScreen />
+          <RentHistoryScreen navigation={navigation} />
         </View>
         <View key="2" style={{ paddingHorizontal: scaleHor(24) }}>
-          <RentHistoryScreen />
+          <RentHistoryScreen navigation={navigation} />
         </View>
       </ViewPager>
     </ViewContainer>

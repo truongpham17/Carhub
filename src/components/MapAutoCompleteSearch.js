@@ -37,7 +37,7 @@ const MapAutoCompleteSearch = ({
   }, []);
 
   const onSelect = (data, details) => {
-    console.log(data);
+    // console.log(data);
     if (data.description === SELECT_ON_MAPS) {
       return onRequestMap();
     }

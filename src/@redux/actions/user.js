@@ -16,7 +16,7 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
       const result = await query({
         endpoint: 'account/login',
         method: METHODS.post,
-        data: { username: 'customer', password: '123456' },
+        data: { username: 'dat123456', password: '123456' },
       });
       if (result.status === STATUS.OK) {
         dispatch({ type: SIGN_IN_SUCCESS, payload: result.data });
