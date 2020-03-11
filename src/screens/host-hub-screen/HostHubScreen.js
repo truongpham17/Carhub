@@ -13,26 +13,43 @@ import { NavigationType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
+import { checkHostHubInfo } from '@redux/actions/lease';
 
 type PropTypes = () => {
   navigation: NavigationType,
+  checkHostHubInfo: () => void,
+  loading: Boolean,
 };
 
-const HostHubScreen = ({ navigation }: PropTypes) => {
+const HostHubScreen = ({
+  checkHostHubInfo,
+  loading,
+  navigation,
+}: PropTypes) => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [cardNumber, setCardNumber] = useState('');
+  const [selectedHub, setSelectedHub] = useState('');
+
   const onPressBack = () => {
     navigation.pop();
   };
   const handleNextStep = () => {
+    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub });
     navigation.navigate('HostReviewScreen');
   };
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
       setStartDate(date);
     } else {
       setEndDate(date);
     }
+  };
+  const handleChangeCardNumber = cardNumber => {
+    setCardNumber(cardNumber);
+  };
+  const handleChangeAddress = selectedHub => {
+    setSelectedHub(selectedHub);
   };
 
   return (
@@ -41,11 +58,23 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
+      loading={loading}
     >
       <InputForm
         label="Select hub address"
         placeholder="Enter location..."
+        value={selectedHub.address}
+        onChangeText={handleChangeAddress}
         containerStyle={{ marginVertical: scaleVer(32) }}
+        onTextFocus={() =>
+          navigation.navigate('SelectMapScreen', {
+            callback(hub) {
+              setSelectedHub(hub);
+              navigation.pop(1);
+            },
+            type: 'hub',
+          })
+        }
       />
       <DatePicker
         startDate={startDate}
@@ -57,6 +86,8 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
       </Text>
       <InputForm
         label="CARD NUMBER"
+        value={cardNumber}
+        onChangeText={handleChangeCardNumber}
         containerStyle={{ marginVertical: scaleVer(32) }}
       />
       <Button
@@ -68,4 +99,10 @@ const HostHubScreen = ({ navigation }: PropTypes) => {
   );
 };
 
-export default HostHubScreen;
+export default connect(
+  state => ({
+    hub: state.leaseRequest.hub,
+    loading: state.leaseRequest.loading,
+  }),
+  { checkHostHubInfo }
+)(HostHubScreen);
