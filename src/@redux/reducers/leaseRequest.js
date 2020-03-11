@@ -2,26 +2,25 @@ import {
   GET_VIN_CAR_REQUEST,
   GET_VIN_CAR_SUCCESS,
   GET_VIN_CAR_FAILURE,
-} from '@redux/actions/hostCarModel';
-
-import {
-  GET_HOST_HUB_INFO_REQUEST,
-  GET_HOST_HUB_INFO_SUCCESS,
-  GET_HOST_HUB_INFO_FAILURE,
-} from '@redux/actions/hostHubInfo';
-
-import {
   ADD_LEASE_REQUEST,
   ADD_LEASE_SUCCESS,
   ADD_LEASE_FAILURE,
-} from '@redux/actions/hostReview';
+  GET_HOST_HUB_INFO_SUCCESS,
+  GET_LEASE_CAR_FAILURE,
+  GET_LEASE_CAR_SUCCESS,
+  GET_LEASE_CAR_REQUEST,
+} from '../actions/lease';
 
 const INITIAL_STATE = {
   car: {},
-  hub: {},
+  list: [],
   review: {},
   error: null,
   loading: false,
+  startDate: null,
+  endDate: null,
+  cardNumber: null,
+  selectedHub: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -37,12 +36,9 @@ export default (state = INITIAL_STATE, action) => {
     case GET_VIN_CAR_REQUEST:
       return { ...state, loading: true };
     case GET_HOST_HUB_INFO_SUCCESS:
-      return { ...state, hub: action.payload, loading: false };
-    case GET_HOST_HUB_INFO_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, ...action.payload, loading: false };
     case ADD_LEASE_SUCCESS:
       return {
-        ...state,
         loading: false,
       };
     case ADD_LEASE_FAILURE:
@@ -52,6 +48,16 @@ export default (state = INITIAL_STATE, action) => {
         error: action.payload,
       };
     case ADD_LEASE_REQUEST:
+      return { ...state, loading: true };
+    case GET_LEASE_CAR_SUCCESS:
+      return { ...state, list: action.payload, loading: false };
+    case GET_LEASE_CAR_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_LEASE_CAR_REQUEST:
       return { ...state, loading: true };
     default:
       return { ...state };

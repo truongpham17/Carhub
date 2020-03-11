@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { connect } from 'react-redux';
 import {
   ViewContainer,
@@ -9,22 +15,30 @@ import {
   ImageSelector,
 } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
+import { NavigationType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
-import { checkCarByVin } from '@redux/actions/hostCarModel';
+import { checkCarByVin, getCustomerCarList } from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Seperator from './Seperator';
 import Extra from './Extra';
 
 type PropTypes = {
   checkCarByVin: () => void,
+  getCustomerCarList: () => void,
   navigation: NavigationType,
   loading: Boolean,
+  user: UserType,
 };
 
-const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
+const HostScreen = ({
+  checkCarByVin,
+  navigation,
+  loading,
+  user,
+  getCustomerCarList,
+}: PropTypes) => {
   const [vin, setVin] = useState('');
   const [usingYears, setUsingYears] = useState('');
   const [odometers, setOdometers] = useState('');
@@ -53,12 +67,22 @@ const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
       { vin, usingYears, odometers, images: images.filter((_, i) => i > 0) },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
-        onFailure: () => {},
+        onFailure: () => {
+          console.log('error');
+        },
       }
     );
   };
   const handlePreviousCar = () => {
-    navigation.navigate('HostListCarScreen');
+    // getCustomerCarList(
+    //   { id: user._id },
+    //   {
+    //     onSuccess: () => navigation.navigate('HostListCarScreen'),
+    //     onFailure: () => {
+    //       console.log('error');
+    //     },
+    //   }
+    // );
   };
   const handleScan = () => {};
   return (
@@ -94,7 +118,7 @@ const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
         placeholder="Type odometers..."
         containerStyle={{ marginVertical: scaleVer(16) }}
       />
-      <View style={{ flexDirection: 'row' }}>
+      <ScrollView horizontal>
         {images.map((item, index) => (
           <ImageSelector
             data={item}
@@ -102,7 +126,7 @@ const HostScreen = ({ checkCarByVin, navigation, loading }: PropTypes) => {
             onRemovePress={handleRemoveImage}
           />
         ))}
-      </View>
+      </ScrollView>
       <TouchableOpacity
         style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
         onPress={handlePreviousCar}
@@ -128,6 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...shadowStyle.ELEVATION_3,
     backgroundColor: colors.white,
+    marginVertical: scaleVer(15),
   },
 });
 
@@ -135,6 +160,7 @@ export default connect(
   state => ({
     car: state.leaseRequest.car,
     loading: state.leaseRequest.loading,
+    user: state.user,
   }),
-  { checkCarByVin }
+  { checkCarByVin, getCustomerCarList }
 )(HostScreen);

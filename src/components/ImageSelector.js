@@ -36,7 +36,7 @@ const ImageSelector = ({
       <View style={[styles.container, style]}>
         <TouchableOpacity style={styles.empty} onPress={onAddPress}>
           <AddImage />
-          <Text style={styles.text}>THÊM HÌNH</Text>
+          <Text style={styles.text}>ADD IMAGES</Text>
         </TouchableOpacity>
       </View>
     );

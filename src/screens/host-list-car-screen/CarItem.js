@@ -5,62 +5,35 @@ import { Rating, Icon } from 'react-native-elements';
 import { getSvg } from 'Assets/svgs';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
+import { NavigationType, CarType, UserType } from 'types';
 import { shadowStyle } from 'Constants';
 
 type PropTypes = {
-  image: string,
-  name: string,
-  type: string,
-  rating: number,
-  configs: [
-    {
-      icon: string,
-      type: string,
-      value: string,
-    }
-  ],
+  data: CarType,
 };
 
-const ConfigItem = ({ icon, value }) => (
-  <View style={styles.item}>
-    <Icon
-      type="feather"
-      name={icon}
-      containerStyle={{ marginEnd: scaleHor(8) }}
-    />
-    <Text style={[textStyle.bodyText]}>{value}</Text>
-  </View>
-);
-
-const CarItem = ({ image, name, type, rating, configs }: PropTypes) => (
-  <View style={styles.container}>
-    <Image source={{ uri: image }} resizeMode="cover" style={styles.image} />
-    <TouchableOpacity style={styles.contentContainer}>
-      <View style={styles.title}>
-        <View>
-          <Text style={textStyle.widgetItem}>{name}</Text>
-          <Text style={textStyle.label}>{type}</Text>
+const CarItem = ({ data }: PropTypes) => {
+  const handleCarDetail = () => {};
+  return (
+    <View style={styles.container}>
+      {/* <Image
+      source={{ uri: data.carModel.images[0] }}
+      resizeMode="cover"
+      style={styles.image}
+    /> */}
+      <TouchableOpacity
+        style={styles.contentContainer}
+        onPress={handleCarDetail}
+      >
+        <View style={styles.title}>
+          <View>
+            <Text style={textStyle.widgetItem}>{data.carModel.name}</Text>
+          </View>
         </View>
-        <View style={styles.rating}>
-          <Text style={textStyle.widgetItem}>{rating}</Text>
-
-          <Rating
-            imageSize={20}
-            readonly
-            startingValue={rating}
-            style={{ paddingStart: scaleHor(8) }}
-          />
-        </View>
-      </View>
-
-      <View style={styles.config}>
-        {configs.map(item => (
-          <ConfigItem {...item} />
-        ))}
-      </View>
-    </TouchableOpacity>
-  </View>
-);
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -84,21 +57,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingVertical: scaleVer(12),
     paddingHorizontal: scaleVer(12),
-  },
-  rating: {
-    flexDirection: 'row',
-    // alignItems: 'center',
-  },
-  config: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    flexGrow: 2,
-  },
-  item: {
-    width: '40%',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
 });
 
