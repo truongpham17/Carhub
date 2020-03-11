@@ -129,7 +129,7 @@ android {
 
     defaultConfig {
         applicationId "com.carhub"
-        minSdkVersion rootProject.ext.minSdkVersion
+        minSdkVersion 22
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -186,6 +186,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation "com.google.android.gms:play-services-base:17.1.0"
     implementation "com.google.firebase:firebase-core:17.1.0"
+    implementation "com.google.firebase:firebase-storage:19.1.1"
 
     implementation "com.google.firebase:firebase-auth:17.0.0"
     implementation "com.google.firebase:firebase-database:19.2.0"

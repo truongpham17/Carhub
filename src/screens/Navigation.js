@@ -13,6 +13,10 @@ import SelectMapScreen from './select-map-screen/SelectMapScreen';
 import SelectCarScreen from './select-car-screen/SelectCarScreen';
 // import RequestListScreen from './request-list-screen/RequestListScreen';
 // import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
+import HostScreen from './host-screen/HostScreen';
+import HostReviewScreen from './host-review-screen/HostReviewScreen';
+import HostHubScreen from './host-hub-screen/HostHubScreen';
+import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
 import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 import AuthScreen from './auth-screen/AuthScreen';
 import SignInScreen from './sign-in-screen/SignInScreen';
@@ -44,10 +48,15 @@ const RentalStack = createStackNavigator(
 
 const LeaseStack = createStackNavigator(
   {
-    TestScreen,
+    HostScreen,
+    HostReviewScreen,
+    HostHubScreen,
+    HostListCarScreen,
+    SelectMapScreen,
   },
   {
     headerMode: 'none',
+    initialRouteName: 'HostScreen',
   }
 );
 const HistoryStack = createStackNavigator(
@@ -79,7 +88,7 @@ const MainApp = createBottomTabNavigator(
   },
   {
     tabBarComponent: Tabbar,
-    initialRouteName: 'RentalStack',
+    initialRouteName: 'LeaseStack',
   }
 );
 

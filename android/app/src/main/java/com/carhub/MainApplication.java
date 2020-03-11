@@ -17,6 +17,7 @@ import io.invertase.firebase.analytics.RNFirebaseAnalyticsPackage;
 import io.invertase.firebase.fabric.crashlytics.RNFirebaseCrashlyticsPackage;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -37,6 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           packages.add(new RNFirebaseAnalyticsPackage());
           packages.add(new RNFirebaseCrashlyticsPackage());
           packages.add(new RNFirebaseDatabasePackage());
+          packages.add(new RNFirebaseStoragePackage());
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
           return packages;
