@@ -17,6 +17,7 @@ export const getSpecificRental = (
     const result = await query({
       endpoint: `${ENDPOINTS.rental}/${data.id}`,
     });
+    // console.log(result.data);
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_RENTAL_ITEM_SUCCESS, payload: result.data });
       callback.success();

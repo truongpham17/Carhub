@@ -53,11 +53,17 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
         </View>
         <View style={[styles.itemContainer, styles.secondItem]}>
           <Image
+<<<<<<< HEAD
             source={
               {
                 // uri: rentDetail.carModel.images[0],
               }
             }
+=======
+            source={{
+              uri: rentDetail.carModel.images[0],
+            }}
+>>>>>>> ac625ebc59b8657ef4f024000de0b8cb9bd795a7
             resizeMode="center"
             style={styles.imgContainer}
           />

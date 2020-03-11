@@ -10,13 +10,23 @@ type PropType = {
   visible: Boolean,
   onClose: () => void,
   onSubmit: () => void,
+  suggestCost: Number,
+  maximumCost: Number,
+  minimumCost: Number,
 };
 
-const PriceSelectModal = ({ visible, onClose, onSubmit }: PropType) => {
+const PriceSelectModal = ({
+  visible,
+  onClose,
+  onSubmit,
+  suggestCost,
+  maximumCost,
+  minimumCost = 50,
+}: PropType) => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    handleValueChange(100);
+    handleValueChange(suggestCost);
   }, []);
 
   const handleValueChange = val => {
@@ -43,8 +53,8 @@ const PriceSelectModal = ({ visible, onClose, onSubmit }: PropType) => {
           <Slider
             value={value}
             onValueChange={handleValueChange}
-            minimumValue={50}
-            maximumValue={200}
+            minimumValue={minimumCost}
+            maximumValue={maximumCost}
             step={1}
             thumbTintColor={colors.secondary}
             minimumTrackTintColor={colors.secondary}
