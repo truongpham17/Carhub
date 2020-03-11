@@ -6,40 +6,39 @@ import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
-import { getSpecificLease } from '@redux/actions/leaseItemDetail';
-import PriceSelectModal from './PriceSelectModal';
+import { getLease } from '@redux/actions/lease';
 
 type PropTypes = {
   navigation: NavigationType,
   leaseDetail: LeaseDetailType,
-  getSpecificLeasea: () => void,
+  getLease: () => void,
 };
 
 const LeaseHistoryItemDetailScreen = ({
   navigation,
   leaseDetail,
-  getSpecificLease,
+  getLease,
 }: PropTypes) => {
   useEffect(() => {
     const id = navigation.getParam('itemID', '');
-    getSpecificLease({ id });
+    getLease({ id });
     // console.log('Getting data!!!');
   }, []);
   const startDateFormat = moment(leaseDetail.startDate).format('D MMMM, YYYY');
   const endDateFormat = moment(leaseDetail.endDate).format('D MMMM, YYYY');
+  const duration = subtractDate(leaseDetail.startDate, leaseDetail.endDate);
   const daysleft = subtractDate(new Date(), leaseDetail.endDate);
   const showAttr = [
     { value: leaseDetail.car.carModel.name, label: 'Car Name' },
     { value: startDateFormat, label: 'From date' },
     { value: endDateFormat, label: 'To date' },
+    { value: `${duration} days`, label: 'Duration' },
     { value: `${leaseDetail.price} $`, label: 'Price Per Day' },
-    { value: `${leaseDetail.totalCost} $`, label: 'Total' },
-    { value: leaseDetail.pickupHub.name, label: 'Store' },
+    { value: `${leaseDetail.totalEarn} $`, label: 'Total earn' },
+    { value: leaseDetail.hub, label: 'Hub' },
     { value: daysleft, label: 'Days left' },
     { value: leaseDetail.status, label: 'Status' },
   ];
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   // const { data } = leaseDetail;
   const onBackPress = () => {
@@ -47,18 +46,6 @@ const LeaseHistoryItemDetailScreen = ({
   };
 
   const handleReturn = () => {};
-
-  const onShowModal = () => {
-    setModalVisible(true);
-  };
-
-  const onCloseModal = () => {
-    setModalVisible(false);
-  };
-
-  const handleSubmitSharing = value => {
-    console.log(value);
-  };
 
   return (
     <ViewContainer
@@ -83,16 +70,6 @@ const LeaseHistoryItemDetailScreen = ({
         />
       ))}
       <Button label="RETURN" onPress={handleReturn} style={styles.button} />
-      <Button
-        label="SHARE TO OTHER"
-        onPress={onShowModal}
-        style={styles.button}
-      />
-      <PriceSelectModal
-        visible={modalVisible}
-        onClose={onCloseModal}
-        onSubmit={handleSubmitSharing}
-      />
     </ViewContainer>
   );
 };
@@ -109,7 +86,7 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    leaseDetail: state.leaseItemDetail.data,
+    leaseDetail: state.lease.data,
   }),
-  { getSpecificLease }
+  { getLease }
 )(LeaseHistoryItemDetailScreen);
