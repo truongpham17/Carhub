@@ -1,5 +1,10 @@
 import { query } from 'services/api';
-import { METHODS } from 'Constants/api';
+import { METHODS, ENDPOINTS, STATUS, INITIAL_CALLBACK } from 'Constants/api';
+import {
+  GET_LEASE_FAILURE,
+  GET_LEASE_REQUEST,
+  GET_LEASE_SUCCESS,
+} from '@redux/constants/lease';
 
 export const GET_LEASE_CAR_REQUEST = 'get-lease-car-request';
 export const GET_LEASE_CAR_SUCCESS = 'get-lease-car-success';
@@ -21,5 +26,31 @@ export const getCar = () => async dispatch => {
     }
   } catch (error) {
     dispatch({ type: GET_LEASE_CAR_FAILURE, payload: error });
+  }
+};
+
+export const getLeaseList = (
+  data,
+  callback = INITIAL_CALLBACK
+) => async dispatch => {
+  try {
+    dispatch({
+      type: GET_LEASE_REQUEST,
+    });
+    const result = await query({ endpoint: ENDPOINTS.lease });
+    // console.log(result.data);
+    if (result.status === STATUS.OK) {
+      dispatch({ type: GET_LEASE_SUCCESS, payload: result.data });
+      callback.success();
+    } else {
+      dispatch({ type: GET_LEASE_FAILURE });
+      callback.onFailure();
+    }
+  } catch (error) {
+    dispatch({
+      type: GET_LEASE_FAILURE,
+      payload: error,
+    });
+    callback.onFailure();
   }
 };

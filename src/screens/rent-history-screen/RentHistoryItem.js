@@ -11,6 +11,8 @@ import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
 import { RentDetailType } from 'types';
+import { subtractDate } from 'Utils/common';
+import moment from 'moment';
 
 type PropTypes = {
   rentDetail: RentDetailType,
@@ -19,43 +21,49 @@ type PropTypes = {
 
 const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
   const handleOnClick = () => {
-    onGetDetail(rentDetail.id);
+    onGetDetail(rentDetail._id);
   };
+  const startDateFormat = moment(rentDetail.startDate).format('MMM Do, YYYY');
+  const endDateFormat = moment(rentDetail.endDate).format('MMM Do, YYYY');
   return (
     <TouchableWithoutFeedback onPress={handleOnClick}>
       <View style={styles.container}>
         <View style={[styles.itemContainer, styles.firstItem]}>
           <View style={styles.inforContainer}>
-            <Text style={textStyle.widgetItem}>{rentDetail.data.name}</Text>
+            <Text style={textStyle.widgetItem}>
+              {rentDetail.carModel.name || 'Camry'}
+            </Text>
             <Text
               style={[
                 textStyle.label,
                 { marginBottom: scaleHor(10), color: colors.dark40 },
               ]}
             >
-              {rentDetail.data.type}
+              {rentDetail.carModel.type}
             </Text>
             <Text style={[textStyle.bodyText, { color: colors.success }]}>
-              {rentDetail.data.dateOfHire} - {rentDetail.data.dateDropOff}
+              {startDateFormat} - {endDateFormat}
             </Text>
           </View>
           <View style={styles.statusContainer}>
             <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
-              {rentDetail.data.status}
+              {rentDetail.status}
             </Text>
           </View>
         </View>
         <View style={[styles.itemContainer, styles.secondItem]}>
           <Image
-            source={{
-              uri: rentDetail.data.image,
-            }}
+            source={
+              {
+                // uri: rentDetail.carModel.images[0],
+              }
+            }
             resizeMode="center"
             style={styles.imgContainer}
           />
           <View style={styles.dayCount}>
             <Text style={[textStyle.bodyText, { color: colors.white }]}>
-              {rentDetail.data.daysleft} days left
+              {subtractDate(new Date(), rentDetail.endDate)} days left
             </Text>
           </View>
         </View>

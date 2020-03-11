@@ -1,33 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
-import { ViewContainer } from 'Components';
-import { NavigationType, RentDetailType } from 'types';
+// import { ViewContainer } from 'Components';
+import { NavigationType, LeaseDetailType } from 'types';
+import { getLeaseList } from '@redux/actions/lease';
 import { connect } from 'react-redux';
-import HistoryItem from 'Components/HistoryItem';
-// import RentHistoryItem from './RentHistoryItem';
+// import HistoryItem from 'Components/HistoryItem';
+import LeaseHistoryItem from './LeaseHistoryItem';
 
 type PropsType = {
-  rentList: [RentDetailType],
+  leaseList: [LeaseDetailType],
   navigation: NavigationType,
+  getLeaseList: () => void,
 };
 
-const LeaseHistoryScreen = ({ rentList, navigation }: PropsType) => {
+const LeaseHistoryScreen = ({
+  leaseList,
+  navigation,
+  getLeaseList,
+}: PropsType) => {
+  const [refreshing, setRefreshing] = useState(true);
+  useEffect(() => {
+    if (refreshing) {
+      getLeaseList();
+      setRefreshing(false);
+    }
+  }, [refreshing]);
   const onGetDetail = id => {
-    console.log('Get id = ', id);
-    navigation.navigate('RentHistoryItemDetailScreen');
+    navigation.navigate('LeaseHistoryItemDetailScreen', { itemID: id });
   };
+  // console.log(rentList);
   // eslint-disable-next-line react/prop-types
-  // const handleRenderItem = ({ item }) => (
-  //   <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
-  // );
-  const data = ['1', '2', '3', '4'];
+  const handleRenderItem = ({ item }) => (
+    <LeaseHistoryItem leaseDetail={item} onGetDetail={onGetDetail} />
+  );
+  // const data = ['1', '2', '3', '4'];
+  // console.log(rentList);
 
-  const handleRenderItem = () => <HistoryItem />;
+  // const handleRenderItem = () => <HistoryItem />;
 
   const handleKeyExtractor = (item, index) => index.toString();
   return (
     <FlatList
-      data={data}
+      refreshing={refreshing}
+      onRefresh={() => setRefreshing(true)}
+      data={leaseList}
       renderItem={handleRenderItem}
       keyExtractor={handleKeyExtractor}
       showsVerticalScrollIndicator={false}
@@ -35,7 +51,10 @@ const LeaseHistoryScreen = ({ rentList, navigation }: PropsType) => {
   );
 };
 
-export default connect(state => ({
-  rentList: [],
-}))(LeaseHistoryScreen);
+export default connect(
+  state => ({
+    leaseList: state.lease.data.leases,
+  }),
+  { getLeaseList }
+)(LeaseHistoryScreen);
 // export default RentHistoryScreen;
