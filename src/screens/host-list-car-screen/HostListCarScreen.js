@@ -9,166 +9,21 @@ import {
 import { connect } from 'react-redux';
 import { ViewContainer, InputForm, ListItem, Button } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
+import { NavigationType, CarType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import { SearchBar, Icon } from 'react-native-elements';
+
+import { checkCarByVin, getCustomerCarList } from '@redux/actions/lease';
 import CarItem from './CarItem';
 
 type PropTypes = () => {
   navigation: NavigationType,
+  list: [CarType],
 };
 
-const data = [
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-];
-
-const HostListCarScreen = ({ navigation }: PropTypes) => {
+const HostListCarScreen = ({ navigation, list }: PropTypes) => {
   const onPressBack = () => {
     navigation.pop();
   };
@@ -176,7 +31,7 @@ const HostListCarScreen = ({ navigation }: PropTypes) => {
   const clearSearch = () => {};
 
   const keyExtractor = (item, index) => index;
-  const renderItem = ({ item, index }) => <CarItem {...item} />;
+  const renderItem = ({ item, index }) => <CarItem data={item} />;
 
   return (
     <ViewContainer haveBackHeader title="Car list" onBackPress={onPressBack}>
@@ -189,7 +44,7 @@ const HostListCarScreen = ({ navigation }: PropTypes) => {
         placeholder="Car name..."
       />
       <FlatList
-        data={data}
+        data={list}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
@@ -209,4 +64,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HostListCarScreen;
+export default connect(
+  state => ({
+    list: state.leaseRequest.list,
+    loading: state.leaseRequest.loading,
+    user: state.user,
+  }),
+  { checkCarByVin, getCustomerCarList }
+)(HostListCarScreen);

@@ -25,6 +25,12 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
   };
   const startDateFormat = moment(rentDetail.startDate).format('MMM Do, YYYY');
   const endDateFormat = moment(rentDetail.endDate).format('MMM Do, YYYY');
+  let typeofDate = '';
+  if (rentDetail.status === 'CURRENT') {
+    typeofDate = 'days left';
+  } else if (rentDetail.status === 'OVERDUE') {
+    typeofDate = 'days overdue';
+  }
   return (
     <TouchableWithoutFeedback onPress={handleOnClick}>
       <View style={styles.container}>
@@ -59,11 +65,17 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
             resizeMode="center"
             style={styles.imgContainer}
           />
-          <View style={styles.dayCount}>
-            <Text style={[textStyle.bodyText, { color: colors.white }]}>
-              {subtractDate(new Date(), rentDetail.endDate)} days left
-            </Text>
-          </View>
+          {rentDetail.status === 'CURRENT' ||
+          rentDetail.status === 'OVERDUE' ? (
+            <View style={styles.dayCount}>
+              <Text style={[textStyle.bodyText, { color: colors.white }]}>
+                {Math.abs(subtractDate(new Date(), rentDetail.endDate))}{' '}
+                {typeofDate}
+              </Text>
+            </View>
+          ) : (
+            <Text></Text>
+          )}
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -13,7 +13,7 @@ import { NavigationType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
-import { checkHostHubInfo } from '@redux/actions/hostHubInfo';
+import { checkHostHubInfo } from '@redux/actions/lease';
 
 type PropTypes = () => {
   navigation: NavigationType,
@@ -29,19 +29,14 @@ const HostHubScreen = ({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [cardNumber, setCardNumber] = useState('');
-  const [address, setAddress] = useState('');
+  const [selectedHub, setSelectedHub] = useState('');
 
   const onPressBack = () => {
     navigation.pop();
   };
   const handleNextStep = () => {
-    checkHostHubInfo(
-      { startDate, endDate, cardNumber, address },
-      {
-        onSuccess: () => navigation.navigate('HostReviewScreen'),
-        onFailure: () => {},
-      }
-    );
+    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub });
+    navigation.navigate('HostReviewScreen');
   };
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
@@ -53,8 +48,8 @@ const HostHubScreen = ({
   const handleChangeCardNumber = cardNumber => {
     setCardNumber(cardNumber);
   };
-  const handleChangeAddress = address => {
-    setAddress(address);
+  const handleChangeAddress = selectedHub => {
+    setSelectedHub(selectedHub);
   };
 
   return (
@@ -68,10 +63,18 @@ const HostHubScreen = ({
       <InputForm
         label="Select hub address"
         placeholder="Enter location..."
-        value={address}
+        value={selectedHub.address}
         onChangeText={handleChangeAddress}
         containerStyle={{ marginVertical: scaleVer(32) }}
-        onTextFocus={() => navigation.navigate('SelectMapScreen')}
+        onTextFocus={() =>
+          navigation.navigate('SelectMapScreen', {
+            callback(hub) {
+              setSelectedHub(hub);
+              navigation.pop(1);
+            },
+            type: 'hub',
+          })
+        }
       />
       <DatePicker
         startDate={startDate}

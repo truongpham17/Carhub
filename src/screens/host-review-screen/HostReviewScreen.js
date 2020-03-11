@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -15,50 +15,46 @@ import {
   ListItem,
 } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
+import { NavigationType, UserType, CarType, HubType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import moment from 'moment';
-import { addLease } from '@redux/actions/hostReview';
+import { addLease } from '@redux/actions/lease';
+import firebase from 'react-native-firebase';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 const showProperties = ['vin', 'odometers', 'usingYears'];
-
-type CarTypes = {
-  vin: String,
-  usingYears: String,
-  odometers: String,
-  name: String,
-  images: [],
-};
-
-type HubTypes = {
-  startDate: Date,
-  endDate: Date,
-  cardNumber: String,
-  address: String,
-};
 
 type PropTypes = {
   navigation: NavigationType,
   addLease: () => void,
   loading: Boolean,
-  car: CarTypes,
-  hub: HubTypes,
+  car: CarType,
+  user: UserType,
+  startDate: Date,
+  endDate: Date,
+  cardNumber: String,
+  selectedHub: HubType,
 };
 
 const HostReviewScreen = ({
   navigation,
   loading,
   car,
-  hub,
   addLease,
+  user,
+  startDate,
+  endDate,
+  cardNumber,
+  selectedHub,
 }: PropTypes) => {
   const review = [
     {
       id: 'name',
       label: 'Car name',
-      content: car.name,
+      content: `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`,
     },
     {
       id: 'status',
@@ -68,58 +64,78 @@ const HostReviewScreen = ({
     {
       id: 'from',
       label: 'From date',
-      content: moment(hub.startDate).format('DD-MM-YYYY'),
+      content: moment(startDate).format('DD-MM-YYYY'),
     },
     {
       id: 'to',
       label: 'To date',
-      content: moment(hub.endDate).format('DD-MM-YYYY'),
+      content: moment(endDate).format('DD-MM-YYYY'),
     },
     {
       id: 'duration',
       label: 'Duration',
-      content: hub.endDate.getTime() - hub.startDate.getTime(),
+      content: `${parseInt(
+        (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+      )} days`,
     },
     {
       id: 'customer',
       label: 'Customer name',
-      content: 'Cuong Thai',
+      content: user.username,
     },
     {
       id: 'phone',
       label: 'Phone',
-      content: '0909498577',
+      content: user.phone,
     },
     {
       id: 'location',
       label: 'Hub location',
-      content: hub.address,
-    },
-    {
-      id: 'cost',
-      label: 'Cost',
-      content: '$2020',
+      content: selectedHub.address,
     },
     {
       id: 'number',
       label: 'Card number',
-      content: hub.cardNumber,
+      content: cardNumber,
+    },
+    {
+      id: 'revenue',
+      label: 'You can earn up to',
+      content: '$2020',
     },
   ];
   const onPressBack = () => {
     navigation.pop();
   };
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
+    const images = [];
+    await Promise.all(
+      car.images.map(async element => {
+        const id = uuidv4(element);
+        const snapshot = await firebase
+          .storage()
+          .ref(`lease-car/${user._id}/${id}`)
+          .putFile(element);
+        images.push(await snapshot.downloadURL);
+      })
+    );
     addLease(
       {
-        odometers: car.odometers,
-        images: car.images,
-        startDate: hub.startDate,
-        endDate: hub.endDate,
+        odometer: car.odometers,
+        images,
+        startDate,
+        endDate,
+        usingYears: car.usingYears,
+        name: `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`,
+        VIN: car.vin,
+        customer: user._id,
+        hub: selectedHub._id,
+        cardNumber,
       },
       {
-        onSuccess: () => navigation.navigate('HostScreen'),
-
+        onSuccess: () => {
+          navigation.navigate('HostScreen');
+        },
         onFailure: () => {},
       }
     );
@@ -155,7 +171,11 @@ export default connect(
   state => ({
     loading: state.leaseRequest.loading,
     car: state.leaseRequest.car,
-    hub: state.leaseRequest.hub,
+    user: state.user,
+    startDate: state.leaseRequest.startDate,
+    endDate: state.leaseRequest.endDate,
+    cardNumber: state.leaseRequest.cardNumber,
+    selectedHub: state.leaseRequest.selectedHub,
   }),
   { addLease }
 )(HostReviewScreen);

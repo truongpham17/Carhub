@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
@@ -18,9 +18,13 @@ const RentHistoryScreen = ({
   navigation,
   getRentalsList,
 }: PropsType) => {
+  const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
-    getRentalsList();
-  }, []);
+    if (refreshing) {
+      getRentalsList();
+      setRefreshing(false);
+    }
+  }, [refreshing]);
 
   const onGetDetail = id => {
     console.log('Get id = ', id);
@@ -43,6 +47,8 @@ const RentHistoryScreen = ({
       renderItem={handleRenderItem}
       keyExtractor={handleKeyExtractor}
       showsVerticalScrollIndicator={false}
+      refreshing={refreshing}
+      onRefresh={() => setRefreshing(true)}
     />
   );
 };
