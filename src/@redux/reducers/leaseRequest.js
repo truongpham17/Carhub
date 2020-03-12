@@ -39,6 +39,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...action.payload, loading: false };
     case ADD_LEASE_SUCCESS:
       return {
+        ...state,
         loading: false,
       };
     case ADD_LEASE_FAILURE:

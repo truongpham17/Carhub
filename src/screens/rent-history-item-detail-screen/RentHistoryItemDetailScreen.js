@@ -187,7 +187,7 @@ const RentHistoryItemDetailScreen = ({
       />
       <ConfirmPopup
         title="Successfully"
-        description="Your QR Code has been scanned successfully, dont open it again"
+        description="Your QR Code has been scanned successfully!"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
         onConfirm={() => setPopupVisible(false)}
