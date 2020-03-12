@@ -56,37 +56,39 @@ const SelectCarScreen = ({
   };
 
   const formatData = () =>
-    carModels.map(info => ({
-      // image: car.images,
-      _id: info.carModel._id,
-      image: info.carModel.images[0],
-      name: info.carModel.name,
-      type: info.carModel.type,
-      distance: info.hub.distance,
-      rating: 3,
-      configs: [
-        {
-          icon: 'users',
-          type: 'passenger',
-          value: `${info.carModel.numberOfSeat} Passengers`,
-        },
-        {
-          icon: 'truck',
-          type: 'provided',
-          value: info.hub ? 'Provide hub' : 'Shared',
-        },
-        {
-          icon: 'briefcase',
-          type: 'bag',
-          value: `${info.carModel.numberOfBag || 6} Bags`,
-        },
-        {
-          icon: 'dollar-sign',
-          type: 'price',
-          value: `${info.carModel.price}$/day`,
-        },
-      ],
-    }));
+    carModels
+      .sort((a, b) => a.hub.distance - b.hub.distance)
+      .map(info => ({
+        // image: car.images,
+        _id: info.carModel._id,
+        image: info.carModel.images[0],
+        name: info.carModel.name,
+        type: info.carModel.type,
+        distance: info.hub.distance,
+        rating: 3,
+        configs: [
+          {
+            icon: 'users',
+            type: 'passenger',
+            value: `${info.carModel.numberOfSeat} Passengers`,
+          },
+          {
+            icon: 'truck',
+            type: 'provided',
+            value: info.hub ? 'Provide hub' : 'Shared',
+          },
+          {
+            icon: 'briefcase',
+            type: 'bag',
+            value: `${info.carModel.numberOfBag || 6} Bags`,
+          },
+          {
+            icon: 'dollar-sign',
+            type: 'price',
+            value: `${info.carModel.price}$/day`,
+          },
+        ],
+      }));
 
   const renderItem = ({ item, index }) => (
     <SelectCarItem {...item} onItemPress={handleCarPress} />

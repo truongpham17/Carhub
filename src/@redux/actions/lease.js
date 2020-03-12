@@ -83,53 +83,50 @@ export const addLease = (
   callback
 ) => async dispatch => {
   try {
-    dispatch({ type: GET_LEASE_REQUEST });
-    const carModel = await query({
-      endpoint: 'carModel',
-      method: METHODS.post,
-      data: { name },
-    });
+    dispatch({ type: ADD_LEASE_REQUEST });
+    // const carModel = await query({
+    //   endpoint: 'carModel',
+    //   method: METHODS.post,
+    //   data: { name },
+    // });
 
-    if (carModel.status === 201) {
-      const car = await query({
-        endpoint: 'car',
+    // if (carModel.status === 201) {
+    const car = await query({
+      endpoint: 'car',
+      method: METHODS.post,
+      data: {
+        customer,
+        hub,
+        odometer,
+        images,
+        VIN,
+        carModel: '5e69a07d06c4710835a20231',
+        usingYears,
+      },
+    });
+    if (car.status === 201) {
+      console.log(car.data);
+      const lease = await query({
+        endpoint: 'lease',
         method: METHODS.post,
         data: {
           customer,
           hub,
-          odometer,
-          images,
-          VIN,
-          carModel: carModel.data.carModel._id,
-          usingYears,
+          startDate,
+          endDate,
+          car: car.data.car._id,
+          cardNumber,
         },
       });
-      if (car.status === 201) {
-        const lease = await query({
-          endpoint: 'lease',
-          method: METHODS.post,
-          data: {
-            customer,
-            hub,
-            startDate,
-            endDate,
-            car: car.data.car._id,
-            cardNumber,
-          },
-        });
-        if (lease.status === 201) {
-          dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
-          callback.onSuccess();
-        } else {
-          dispatch({
-            type: ADD_LEASE_FAILURE,
-          });
-        }
+      if (lease.status === 201) {
+        dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
+        callback.onSuccess();
       } else {
         dispatch({
           type: ADD_LEASE_FAILURE,
         });
       }
+      // }
     } else {
       dispatch({
         type: ADD_LEASE_FAILURE,

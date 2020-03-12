@@ -20,6 +20,10 @@ const INITIAL_STATE = {
   endDate: null,
   cardNumber: null,
   selectedHub: null,
+  data: {
+    leases: [],
+    total: 0,
+  },
 };
 
 export default (state = INITIAL_STATE, action) => {

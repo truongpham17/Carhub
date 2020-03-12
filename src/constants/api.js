@@ -6,11 +6,18 @@
 // export const API_URL = 'http://10.0.2.2:5068/';
 
 // truong
+export const API_URL = 'http://192.168.1.106:5068/';
+// export const API_URL = 'https://car-hub-production.herokuapp.com/';
+
+// truong
+// export const API_URL = 'http://192.168.1.33:5068/';
+// export const API_URL = 'http://192.168.1.11:5068/';
 // export const API_URL = 'http://192.168.1.106:5068/';
 // export const API_URL = 'https://car-hub-production.herokuapp.com/';
 
 // dat
-export const API_URL = 'http://192.168.1.33:5068/';
+// export const API_URL = 'http://192.168.1.33:5068/';
+// export const API_URL = 'http://192.168.0.126:5068/';
 
 export const GOOGLE_KEY = 'AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y';
 

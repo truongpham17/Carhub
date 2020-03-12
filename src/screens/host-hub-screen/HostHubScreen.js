@@ -82,7 +82,7 @@ const HostHubScreen = ({
         onChangeDate={handleChangeDate}
       />
       <Text style={[textStyle.label, { marginTop: scaleVer(32) }]}>
-        Please fill in your Paypal information
+        Select your card number
       </Text>
       <InputForm
         label="CARD NUMBER"
