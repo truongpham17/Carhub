@@ -27,7 +27,7 @@ export default (state = INITIAL_STATE, action) => {
     case GET_LEASE_REQUEST:
       return { ...state, loading: true };
     case GET_LEASE_SUCCESS:
-      return { ...state, loading: false, data: action.payload };
+      return { ...state, loading: false, data: { ...action.payload } };
     case GET_LEASE_FAILURE:
       return { ...state, loading: false, error: action.payload };
     // case GET_LEASE_ITEM_REQUEST:
@@ -42,10 +42,22 @@ export default (state = INITIAL_STATE, action) => {
     case UPDATE_LEASE_ITEM_REQUEST:
       return { ...state, loading: true };
     case UPDATE_LEASE_ITEM_SUCCESS:
-      return { ...state, loading: false, data: action.payload };
+      return {
+        ...state,
+        loading: false,
+        // data: {
+        //   ...state.data,
+        //   leases: state.data.leases.map(item => {
+        //     if (item !== action.payload._id) {
+        //       return item;
+        //     }
+        //     return action.payload;
+        //   }),
+        // },
+      };
     case UPDATE_LEASE_ITEM_FAILURE:
       return { ...state, loading: false, error: action.payload };
     default:
-      return state;
+      return { ...state };
   }
 };
