@@ -1,50 +1,64 @@
+import {
+  GET_VIN_CAR_REQUEST,
+  GET_VIN_CAR_SUCCESS,
+  GET_VIN_CAR_FAILURE,
+  ADD_LEASE_REQUEST,
+  ADD_LEASE_SUCCESS,
+  ADD_LEASE_FAILURE,
+  GET_HOST_HUB_INFO_SUCCESS,
+  GET_LEASE_CAR_FAILURE,
+  GET_LEASE_CAR_SUCCESS,
+  GET_LEASE_CAR_REQUEST,
+} from '../actions/lease';
+
 const INITIAL_STATE = {
-  review: [
-    {
-      label: 'Car name',
-      content: 'Audi V8 2016',
-    },
-    {
-      label: 'Car status',
-      content: '4 years, 1000 kilometers',
-    },
-    {
-      label: 'From date',
-      content: '12/3/2020',
-    },
-    {
-      label: 'To date',
-      content: '12/4/2020',
-    },
-    {
-      label: 'Duration',
-      content: '30 days',
-    },
-    {
-      label: 'Customer name',
-      content: 'Cuong Thai',
-    },
-    {
-      label: 'Phone',
-      content: '0909498577',
-    },
-    {
-      label: 'Hub location',
-      content: '112 Thanh Thai Quan 10',
-    },
-    {
-      label: 'Cost',
-      content: '$2020',
-    },
-    {
-      label: 'Card number',
-      content: '12345678',
-    },
-  ],
+  car: {},
+  list: [],
+  review: {},
+  error: null,
+  loading: false,
+  startDate: null,
+  endDate: null,
+  cardNumber: null,
+  selectedHub: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case GET_VIN_CAR_SUCCESS:
+      return { ...state, car: action.payload, loading: false };
+    case GET_VIN_CAR_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_VIN_CAR_REQUEST:
+      return { ...state, loading: true };
+    case GET_HOST_HUB_INFO_SUCCESS:
+      return { ...state, ...action.payload, loading: false };
+    case ADD_LEASE_SUCCESS:
+      return {
+        loading: false,
+      };
+    case ADD_LEASE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case ADD_LEASE_REQUEST:
+      return { ...state, loading: true };
+    case GET_LEASE_CAR_SUCCESS:
+      return { ...state, list: action.payload, loading: false };
+    case GET_LEASE_CAR_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case GET_LEASE_CAR_REQUEST:
+      return { ...state, loading: true };
     default:
       return { ...state };
   }

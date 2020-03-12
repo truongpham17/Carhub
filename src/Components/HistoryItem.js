@@ -10,72 +10,48 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
-import { RentDetailType } from 'types';
-import { subtractDate } from 'Utils/common';
-import moment from 'moment';
+// import { NavigationType } from 'types';
 
-type PropTypes = {
-  rentDetail: RentDetailType,
-  onGetDetail: () => void,
-};
-
-const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
-  const handleOnClick = () => {
-    onGetDetail(rentDetail._id);
-  };
-  const startDateFormat = moment(rentDetail.startDate).format('MMM Do, YYYY');
-  const endDateFormat = moment(rentDetail.endDate).format('MMM Do, YYYY');
-  let typeofDate = '';
-  if (rentDetail.status === 'CURRENT') {
-    typeofDate = 'days left';
-  } else if (rentDetail.status === 'OVERDUE') {
-    typeofDate = 'days overdue';
-  }
+const HistoryItem = () => {
+  const handleGoToDetail = () => {};
   return (
-    <TouchableWithoutFeedback onPress={handleOnClick}>
+    <TouchableWithoutFeedback onPress={handleGoToDetail}>
       <View style={styles.container}>
         <View style={[styles.itemContainer, styles.firstItem]}>
           <View style={styles.inforContainer}>
-            <Text style={textStyle.widgetItem}>
-              {rentDetail.carModel.name || 'Camry'}
-            </Text>
+            <Text style={textStyle.widgetItem}>Camry 2019</Text>
             <Text
               style={[
                 textStyle.label,
                 { marginBottom: scaleHor(10), color: colors.dark40 },
               ]}
             >
-              {rentDetail.carModel.type}
+              Exclusive car
             </Text>
             <Text style={[textStyle.bodyText, { color: colors.success }]}>
-              {startDateFormat} - {endDateFormat}
+              Mar 20 - Apr 20
             </Text>
           </View>
           <View style={styles.statusContainer}>
             <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
-              {rentDetail.status}
+              Waiting
             </Text>
           </View>
         </View>
         <View style={[styles.itemContainer, styles.secondItem]}>
           <Image
             source={{
-              uri: rentDetail.carModel.images[0],
+              uri:
+                'https://www.kindpng.com/picc/m/184-1840091_mclaren-logo-clipart-png-transparent-png.png',
             }}
             resizeMode="center"
             style={styles.imgContainer}
           />
-          {rentDetail.status === 'CURRENT' ||
-          rentDetail.status === 'OVERDUE' ? (
-            <View style={styles.dayCount}>
-              <Text style={[textStyle.bodyText, { color: colors.white }]}>
-                {Math.abs(subtractDate(new Date(), rentDetail.endDate))}{' '}
-                {typeofDate}
-              </Text>
-            </View>
-          ) : (
-            <Text></Text>
-          )}
+          <View style={styles.dayCount}>
+            <Text style={[textStyle.bodyText, { color: colors.white }]}>
+              3 days left
+            </Text>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -125,4 +101,4 @@ const styles = StyleSheet.create({
   statusContainer: {},
 });
 
-export default RentHistoryItem;
+export default HistoryItem;
