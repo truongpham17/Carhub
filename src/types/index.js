@@ -17,6 +17,19 @@ export type RentDetailType = {
   type: String,
   __v: 0,
 };
+
+export type LeaseDetailType = {
+  _id: String,
+  customer: UserType,
+  car: CarType,
+  startDate: Date,
+  endDate: Date,
+  hub: HubType,
+  price: Number,
+  totalEarn: Number,
+  status: String,
+};
+
 export type RentailCarDetailType = {
   id: String,
   carData: {

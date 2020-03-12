@@ -8,9 +8,9 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        {/* <PersistGate loading={null} persistor={persistor}> */}
+        {/* <PersistGate loading={null} persistor={persistor}>
+        </PersistGate> */}
         <Navigation />
-        {/* </PersistGate> */}
       </Provider>
     );
   }

@@ -81,11 +81,13 @@ const RentHistoryItemDetailScreen = ({
     typeofDate = 'Days overdue';
   }
   const showAttr = [
+    // rentDetail.carModel.name
     { value: rentDetail.carModel.name, label: 'Name' },
     { value: startDateFormat, label: 'Date Of Hire' },
     { value: `${duration} days`, label: 'Duration' },
     { value: `${rentDetail.price} $`, label: 'Price Per Day' },
     { value: `${rentDetail.totalCost} $`, label: 'Total' },
+    // rentDetail.pickupHub.name
     { value: rentDetail.pickupHub.name, label: 'Store' },
     { value: daysdiff, label: typeofDate },
     { value: rentDetail.status, label: 'Status' },
