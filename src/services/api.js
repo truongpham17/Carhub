@@ -2,8 +2,9 @@ import axios from 'axios';
 
 import { API_URL, METHODS } from 'Constants/api';
 import store from '@redux/store';
+import AsyncStorage from '@react-native-community/async-storage';
 
-export const query = ({
+export const query = async ({
   method = METHODS.get,
   endpoint = '',
   data = null,
@@ -11,7 +12,7 @@ export const query = ({
   params = {},
 }) => {
   console.log(API_URL + endpoint);
-  return axios({
+   return axios({
     method,
     url: API_URL + endpoint,
     data,

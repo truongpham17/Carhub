@@ -25,7 +25,7 @@ export function getCarList(_, callback = INITIAL_CALLBACK) {
       });
 
       if (result.status === STATUS.OK) {
-        console.log(result.data);
+        // console.log(result.data);
         dispatch({
           type: GET_CAR_SUCCESS,
           payload: result.data,

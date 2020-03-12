@@ -69,7 +69,8 @@ const RentBookingReview = ({
         },
         {
           onSuccess() {
-            // navigation.navigate('SuccessBookingRental');
+            // console.log('come here!!!!');
+            // navigation.navigate(' ');
             addRentRequest(
               {
                 carModel: car.carModel._id,
@@ -77,7 +78,7 @@ const RentBookingReview = ({
                 type: 'hub',
                 startDate: fromDate.toISOString(),
                 endDate: toDate.toISOString(),
-                pickupHub: car.carModel._id,
+                pickupHub: car.hub._id,
                 pickoffHub: pickOffHub._id,
                 price: car.carModel.price,
                 totalCost: duration * car.carModel.price,

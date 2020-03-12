@@ -92,7 +92,7 @@ const LicenseScreen = ({ navigation, addLicense, loading }: PropTypes) => {
       address: license.address,
       dateOfBirth: license.dateOfBirth.toISOString(),
     };
-    console.log(data);
+    // console.log(data);
     addLicense(data, {
       onSuccess() {
         navigation.pop(2);
