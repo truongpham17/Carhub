@@ -4,6 +4,9 @@ import {
   GET_LEASE_FAILURE,
   GET_LEASE_REQUEST,
   GET_LEASE_SUCCESS,
+  UPDATE_LEASE_ITEM_FAILURE,
+  UPDATE_LEASE_ITEM_REQUEST,
+  UPDATE_LEASE_ITEM_SUCCESS,
   // GET_LEASE_ITEM_FAILURE,
   // GET_LEASE_ITEM_REQUEST,
   // GET_LEASE_ITEM_SUCCESS,
@@ -190,6 +193,32 @@ export const getLeaseList = (
 //     callback.onFailure();
 //   }
 // };
+
+export const updateLeaseStatus = (
+  data,
+  callback = INITIAL_CALLBACK
+) => async dispatch => {
+  try {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_REQUEST,
+    });
+    const result = await query({
+      method: METHODS.put,
+      endpoint: `${ENDPOINTS.lease}/${data.id}`,
+      data: data.value,
+    });
+    if (result.status) {
+      dispatch({ type: UPDATE_LEASE_ITEM_SUCCESS, payload: result.data });
+      callback.success();
+    }
+  } catch (error) {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_FAILURE,
+      payload: error,
+    });
+    callback.onFailure();
+  }
+};
 
 export const setLeaseDetailId = _id => ({
   type: SET_LEASE_DETAIL_ID,

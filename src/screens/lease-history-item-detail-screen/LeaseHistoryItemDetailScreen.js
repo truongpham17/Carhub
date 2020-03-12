@@ -6,12 +6,13 @@ import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
-import { getLease } from '@redux/actions/lease';
+import { updateLeaseStatus } from '@redux/actions/lease';
 
 type PropTypes = {
   navigation: NavigationType,
   leaseDetail: LeaseDetailType,
-  getLease: () => void,
+  // getLease: () => void,
+  updateLeaseStatus: () => void,
   isLoading: Boolean,
 };
 
@@ -35,17 +36,28 @@ const LeaseHistoryItemDetailScreen = ({
   const showAttr = [
     // leaseDetail.car.carModel.name ||
 
-    { value: leaseDetail.car.carModel.name, label: 'Car Name' },
+    { value: 'leaseDetail.car.carModel.name', label: 'Car Name' },
     { value: startDateFormat, label: 'From date' },
     { value: endDateFormat, label: 'To date' },
-    { value: `${duration} days`, label: 'Duration' },
-    { value: `${leaseDetail.price || 0} $`, label: 'Price Per Day' },
-    { value: `${leaseDetail.totalEarn} $`, label: 'Total earn' },
+    { value: `${duration} day(s)`, label: 'Duration' },
+    {
+      value: leaseDetail.price > 0 ? `$ ${leaseDetail.price}` : `$ 0`,
+      label: 'Price Per Day',
+    },
+    { value: `$ ${leaseDetail.totalEarn}`, label: 'Total earn' },
     // leaseDetail.hub.name
     { value: leaseDetail.hub.name, label: 'Hub' },
     { value: daysleft > 0 ? daysleft : 'None', label: 'Days left' },
-    { value: leaseDetail.status, label: 'Status' },
+    { value: genStatus(), label: 'Status' },
   ];
+
+  const genStatus = () => {
+    switch (leaseDetail.status) {
+      case 'WAIT_TO_RETURN':
+        return 'Wait to return';
+      default:
+    }
+  };
 
   if (leaseDetail.status === 'PENDING' || leaseDetail.status === 'PAST') {
     showAttr.splice(7, 1);
@@ -61,7 +73,12 @@ const LeaseHistoryItemDetailScreen = ({
   };
 
   const handleconfirm = () => {};
-
+  const handleConfirmRequest = () => {
+    updateLeaseStatus({
+      id: leaseDetail._id,
+      value: { status: 'WAIT_TO_RETURN' },
+    });
+  };
   return (
     <ViewContainer
       haveBackHeader
@@ -101,11 +118,10 @@ const LeaseHistoryItemDetailScreen = ({
       )}
       <ConfirmPopup
         title="CONFIRM"
-        description="Would you like to request 
-        returning your car?"
+        description="Would you like to request returning your car?"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
-        onConfirm={() => setPopupVisible(false)}
+        onConfirm={handleConfirmRequest}
       />
     </ViewContainer>
   );
@@ -128,5 +144,5 @@ export default connect(
     ),
     isLoading: state.lease.loading,
   }),
-  { getLease }
+  { updateLeaseStatus }
 )(LeaseHistoryItemDetailScreen);
