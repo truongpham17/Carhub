@@ -8,6 +8,7 @@ import { NavigationType } from 'types';
 import { dimension } from 'Constants';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import RentHistoryScreen from '../rent-history-screen/RentHistoryScreen';
+import LeaseHistoryScreen from '../lease-history-screen/LeaseHistoryScreen';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -56,7 +57,7 @@ const HistoryScreen = ({ navigation }: PropTypes) => {
           <RentHistoryScreen navigation={navigation} />
         </View>
         <View key="2" style={{ paddingHorizontal: scaleHor(24) }}>
-          <RentHistoryScreen navigation={navigation} />
+          <LeaseHistoryScreen navigation={navigation} />
         </View>
       </ViewPager>
     </ViewContainer>

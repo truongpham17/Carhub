@@ -1,61 +1,53 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
-import { NavigationType, RentDetailType } from 'types';
-import { getRentalsList } from '@redux/actions/getRentalsList';
+import { NavigationType, LeaseDetailType } from 'types';
+import { getLeaseList } from '@redux/actions/lease';
 import { connect } from 'react-redux';
 // import HistoryItem from 'Components/HistoryItem';
-import RentHistoryItem from './RentHistoryItem';
+import LeaseHistoryItem from './LeaseHistoryItem';
 
 type PropsType = {
-  rentList: [RentDetailType],
+  leaseList: [LeaseDetailType],
   navigation: NavigationType,
-  getRentalsList: () => void,
+  getLeaseList: () => void,
 };
 
-const RentHistoryScreen = ({
-  rentList,
+const LeaseHistoryScreen = ({
+  leaseList,
   navigation,
-  getRentalsList,
+  getLeaseList,
 }: PropsType) => {
   const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
     if (refreshing) {
-      getRentalsList();
+      getLeaseList();
       setRefreshing(false);
     }
   }, [refreshing]);
-
   const onGetDetail = id => {
-    console.log('Get id = ', id);
-    navigation.navigate('RentHistoryItemDetailScreen', { itemID: id });
+    navigation.navigate('LeaseHistoryItemDetailScreen', { itemID: id });
   };
-  // console.log(rentList);
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
-    <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
+    <LeaseHistoryItem leaseDetail={item} onGetDetail={onGetDetail} />
   );
-  // const data = ['1', '2', '3', '4'];
-  // console.log(rentList);
-
-  // const handleRenderItem = () => <HistoryItem />;
-
   const handleKeyExtractor = (item, index) => index.toString();
   return (
     <FlatList
-      data={rentList}
+      refreshing={refreshing}
+      onRefresh={() => setRefreshing(true)}
+      data={leaseList}
       renderItem={handleRenderItem}
       keyExtractor={handleKeyExtractor}
       showsVerticalScrollIndicator={false}
-      refreshing={refreshing}
-      onRefresh={() => setRefreshing(true)}
     />
   );
 };
 
 export default connect(
   state => ({
-    rentList: state.rentalsList.data.rentals,
+    leaseList: state.lease.data.leases,
   }),
-  { getRentalsList }
-)(RentHistoryScreen);
+  { getLeaseList }
+)(LeaseHistoryScreen);
