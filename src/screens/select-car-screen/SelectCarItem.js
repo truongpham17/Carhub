@@ -21,6 +21,7 @@ type PropTypes = {
   ],
   _id: String,
   onItemPress: () => void,
+  distance: Number,
 };
 
 const ConfigItem = ({ icon, value }) => (
@@ -42,6 +43,7 @@ const SelectCarItem = ({
   configs,
   onItemPress,
   _id,
+  distance,
 }: PropTypes) => (
   <View style={styles.container}>
     <Image source={{ uri: image }} resizeMode="cover" style={styles.image} />
@@ -66,7 +68,10 @@ const SelectCarItem = ({
             />
           </View>
           <Text style={textStyle.bodyText}>
-            Distance: <Text style={textStyle.bodyTextBold}>3.5 Km</Text>
+            Distance:{' '}
+            <Text style={textStyle.bodyTextBold}>
+              {Math.round(distance * 100) / 100} Km
+            </Text>
           </Text>
         </View>
       </View>

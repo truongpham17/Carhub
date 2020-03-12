@@ -19,28 +19,6 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    const result = await Axios({
-      url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/1GNALDEK9FZ108495?format=json`,
-    });
-
-    // console.log(result.data);
-    const valueData = [];
-    const codes = [24, 26, 27, 28, 29, 39, 75];
-
-    codes.forEach(code => {
-      const item = result.data.Results.find(data => data.VariableId === code);
-      if (item) {
-        valueData.push({ key: item.Variable, value: item.Value });
-      }
-    });
-
-    // console.log(valueData);
-  };
 
   const onChangeUserName = username => {
     setUsername(username);

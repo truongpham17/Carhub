@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
-import { getLeaseList } from '@redux/actions/lease';
+import { getLeaseList, setLeaseDetailId } from '@redux/actions/lease';
 import { connect } from 'react-redux';
 // import HistoryItem from 'Components/HistoryItem';
 import LeaseHistoryItem from './LeaseHistoryItem';
@@ -11,12 +11,14 @@ type PropsType = {
   leaseList: [LeaseDetailType],
   navigation: NavigationType,
   getLeaseList: () => void,
+  setLeaseDetailId: () => void,
 };
 
 const LeaseHistoryScreen = ({
   leaseList,
   navigation,
   getLeaseList,
+  setLeaseDetailId,
 }: PropsType) => {
   const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
@@ -26,7 +28,8 @@ const LeaseHistoryScreen = ({
     }
   }, [refreshing]);
   const onGetDetail = id => {
-    navigation.navigate('LeaseHistoryItemDetailScreen', { itemID: id });
+    setLeaseDetailId(id);
+    navigation.navigate('LeaseHistoryItemDetailScreen');
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
@@ -49,5 +52,5 @@ export default connect(
   state => ({
     leaseList: state.lease.data.leases,
   }),
-  { getLeaseList }
+  { getLeaseList, setLeaseDetailId }
 )(LeaseHistoryScreen);

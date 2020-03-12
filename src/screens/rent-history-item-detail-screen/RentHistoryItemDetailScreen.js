@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, Alert } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { ViewContainer, ListItem, Button, ConfirmPopup } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
 import { connect } from 'react-redux';
@@ -15,12 +15,13 @@ type PropTypes = {
   navigation: NavigationType,
   rentDetail: RentDetailType,
   getSpecificRental: () => void,
+  isLoading: Boolean,
 };
 
 const RentHistoryItemDetailScreen = ({
   navigation,
   rentDetail,
-  getSpecificRental,
+  isLoading,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
@@ -28,10 +29,10 @@ const RentHistoryItemDetailScreen = ({
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
-  useEffect(() => {
-    const id = navigation.getParam('itemID', '');
-    getSpecificRental({ id });
-  }, []);
+  // useEffect(() => {
+  //   const id = navigation.getParam('itemID', '');
+  //   getSpecificRental({ id });
+  // }, []);
 
   useEffect(() => {
     if (qrCodeModalVisible && generateNewQR) {
@@ -121,6 +122,20 @@ const RentHistoryItemDetailScreen = ({
   const handleSubmitSharing = value => {
     console.log(value);
   };
+  const getActionLabel = () => {
+    // 'UPCOMING', 'CURRENT', 'OVERDUE', 'SHARING', 'SHARED', 'PAST'
+    switch (rentDetail.status) {
+      case 'UPCOMING':
+        return 'GET CAR';
+      case 'CURRENT':
+      case 'OVERDUE':
+        return 'RETURN CAR';
+      case 'PAST':
+        return 'HIRE THIS CAR';
+      default:
+        return '';
+    }
+  };
 
   return (
     <ViewContainer
@@ -129,6 +144,7 @@ const RentHistoryItemDetailScreen = ({
       onBackPress={onBackPress}
       scrollable
       style={{ paddingBottom: scaleVer(16) }}
+      loading={isLoading}
     >
       <Image
         source={{
@@ -147,7 +163,11 @@ const RentHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
-      <Button label="RETURN" onPress={handleReturn} style={styles.button} />
+      <Button
+        label={getActionLabel()}
+        onPress={handleReturn}
+        style={styles.button}
+      />
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
@@ -192,7 +212,10 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    rentDetail: state.rentItemDetail.data,
+    rentDetail: state.rentalsList.data.rentals.find(
+      item => item._id === state.rentalsList.selectedId
+    ),
+    isLoading: state.rentalsList.isLoading,
   }),
   { getSpecificRental }
 )(RentHistoryItemDetailScreen);

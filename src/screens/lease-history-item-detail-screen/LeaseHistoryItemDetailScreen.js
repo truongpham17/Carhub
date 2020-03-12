@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { ViewContainer, ListItem, Button, ConfirmPopup } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { connect } from 'react-redux';
@@ -12,19 +12,21 @@ type PropTypes = {
   navigation: NavigationType,
   leaseDetail: LeaseDetailType,
   getLease: () => void,
+  isLoading: Boolean,
 };
 
 const LeaseHistoryItemDetailScreen = ({
   navigation,
   leaseDetail,
-  getLease,
+  isLoading,
 }: PropTypes) => {
   const [popupVisible, setPopupVisible] = useState(false);
-  useEffect(() => {
-    const id = navigation.getParam('itemID', '');
-    getLease({ id });
-    // console.log('Getting data!!!');
-  }, []);
+  // useEffect(() => {
+  //   const id = navigation.getParam('itemID', '');
+  //   getLease({ id });
+  //   // console.log('Getting data!!!');
+  // }, []);
+  console.log(leaseDetail);
   const startDateFormat = moment(leaseDetail.startDate).format('D MMMM, YYYY');
   const endDateFormat = moment(leaseDetail.endDate).format('D MMMM, YYYY');
   const duration = subtractDate(leaseDetail.startDate, leaseDetail.endDate);
@@ -37,13 +39,17 @@ const LeaseHistoryItemDetailScreen = ({
     { value: startDateFormat, label: 'From date' },
     { value: endDateFormat, label: 'To date' },
     { value: `${duration} days`, label: 'Duration' },
-    { value: `${leaseDetail.price} $`, label: 'Price Per Day' },
+    { value: `${leaseDetail.price || 0} $`, label: 'Price Per Day' },
     { value: `${leaseDetail.totalEarn} $`, label: 'Total earn' },
     // leaseDetail.hub.name
     { value: leaseDetail.hub.name, label: 'Hub' },
     { value: daysleft > 0 ? daysleft : 'None', label: 'Days left' },
     { value: leaseDetail.status, label: 'Status' },
   ];
+
+  if (leaseDetail.status === 'PENDING' || leaseDetail.status === 'PAST') {
+    showAttr.splice(7, 1);
+  }
 
   // const { data } = leaseDetail;
   const onBackPress = () => {
@@ -62,9 +68,10 @@ const LeaseHistoryItemDetailScreen = ({
       title="Detail"
       onBackPress={onBackPress}
       scrollable
+      loading={isLoading}
     >
       <Image
-        // source={{ uri: leaseDetail.car.images[0] }}
+        source={{ uri: leaseDetail.car.images[0] }}
         style={styles.imageContainer}
         resizeMode="stretch"
       />
@@ -116,7 +123,10 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    leaseDetail: state.lease.data,
+    leaseDetail: state.lease.data.leases.find(
+      item => item._id === state.lease.selectedId
+    ),
+    isLoading: state.lease.loading,
   }),
   { getLease }
 )(LeaseHistoryItemDetailScreen);

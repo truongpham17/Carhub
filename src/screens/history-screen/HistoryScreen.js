@@ -1,20 +1,25 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { ViewContainer, ButtonGroup } from 'Components';
 import ViewPager from '@react-native-community/viewpager';
 import { connect } from 'react-redux';
 
 import { NavigationType } from 'types';
-import { dimension } from 'Constants';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import RentHistoryScreen from '../rent-history-screen/RentHistoryScreen';
 import LeaseHistoryScreen from '../lease-history-screen/LeaseHistoryScreen';
 
 type PropTypes = {
   navigation: NavigationType,
+  rentLoading: Boolean,
+  leaseLoading: Boolean,
 };
 
-const HistoryScreen = ({ navigation }: PropTypes) => {
+const HistoryScreen = ({
+  navigation,
+  rentLoading,
+  leaseLoading,
+}: PropTypes) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const viewPagerRef = useRef(null);
 
@@ -35,7 +40,12 @@ const HistoryScreen = ({ navigation }: PropTypes) => {
   };
 
   return (
-    <ViewContainer haveBackHeader title="History" onBackPress={onBackPress}>
+    <ViewContainer
+      haveBackHeader
+      title="History"
+      onBackPress={onBackPress}
+      loading={rentLoading && leaseLoading}
+    >
       <ButtonGroup
         // theme={theme}
         activeIndex={activeIndex}
@@ -64,5 +74,7 @@ const HistoryScreen = ({ navigation }: PropTypes) => {
   );
 };
 
-export default connect(state => ({}), {})(HistoryScreen);
-const styles = StyleSheet.create({});
+export default connect(state => ({
+  rentLoading: state.rentalsList.isLoading,
+  leaseLoading: state.lease.loading,
+}))(HistoryScreen);

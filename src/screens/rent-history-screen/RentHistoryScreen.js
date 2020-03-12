@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
-import { getRentalsList } from '@redux/actions/getRentalsList';
+import { getRentalsList, setRentDetailId } from '@redux/actions/getRentalsList';
 import { connect } from 'react-redux';
+
 // import HistoryItem from 'Components/HistoryItem';
 import RentHistoryItem from './RentHistoryItem';
 
@@ -11,12 +12,14 @@ type PropsType = {
   rentList: [RentDetailType],
   navigation: NavigationType,
   getRentalsList: () => void,
+  setRentDetailId: () => void,
 };
 
 const RentHistoryScreen = ({
   rentList,
   navigation,
   getRentalsList,
+  setRentDetailId,
 }: PropsType) => {
   const [refreshing, setRefreshing] = useState(true);
   useEffect(() => {
@@ -27,7 +30,7 @@ const RentHistoryScreen = ({
   }, [refreshing]);
 
   const onGetDetail = id => {
-    console.log('Get id = ', id);
+    setRentDetailId(id);
     navigation.navigate('RentHistoryItemDetailScreen', { itemID: id });
   };
   // console.log(rentList);
@@ -57,5 +60,5 @@ export default connect(
   state => ({
     rentList: state.rentalsList.data.rentals,
   }),
-  { getRentalsList }
+  { getRentalsList, setRentDetailId }
 )(RentHistoryScreen);

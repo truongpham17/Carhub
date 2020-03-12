@@ -6,6 +6,7 @@ import {
 } from '@redux/constants/rental';
 import { query } from 'services/api';
 import { ENDPOINTS, STATUS, INITIAL_CALLBACK } from 'Constants/api';
+import { SET_RENT_DETAIL_ID } from '../constants/rental';
 
 export const getRentalsList = (
   data,
@@ -27,3 +28,8 @@ export const getRentalsList = (
     });
   }
 };
+
+export const setRentDetailId = _id => ({
+  type: SET_RENT_DETAIL_ID,
+  payload: _id,
+});
