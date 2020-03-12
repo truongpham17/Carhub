@@ -28,10 +28,10 @@ const RentHistoryItemDetailScreen = ({
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
 
-  useEffect(() => {
-    const id = navigation.getParam('itemID', '');
-    getSpecificRental({ id });
-  }, []);
+  // useEffect(() => {
+  //   const id = navigation.getParam('itemID', '');
+  //   getSpecificRental({ id });
+  // }, []);
 
   useEffect(() => {
     if (qrCodeModalVisible && generateNewQR) {
@@ -119,6 +119,20 @@ const RentHistoryItemDetailScreen = ({
   const handleSubmitSharing = value => {
     console.log(value);
   };
+  const getActionLabel = () => {
+    // 'UPCOMING', 'CURRENT', 'OVERDUE', 'SHARING', 'SHARED', 'PAST'
+    switch (rentDetail.status) {
+      case 'UPCOMING':
+        return 'GET CAR';
+      case 'CURRENT':
+      case 'OVERDUE':
+        return 'RETURN CAR';
+      case 'PAST':
+        return 'HIRE THIS CAR';
+      default:
+        return '';
+    }
+  };
 
   return (
     <ViewContainer
@@ -145,7 +159,11 @@ const RentHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
-      <Button label="RETURN" onPress={handleReturn} style={styles.button} />
+      <Button
+        label={getActionLabel()}
+        onPress={handleReturn}
+        style={styles.button}
+      />
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
@@ -190,7 +208,9 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    rentDetail: state.rentItemDetail.data,
+    rentDetail: state.rentalsList.data.rentals.find(
+      item => item._id === state.rentalsList.selectedId
+    ),
   }),
   { getSpecificRental }
 )(RentHistoryItemDetailScreen);
