@@ -50,7 +50,7 @@ const HostReviewScreen = ({
   cardNumber,
   selectedHub,
 }: PropTypes) => {
-  const review = [
+  const leaseContract = [
     {
       id: 'name',
       label: 'Car name',
@@ -148,12 +148,12 @@ const HostReviewScreen = ({
       onBackPress={onPressBack}
       loading={loading}
     >
-      {review.map((item, index) => (
+      {leaseContract.map((item, index) => (
         <ListItem
           type="detail"
           label={item.label}
           detail={item.content}
-          showSeparator={index !== review.length - 1}
+          showSeparator={index !== leaseContract.length - 1}
           key={item.label}
           pressable={false}
         />
@@ -169,13 +169,13 @@ const HostReviewScreen = ({
 
 export default connect(
   state => ({
-    loading: state.leaseRequest.loading,
-    car: state.leaseRequest.car,
+    loading: state.lease.loading,
+    car: state.lease.car,
     user: state.user,
-    startDate: state.leaseRequest.startDate,
-    endDate: state.leaseRequest.endDate,
-    cardNumber: state.leaseRequest.cardNumber,
-    selectedHub: state.leaseRequest.selectedHub,
+    startDate: state.lease.startDate,
+    endDate: state.lease.endDate,
+    cardNumber: state.lease.cardNumber,
+    selectedHub: state.lease.selectedHub,
   }),
   { addLease }
 )(HostReviewScreen);

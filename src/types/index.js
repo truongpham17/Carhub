@@ -99,6 +99,7 @@ export type CarType = {
   odometer: Number,
   price: Number,
   feature: String,
+  valueData: [String],
 };
 
 export type LicenseType = {

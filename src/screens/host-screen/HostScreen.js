@@ -19,14 +19,17 @@ import { NavigationType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
-import { checkCarByVin, getCustomerCarList } from '@redux/actions/lease';
+import {
+  checkCarByVin,
+  getCustomerPreviousCarList,
+} from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Seperator from './Seperator';
 import Extra from './Extra';
 
 type PropTypes = {
   checkCarByVin: () => void,
-  getCustomerCarList: () => void,
+  getCustomerPreviousCarList: () => void,
   navigation: NavigationType,
   loading: Boolean,
   user: UserType,
@@ -37,7 +40,7 @@ const HostScreen = ({
   navigation,
   loading,
   user,
-  getCustomerCarList,
+  getCustomerPreviousCarList,
 }: PropTypes) => {
   const [vin, setVin] = useState('');
   const [usingYears, setUsingYears] = useState('');
@@ -74,7 +77,7 @@ const HostScreen = ({
     );
   };
   const handlePreviousCar = () => {
-    getCustomerCarList(
+    getCustomerPreviousCarList(
       { id: user._id },
       {
         onSuccess: () => navigation.navigate('HostListCarScreen'),
@@ -158,9 +161,8 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    car: state.leaseRequest.car,
-    loading: state.leaseRequest.loading,
+    loading: state.lease.loading,
     user: state.user,
   }),
-  { checkCarByVin, getCustomerCarList }
+  { checkCarByVin, getCustomerPreviousCarList }
 )(HostScreen);

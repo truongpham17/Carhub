@@ -101,8 +101,7 @@ const HostHubScreen = ({
 
 export default connect(
   state => ({
-    hub: state.leaseRequest.hub,
-    loading: state.leaseRequest.loading,
+    loading: state.lease.loading,
   }),
   { checkHostHubInfo }
 )(HostHubScreen);

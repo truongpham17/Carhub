@@ -15,15 +15,18 @@ import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import { SearchBar, Icon } from 'react-native-elements';
 
-import { checkCarByVin, getCustomerCarList } from '@redux/actions/lease';
+import {
+  checkCarByVin,
+  getCustomerPreviousCarList,
+} from '@redux/actions/lease';
 import CarItem from './CarItem';
 
 type PropTypes = () => {
   navigation: NavigationType,
-  list: [CarType],
+  listPreviousCar: [CarType],
 };
 
-const HostListCarScreen = ({ navigation, list }: PropTypes) => {
+const HostListCarScreen = ({ navigation, listPreviousCar }: PropTypes) => {
   const onPressBack = () => {
     navigation.pop();
   };
@@ -44,7 +47,7 @@ const HostListCarScreen = ({ navigation, list }: PropTypes) => {
         placeholder="Car name..."
       />
       <FlatList
-        data={list}
+        data={listPreviousCar}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
@@ -66,9 +69,9 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    list: state.leaseRequest.list,
-    loading: state.leaseRequest.loading,
+    listPreviousCar: state.lease.listPreviousCar,
+    loading: state.lease.loading,
     user: state.user,
   }),
-  { checkCarByVin, getCustomerCarList }
+  { checkCarByVin, getCustomerPreviousCarList }
 )(HostListCarScreen);
