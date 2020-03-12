@@ -13,7 +13,10 @@ import {
 
 const INITIAL_STATE = {
   loading: false,
-  data: [],
+  data: {
+    leases: [],
+    total: 0,
+  },
   error: '',
   selectedId: null,
 };
