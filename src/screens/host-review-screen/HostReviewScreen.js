@@ -21,8 +21,8 @@ import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import moment from 'moment';
 import { addLease } from '@redux/actions/lease';
-import firebase from 'react-native-firebase';
 import 'react-native-get-random-values';
+import firebase from 'react-native-firebase';
 import { v4 as uuidv4 } from 'uuid';
 
 const showProperties = ['vin', 'odometers', 'usingYears'];

@@ -84,6 +84,7 @@ export type HubType = {
     lng: Number,
   },
   description: string,
+  distance?: number,
 };
 
 export type CarType = {
@@ -118,7 +119,8 @@ export type CarModel = {
   name: String,
   numberOfSeat: Number,
   type: String,
-  price: Number,
-  description: String,
   images: [String],
+  description: String,
+  price: number,
+  _id: String,
 };

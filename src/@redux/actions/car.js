@@ -10,6 +10,9 @@ import {
   ADD_RENTAL_REQUEST,
   ADD_RENTAL_SUCCESS,
   ADD_RENTAL_FAILURE,
+  SEARCH_CAR_MODEL_FAILURE,
+  SEARCH_CAR_MODEL_REQUEST,
+  SEARCH_CAR_MODEL_SUCCESS,
 } from '../constants/car';
 
 export function getCarList(_, callback = INITIAL_CALLBACK) {
@@ -86,5 +89,36 @@ export function setPickOffHub(hub) {
   return {
     type: SET_PICK_OFF_HUB,
     payload: hub,
+  };
+}
+
+export function searchCarList(data, callback = INITIAL_CALLBACK) {
+  return async dispatch => {
+    try {
+      dispatch({ type: SEARCH_CAR_MODEL_REQUEST });
+      const result = await query({
+        endpoint: 'carModel/search',
+        method: METHODS.post,
+        data,
+      });
+
+      console.log(result.status, result.data);
+
+      if (result.status === STATUS.OK) {
+        console.log('success!!');
+        dispatch({
+          type: SEARCH_CAR_MODEL_SUCCESS,
+          payload: result.data,
+        });
+        callback.onSuccess();
+      } else {
+        dispatch({ type: SEARCH_CAR_MODEL_FAILURE });
+        callback.onFailure();
+      }
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: SEARCH_CAR_MODEL_FAILURE, payload: error });
+      callback.onFailure();
+    }
   };
 }

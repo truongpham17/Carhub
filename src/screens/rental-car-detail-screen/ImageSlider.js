@@ -7,9 +7,10 @@ import { dimension } from 'Constants';
 type PropsType = {
   rentalDetail: RentailCarDetailType,
   navigation: NavigationType,
+  images: [String],
 };
 
-const ImageSlider = ({ rentalDetail, navigation }: PropsType) => {
+const ImageSlider = ({ images }: PropsType) => {
   const flatlistRef = useRef(null);
   const getItemLayout = useRef((data, index) => ({
     length: dimension.SCREEN_WIDTH,
@@ -41,12 +42,11 @@ const ImageSlider = ({ rentalDetail, navigation }: PropsType) => {
       ref={ref => (flatlistRef.current = ref)}
       showsHorizontalScrollIndicator={false}
       onViewableItemsChanged={handleItemChanged.current}
-      data={[1, 2, 3]}
-      renderItem={() => (
+      data={images}
+      renderItem={({ item }) => (
         <Image
           source={{
-            uri:
-              'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
+            uri: item,
           }}
           resizeMode="stretch"
           style={styles.imageContainer}

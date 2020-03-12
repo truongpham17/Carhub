@@ -5,14 +5,14 @@ import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 import { connect } from 'react-redux';
 import { addPayment } from '@redux/actions/payment';
 import { addRentRequest } from '@redux/actions/car';
-import { NavigationType, CarType, HubType, UserType } from 'types';
+import { NavigationType, CarType, HubType, UserType, CarModel } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 import { textStyle, textStyleObject } from 'Constants/textStyles';
 
 type PropTypes = {
   navigation: NavigationType,
-  car: CarType,
+  car: { carModel: CarModel, hub: HubType },
   fromDate: Date,
   toDate: Date,
   pickOffHub: HubType,
@@ -48,12 +48,13 @@ const SuccessBookingRental = ({
       label: 'Duration',
       value: `${duration} days`,
     },
-    { label: 'Price per day', value: car.price },
+    { label: 'Price per day', value: car.carModel.price },
     { label: 'Extra price', value: `0 $` },
-    { label: 'Total', value: `${duration * car.price}$` },
+    { label: 'Total', value: `${duration * car.carModel.price}$` },
     { label: 'Pick-up hub location', value: car.hub.address },
     { label: 'Pick-off hub location', value: pickOffHub.address },
   ];
+
   const onClose = () => {
     navigation.navigate('SearchCarScreen');
   };
@@ -90,7 +91,7 @@ const SuccessBookingRental = ({
         ))}
       </View>
       <Button
-        label="Next"
+        label="Done"
         style={{ marginVertical: scaleVer(16) }}
         onPress={onClose}
       />
@@ -100,7 +101,9 @@ const SuccessBookingRental = ({
 
 export default connect(
   state => ({
-    car: state.car.data.find(item => item._id === state.car.selectedCar),
+    car: state.car.carModels.find(
+      item => item.carModel._id === state.car.selectedCar
+    ),
     fromDate: state.car.rentalSearch.startDate,
     toDate: state.car.rentalSearch.endDate,
     pickOffHub: state.car.pickOffHub,

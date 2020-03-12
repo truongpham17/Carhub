@@ -4,9 +4,10 @@ import {
   GET_LEASE_FAILURE,
   GET_LEASE_REQUEST,
   GET_LEASE_SUCCESS,
-  GET_LEASE_ITEM_FAILURE,
-  GET_LEASE_ITEM_REQUEST,
-  GET_LEASE_ITEM_SUCCESS,
+  // GET_LEASE_ITEM_FAILURE,
+  // GET_LEASE_ITEM_REQUEST,
+  // GET_LEASE_ITEM_SUCCESS,
+  SET_LEASE_DETAIL_ID,
 } from '@redux/constants/lease';
 import axios from 'axios';
 
@@ -166,26 +167,31 @@ export const getLeaseList = (
   }
 };
 
-export const getLease = (
-  data,
-  callback = INITIAL_CALLBACK
-) => async dispatch => {
-  try {
-    dispatch({
-      type: GET_LEASE_ITEM_REQUEST,
-    });
-    const result = await query({
-      endpoint: `${ENDPOINTS.lease}/${data.id}`,
-    });
-    if (result.status) {
-      dispatch({ type: GET_LEASE_ITEM_SUCCESS, payload: result.data });
-      callback.success();
-    }
-  } catch (error) {
-    dispatch({
-      type: GET_LEASE_ITEM_FAILURE,
-      payload: error,
-    });
-    callback.onFailure();
-  }
-};
+// export const getLease = (
+//   data,
+//   callback = INITIAL_CALLBACK
+// ) => async dispatch => {
+//   try {
+//     dispatch({
+//       type: GET_LEASE_ITEM_REQUEST,
+//     });
+//     const result = await query({
+//       endpoint: `${ENDPOINTS.lease}/${data.id}`,
+//     });
+//     if (result.status) {
+//       dispatch({ type: GET_LEASE_ITEM_SUCCESS, payload: result.data });
+//       callback.success();
+//     }
+//   } catch (error) {
+//     dispatch({
+//       type: GET_LEASE_ITEM_FAILURE,
+//       payload: error,
+//     });
+//     callback.onFailure();
+//   }
+// };
+
+export const setLeaseDetailId = _id => ({
+  type: SET_LEASE_DETAIL_ID,
+  payload: _id,
+});

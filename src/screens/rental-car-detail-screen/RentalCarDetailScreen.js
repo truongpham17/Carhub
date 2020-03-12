@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ViewContainer, Button } from 'Components';
 import {
@@ -7,6 +7,7 @@ import {
   CarType,
   GeoLocationType,
   HubType,
+  CarModel,
 } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setPickOffHub } from '@redux/actions/car';
@@ -23,7 +24,7 @@ import Description from './Description';
 type PropsType = {
   rentalDetail: RentailCarDetailType,
   navigation: NavigationType,
-  carList: [CarType],
+  carModels: [{ carModel: CarModel, hub: HubType }],
   loading: Boolean,
   id: String,
   rentalSearch: {
@@ -36,25 +37,26 @@ type PropsType = {
 };
 
 const RentalCarDetailScreen = ({
-  rentalDetail,
   navigation,
-  carList,
-  loading,
+  carModels,
   id,
   rentalSearch,
   setPickOffHub,
 }: PropsType) => {
   const [returnHub, setReturnHub]: [HubType] = useState();
+  const car = carModels.find(item => item.carModel._id === id);
+
+  useEffect(() => {
+    if (
+      rentalSearch.startLocation.address === rentalSearch.endLocation.address
+    ) {
+      setReturnHub(car.hub);
+    }
+  }, []);
 
   const onBackPress = () => {
     navigation.goBack();
   };
-
-  const car = carList.find(item => item._id === id);
-
-  const handleChangeTripDate = () => {};
-  const handleShowPickupLoc = () => {};
-  const handleShowReturnLoc = () => {};
 
   const goToCheckOut = () => {
     if (!returnHub) return;
@@ -67,7 +69,6 @@ const RentalCarDetailScreen = ({
   const onSelectReturnHub = () => {
     navigation.navigate('SelectMapScreen', {
       callback(hub) {
-        console.log(hub);
         setReturnHub(hub);
         navigation.pop();
       },
@@ -85,13 +86,13 @@ const RentalCarDetailScreen = ({
 
   return (
     <ViewContainer onBackPress={onBackPress} scrollable safeArea={false}>
-      <ImageSlider images={car.images} />
+      <ImageSlider images={car.carModel.images} />
       <Header
         name={car.carModel.name}
         type={car.carModel.type}
         star={4}
         trip={20}
-        price={car.price}
+        price={car.carModel.price}
         total={500}
       />
       <Item
@@ -112,7 +113,7 @@ const RentalCarDetailScreen = ({
 
       <Item
         title="PICK UP LOCATION"
-        data={[{ value: car.currentHub.address }]}
+        data={[{ value: car.hub.address }]}
         showAction
         actionLabel="SHOW"
         onActionPress={onShowPickUpLocation}
@@ -121,7 +122,7 @@ const RentalCarDetailScreen = ({
         title="PICK OFF LOCATION"
         data={[{ value: (returnHub && returnHub.address) || '' }]}
         showAction
-        actionLabel="SELECT HUB"
+        actionLabel={returnHub ? 'CHANGE HUB' : 'SELECT HUB'}
         onActionPress={onSelectReturnHub}
       />
 
@@ -151,7 +152,7 @@ const RentalCarDetailScreen = ({
         ]}
       />
 
-      <Description description={car.description} />
+      <Description description={car.carModel.description} />
 
       <View style={styles.buttonContainer}>
         <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    carList: state.car.data,
+    carModels: state.car.carModels,
     loading: state.car.loading,
     id: state.car.selectedCar,
     rentalSearch: state.car.rentalSearch,

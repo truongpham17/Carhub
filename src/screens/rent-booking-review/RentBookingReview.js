@@ -5,13 +5,13 @@ import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 import { connect } from 'react-redux';
 import { addPayment } from '@redux/actions/payment';
 import { addRentRequest } from '@redux/actions/car';
-import { NavigationType, CarType, HubType, UserType } from 'types';
+import { NavigationType, CarModel, HubType, UserType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 
 type PropTypes = {
   navigation: NavigationType,
-  car: CarType,
+  car: { carModel: CarModel, hub: HubType },
   fromDate: Date,
   toDate: Date,
   pickOffHub: HubType,
@@ -47,9 +47,9 @@ const RentBookingReview = ({
       label: 'Duration',
       value: `${duration} days`,
     },
-    { label: 'Price per day', value: car.price },
+    { label: 'Price per day', value: car.carModel.price },
     { label: 'Extra price', value: `0 $` },
-    { label: 'Total', value: `${duration * car.price}$` },
+    { label: 'Total', value: `${duration * car.carModel.price}$` },
     { label: 'Pick-up hub location', value: car.hub.address },
     { label: 'Pick-off hub location', value: pickOffHub.address },
   ];
@@ -64,24 +64,24 @@ const RentBookingReview = ({
       addPayment(
         {
           type: 'Rental',
-          amount: duration * car.price,
+          amount: duration * car.carModel.price,
           note: 'Rental transaction',
         },
         {
           onSuccess() {
             // console.log('come here!!!!');
-            // navigation.navigate('SuccessBookingRental');
+            // navigation.navigate(' ');
             addRentRequest(
               {
-                car: car._id,
+                carModel: car.carModel._id,
                 customer: user._id,
                 type: 'hub',
                 startDate: fromDate.toISOString(),
                 endDate: toDate.toISOString(),
-                pickupHub: car.currentHub._id,
+                pickupHub: car.hub._id,
                 pickoffHub: pickOffHub._id,
-                price: car.price,
-                totalCost: duration * car.price,
+                price: car.carModel.price,
+                totalCost: duration * car.carModel.price,
                 description: 'Rental booking',
                 payment: payment._id,
               },
@@ -135,7 +135,9 @@ const RentBookingReview = ({
 
 export default connect(
   state => ({
-    car: state.car.data.find(item => item._id === state.car.selectedCar),
+    car: state.car.carModels.find(
+      item => item.carModel._id === state.car.selectedCar
+    ),
     fromDate: state.car.rentalSearch.startDate,
     toDate: state.car.rentalSearch.endDate,
     pickOffHub: state.car.pickOffHub,
@@ -146,4 +148,3 @@ export default connect(
   }),
   { addPayment, addRentRequest }
 )(RentBookingReview);
-const styles = StyleSheet.create({});

@@ -8,6 +8,9 @@ import {
   ADD_RENTAL_REQUEST,
   ADD_RENTAL_SUCCESS,
   ADD_RENTAL_FAILURE,
+  SEARCH_CAR_MODEL_FAILURE,
+  SEARCH_CAR_MODEL_REQUEST,
+  SEARCH_CAR_MODEL_SUCCESS,
 } from '../constants/car';
 
 const INITIAL_STATE = {
@@ -18,6 +21,7 @@ const INITIAL_STATE = {
   loading: false,
   pickOffHub: {},
   rentalRequest: null,
+  carModels: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -58,6 +62,18 @@ export default (state = INITIAL_STATE, action) => {
       };
     case SET_PICK_OFF_HUB:
       return { ...state, pickOffHub: action.payload };
+
+    case SEARCH_CAR_MODEL_REQUEST:
+      return { ...state, loading: true };
+    case SEARCH_CAR_MODEL_SUCCESS:
+      return {
+        ...state,
+        carModels: action.payload,
+        loading: false,
+      };
+    case SEARCH_CAR_MODEL_FAILURE:
+      return { ...state, loading: false };
+
     default:
       return { ...state };
   }
