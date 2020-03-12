@@ -28,16 +28,10 @@ const LeaseHistoryScreen = ({
   const onGetDetail = id => {
     navigation.navigate('LeaseHistoryItemDetailScreen', { itemID: id });
   };
-  // console.log(rentList);
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
     <LeaseHistoryItem leaseDetail={item} onGetDetail={onGetDetail} />
   );
-  // const data = ['1', '2', '3', '4'];
-  // console.log(rentList);
-
-  // const handleRenderItem = () => <HistoryItem />;
-
   const handleKeyExtractor = (item, index) => index.toString();
   return (
     <FlatList
@@ -57,4 +51,3 @@ export default connect(
   }),
   { getLeaseList }
 )(LeaseHistoryScreen);
-// export default RentHistoryScreen;

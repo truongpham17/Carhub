@@ -59,4 +59,3 @@ export default connect(
   }),
   { getRentalsList }
 )(RentHistoryScreen);
-// export default RentHistoryScreen;

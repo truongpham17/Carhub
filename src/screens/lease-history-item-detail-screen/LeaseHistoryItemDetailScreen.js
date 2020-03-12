@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import { ViewContainer, ListItem, Button } from 'Components';
+import { ViewContainer, ListItem, Button, ConfirmPopup } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
@@ -19,6 +19,7 @@ const LeaseHistoryItemDetailScreen = ({
   leaseDetail,
   getLease,
 }: PropTypes) => {
+  const [popupVisible, setPopupVisible] = useState(false);
   useEffect(() => {
     const id = navigation.getParam('itemID', '');
     getLease({ id });
@@ -28,15 +29,19 @@ const LeaseHistoryItemDetailScreen = ({
   const endDateFormat = moment(leaseDetail.endDate).format('D MMMM, YYYY');
   const duration = subtractDate(leaseDetail.startDate, leaseDetail.endDate);
   const daysleft = subtractDate(new Date(), leaseDetail.endDate);
+  console.log(leaseDetail.car.carModel.name);
   const showAttr = [
+    // leaseDetail.car.carModel.name ||
+
     { value: leaseDetail.car.carModel.name, label: 'Car Name' },
     { value: startDateFormat, label: 'From date' },
     { value: endDateFormat, label: 'To date' },
     { value: `${duration} days`, label: 'Duration' },
     { value: `${leaseDetail.price} $`, label: 'Price Per Day' },
     { value: `${leaseDetail.totalEarn} $`, label: 'Total earn' },
-    { value: leaseDetail.hub, label: 'Hub' },
-    { value: daysleft, label: 'Days left' },
+    // leaseDetail.hub.name
+    { value: leaseDetail.hub.name, label: 'Hub' },
+    { value: daysleft > 0 ? daysleft : 'None', label: 'Days left' },
     { value: leaseDetail.status, label: 'Status' },
   ];
 
@@ -45,7 +50,11 @@ const LeaseHistoryItemDetailScreen = ({
     navigation.pop();
   };
 
-  const handleReturn = () => {};
+  const handleRequestReceive = () => {
+    setPopupVisible(true);
+  };
+
+  const handleconfirm = () => {};
 
   return (
     <ViewContainer
@@ -55,7 +64,7 @@ const LeaseHistoryItemDetailScreen = ({
       scrollable
     >
       <Image
-        source={{ uri: leaseDetail.car.images[0] }}
+        // source={{ uri: leaseDetail.car.images[0] }}
         style={styles.imageContainer}
         resizeMode="stretch"
       />
@@ -69,7 +78,28 @@ const LeaseHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
-      <Button label="RETURN" onPress={handleReturn} style={styles.button} />
+      {leaseDetail.status === 'AVAILABLE' && (
+        <Button
+          label="Request receive"
+          onPress={handleRequestReceive}
+          style={styles.button}
+        />
+      )}
+      {leaseDetail.status === 'WAIT_TO_RETURN' && (
+        <Button
+          label="Confirm receive"
+          onPress={handleconfirm}
+          style={styles.button}
+        />
+      )}
+      <ConfirmPopup
+        title="CONFIRM"
+        description="Would you like to request 
+        returning your car?"
+        modalVisible={popupVisible}
+        onClose={() => setPopupVisible(false)}
+        onConfirm={() => setPopupVisible(false)}
+      />
     </ViewContainer>
   );
 };

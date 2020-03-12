@@ -27,6 +27,7 @@ import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
 import HistoryScreen from './history-screen/HistoryScreen';
 import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
+import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -63,6 +64,7 @@ const HistoryStack = createStackNavigator(
   {
     HistoryScreen,
     RentHistoryItemDetailScreen,
+    LeaseHistoryItemDetailScreen,
   },
   {
     headerMode: 'none',
