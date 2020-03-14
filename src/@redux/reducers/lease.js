@@ -24,6 +24,7 @@ const INITIAL_STATE = {
     leases: [],
     total: 0,
   },
+  carModel: {},
 };
 
 export default (state = INITIAL_STATE, action) => {

@@ -15,7 +15,7 @@ import {
   ListItem,
 } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType, UserType, CarType, HubType } from 'types';
+import { NavigationType, UserType, CarType, HubType, CarModel } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
@@ -37,6 +37,7 @@ type PropTypes = {
   endDate: Date,
   cardNumber: String,
   selectedHub: HubType,
+  carModel: CarModel,
 };
 
 const HostReviewScreen = ({
@@ -49,6 +50,7 @@ const HostReviewScreen = ({
   endDate,
   cardNumber,
   selectedHub,
+  carModel,
 }: PropTypes) => {
   const leaseContract = [
     {
@@ -101,7 +103,10 @@ const HostReviewScreen = ({
     {
       id: 'revenue',
       label: 'You can earn up to',
-      content: '$2020',
+      content: `$${carModel.price *
+        parseInt(
+          (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24)
+        )}`,
     },
   ];
   const onPressBack = () => {
@@ -176,6 +181,7 @@ export default connect(
     endDate: state.lease.endDate,
     cardNumber: state.lease.cardNumber,
     selectedHub: state.lease.selectedHub,
+    carModel: state.lease.carModel,
   }),
   { addLease }
 )(HostReviewScreen);

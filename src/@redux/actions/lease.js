@@ -62,10 +62,25 @@ export const getCustomerPreviousCarList = (id, callback) => async dispatch => {
   }
 };
 
-export const checkHostHubInfo = data => ({
-  type: ADD_HOST_HUB_INFO_SUCCESS,
-  payload: data,
-});
+export const checkHostHubInfo = (data, callback) => async dispatch => {
+  try {
+    dispatch({ type: GET_LEASE_REQUEST });
+    const carModel = await query({
+      endpoint: 'carModel/findByName',
+      method: METHODS.get,
+      data: { data },
+    });
+    if (carModel.status === 200) {
+      dispatch({
+        type: ADD_HOST_HUB_INFO_SUCCESS,
+        payload: { data, carModel },
+      });
+    }
+  } catch (error) {
+    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    callback.onFailure();
+  }
+};
 
 export const addLease = (
   {
@@ -83,50 +98,53 @@ export const addLease = (
   callback
 ) => async dispatch => {
   try {
-    dispatch({ type: ADD_LEASE_REQUEST });
-    // const carModel = await query({
-    //   endpoint: 'carModel',
-    //   method: METHODS.post,
-    //   data: { name },
-    // });
-
-    // if (carModel.status === 201) {
-    const car = await query({
-      endpoint: 'car',
+    dispatch({ type: GET_LEASE_REQUEST });
+    const carModel = await query({
+      endpoint: 'carModel/createCarModel',
       method: METHODS.post,
-      data: {
-        customer,
-        hub,
-        odometer,
-        images,
-        VIN,
-        carModel: '5e69a07d06c4710835a20231',
-        usingYears,
-      },
+      data: { name },
     });
-    if (car.status === 201) {
-      console.log(car.data);
-      const lease = await query({
-        endpoint: 'lease',
+
+    if (carModel.status === 201) {
+      const car = await query({
+        endpoint: 'car/createCarAfterChecking',
         method: METHODS.post,
         data: {
           customer,
           hub,
-          startDate,
-          endDate,
-          car: car.data.car._id,
-          cardNumber,
+          odometer,
+          images,
+          VIN,
+          carModel: carModel.data._id,
+          usingYears,
         },
       });
-      if (lease.status === 201) {
-        dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
-        callback.onSuccess();
+      if (car.status === 201) {
+        const lease = await query({
+          endpoint: 'lease',
+          method: METHODS.post,
+          data: {
+            customer,
+            hub,
+            startDate,
+            endDate,
+            car: car.data._id,
+            cardNumber,
+          },
+        });
+        if (lease.status === 201) {
+          dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
+          callback.onSuccess();
+        } else {
+          dispatch({
+            type: ADD_LEASE_FAILURE,
+          });
+        }
       } else {
         dispatch({
           type: ADD_LEASE_FAILURE,
         });
       }
-      // }
     } else {
       dispatch({
         type: ADD_LEASE_FAILURE,

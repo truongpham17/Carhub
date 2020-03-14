@@ -17,7 +17,11 @@ const CarItem = ({ data }: PropTypes) => {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: data.images[0] }}
+        source={{
+          uri: data.carModel.images[0]
+            ? data.carModel.images[0]
+            : data.images[0],
+        }}
         resizeMode="cover"
         style={styles.image}
       />

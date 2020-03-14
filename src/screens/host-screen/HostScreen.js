@@ -25,7 +25,6 @@ import {
 } from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Seperator from './Seperator';
-import Extra from './Extra';
 
 type PropTypes = {
   checkCarByVin: () => void,
@@ -87,7 +86,9 @@ const HostScreen = ({
       }
     );
   };
-  const handleScan = () => {};
+  const handleScan = () => {
+    navigation.navigate('HostScanCameraScreen');
+  };
   return (
     <ViewContainer
       scrollable

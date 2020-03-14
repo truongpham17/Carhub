@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { ViewContainer, InputForm, Button, DatePicker } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
+import { NavigationType, CarType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
@@ -19,12 +19,14 @@ type PropTypes = () => {
   navigation: NavigationType,
   checkHostHubInfo: () => void,
   loading: Boolean,
+  car: CarType,
 };
 
 const HostHubScreen = ({
   checkHostHubInfo,
   loading,
   navigation,
+  car,
 }: PropTypes) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -35,7 +37,8 @@ const HostHubScreen = ({
     navigation.pop();
   };
   const handleNextStep = () => {
-    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub });
+    const name = `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`;
+    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub, name });
     navigation.navigate('HostReviewScreen');
   };
   const handleChangeDate = (type, date) => {
@@ -102,6 +105,7 @@ const HostHubScreen = ({
 export default connect(
   state => ({
     loading: state.lease.loading,
+    car: state.lease.car,
   }),
   { checkHostHubInfo }
 )(HostHubScreen);
