@@ -34,18 +34,20 @@ const HostListCarScreen = ({ navigation, listPreviousCar }: PropTypes) => {
   const clearSearch = () => {};
 
   const keyExtractor = (item, index) => index;
-  const renderItem = ({ item, index }) => <CarItem data={item} />;
+  const renderItem = ({ item, index }) => (
+    <CarItem data={{ ...item, navigation }} />
+  );
 
   return (
     <ViewContainer haveBackHeader title="Car list" onBackPress={onPressBack}>
-      <SearchBar
+      {/* <SearchBar
         // inputStyle={{ backgroundColor: 'white' }}
         containerStyle={styles.container}
         platform="android"
         onChangeText={updateSearch}
         onClearText={clearSearch}
         placeholder="Car name..."
-      />
+      /> */}
       <FlatList
         data={listPreviousCar}
         renderItem={renderItem}

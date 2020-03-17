@@ -99,6 +99,8 @@ export type CarType = {
   odometer: Number,
   price: Number,
   feature: String,
+  VIN: String,
+  usingYears: Number,
   valueData: [{ value: String }],
 };
 

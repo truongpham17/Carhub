@@ -17,6 +17,7 @@ import HostScreen from './host-screen/HostScreen';
 import HostReviewScreen from './host-review-screen/HostReviewScreen';
 import HostHubScreen from './host-hub-screen/HostHubScreen';
 import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
+import CarItem from './host-list-car-screen/CarItem';
 import HostScanCameraScreen from './host-scan-camera-screen/HostScanCameraScreen';
 import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
 import AuthScreen from './auth-screen/AuthScreen';
@@ -56,6 +57,7 @@ const LeaseStack = createStackNavigator(
     HostListCarScreen,
     SelectMapScreen,
     HostScanCameraScreen,
+    CarItem,
   },
   {
     headerMode: 'none',

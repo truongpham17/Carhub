@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -22,6 +23,7 @@ import colors from 'Constants/colors';
 import {
   checkCarByVin,
   getCustomerPreviousCarList,
+  setValue,
 } from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Seperator from './Seperator';
@@ -29,9 +31,13 @@ import Seperator from './Seperator';
 type PropTypes = {
   checkCarByVin: () => void,
   getCustomerPreviousCarList: () => void,
+  setValue: () => void,
   navigation: NavigationType,
   loading: Boolean,
   user: UserType,
+  vin: String,
+  usingYears: String,
+  odometers: String,
 };
 
 const HostScreen = ({
@@ -39,21 +45,23 @@ const HostScreen = ({
   navigation,
   loading,
   user,
+  vin,
+  usingYears,
+  odometers,
   getCustomerPreviousCarList,
+  setValue,
 }: PropTypes) => {
-  const [vin, setVin] = useState('');
-  const [usingYears, setUsingYears] = useState('');
-  const [odometers, setOdometers] = useState('');
+  console.log({ vin, usingYears, odometers });
   const [images, setImages] = useState(['']);
 
   const handleChangeVin = vin => {
-    setVin(vin);
+    setValue({ vin });
   };
   const handleChangeUsingYears = usingYears => {
-    setUsingYears(usingYears);
+    setValue({ usingYears });
   };
   const handleChangeOdometers = odometers => {
-    setOdometers(odometers);
+    setValue({ odometers });
   };
   const handleAddImage = () => {
     selectImage(image => setImages([...images, image]));
@@ -66,10 +74,21 @@ const HostScreen = ({
   };
   const handleNextStep = () => {
     checkCarByVin(
-      { vin, usingYears, odometers, images: images.filter((_, i) => i > 0) },
+      {
+        vin,
+        usingYears,
+        odometers,
+        images: images.filter((_, i) => i > 0),
+      },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
         onFailure: () => {
+          Alert.alert(
+            'Car is not found',
+            'Your VIN code maybe wrong. Please input again',
+            [{ text: 'OK', onPress: () => console.log('OK') }],
+            { cancelable: false }
+          );
           console.log('error');
         },
       }
@@ -164,6 +183,9 @@ export default connect(
   state => ({
     loading: state.lease.loading,
     user: state.user,
+    vin: state.lease.vin,
+    usingYears: state.lease.usingYears,
+    odometers: state.lease.odometers,
   }),
-  { checkCarByVin, getCustomerPreviousCarList }
+  { checkCarByVin, getCustomerPreviousCarList, setValue }
 )(HostScreen);

@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import { Rating, Icon } from 'react-native-elements';
 import { getSvg } from 'Assets/svgs';
@@ -7,13 +14,36 @@ import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { NavigationType, CarType, UserType } from 'types';
 import { shadowStyle } from 'Constants';
+import { connect } from 'react-redux';
+import { choosePreviousCar } from '@redux/actions/lease';
 
 type PropTypes = {
   data: CarType,
+  navigation: NavigationType,
+  choosePreviousCar: () => void,
 };
 
-const CarItem = ({ data }: PropTypes) => {
-  const handleCarDetail = () => {};
+const CarItem = ({ data, choosePreviousCar }: PropTypes) => {
+  const handleCarDetail = () => {
+    choosePreviousCar(
+      {
+        vin: data.VIN,
+        usingYears: data.usingYears,
+        odometers: data.odometer,
+      },
+      {
+        onSuccess: () => data.navigation.navigate('HostScreen'),
+        onFailure: () => {
+          Alert.alert(
+            'Can not choose this car',
+            'Something went wrong',
+            [{ text: 'OK', onPress: () => console.log('OK') }],
+            { cancelable: false }
+          );
+        },
+      }
+    );
+  };
   return (
     <View style={styles.container}>
       <Image
@@ -64,4 +94,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarItem;
+export default connect(
+  state => ({
+    loading: state.lease.loading,
+    user: state.user,
+    vin: state.lease.vin,
+  }),
+  { choosePreviousCar }
+)(CarItem);

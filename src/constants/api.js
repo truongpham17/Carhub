@@ -3,7 +3,7 @@
  */
 
 // cuong
-export const API_URL = 'http://192.168.1.6:5068/';
+export const API_URL = 'http://192.168.1.7:5068/';
 
 // truong
 // export const API_URL = 'http://192.168.1.33:5068/';

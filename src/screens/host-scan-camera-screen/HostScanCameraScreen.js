@@ -1,16 +1,36 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ViewContainer,
+  InputForm,
+  ListItem,
+  Button,
+  ImageSelector,
+} from 'Components';
 import { NavigationType, UserType } from 'types';
 import { RNCamera } from 'react-native-camera';
 import RNTextDetector from 'react-native-text-detector';
+import { scanVinCodeByCamera } from '@redux/actions/lease';
 
 type PropTypes = {
   navigation: NavigationType,
+  vin: String,
+  loading: Boolean,
+  scanVinCodeByCamera: () => void,
 };
 
-const HostScanCameraScreen = ({ navigation }: PropTypes) => {
+const HostScanCameraScreen = ({
+  navigation,
+  scanVinCodeByCamera,
+  vin,
+  loading,
+}: PropTypes) => {
   const [camera, setCamera] = useState('');
+
+  const onPressBack = () => {
+    navigation.pop();
+  };
 
   const takePicture = async () => {
     try {
@@ -21,16 +41,28 @@ const HostScanCameraScreen = ({ navigation }: PropTypes) => {
       };
       const { uri } = await camera.takePictureAsync(options);
       const visionResp = await RNTextDetector.detectFromUri(uri);
-      navigation.navigate('HostScreen');
-      navigation.navigate('HostScreen', {
-        codeScanned: visionResp[0].text,
-      });
+      scanVinCodeByCamera(
+        { vin: visionResp[0].text },
+        {
+          onSuccess: () => navigation.navigate('HostScreen'),
+          onFailure: () => {
+            console.log('error');
+          },
+        }
+      );
     } catch (e) {
       console.warn(e);
     }
   };
   return (
-    <View style={styles.container}>
+    <ViewContainer
+      scrollable
+      haveBackHeader
+      title="Scan VIN"
+      onBackPress={onPressBack}
+      loading={loading}
+      style={styles.container}
+    >
       <RNCamera
         ref={ref => {
           setCamera(ref);
@@ -53,7 +85,7 @@ const HostScanCameraScreen = ({ navigation }: PropTypes) => {
           </TouchableOpacity>
         </View>
       </RNCamera>
-    </View>
+    </ViewContainer>
   );
 };
 
@@ -79,4 +111,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HostScanCameraScreen;
+export default connect(
+  state => ({
+    loading: state.lease.loading,
+    user: state.user,
+    vin: state.lease.vin,
+  }),
+  { scanVinCodeByCamera }
+)(HostScanCameraScreen);

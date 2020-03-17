@@ -19,14 +19,14 @@ type PropTypes = () => {
   navigation: NavigationType,
   checkHostHubInfo: () => void,
   loading: Boolean,
-  car: CarType,
+  InfoFromVin: [],
 };
 
 const HostHubScreen = ({
   checkHostHubInfo,
   loading,
   navigation,
-  car,
+  InfoFromVin,
 }: PropTypes) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -37,9 +37,16 @@ const HostHubScreen = ({
     navigation.pop();
   };
   const handleNextStep = () => {
-    const name = `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`;
-    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub, name });
-    navigation.navigate('HostReviewScreen');
+    const name = `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`;
+    checkHostHubInfo(
+      { startDate, endDate, cardNumber, selectedHub, name },
+      {
+        onSuccess: () => navigation.navigate('HostReviewScreen'),
+        onFailure: () => {
+          console.log('error');
+        },
+      }
+    );
   };
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
@@ -105,7 +112,7 @@ const HostHubScreen = ({
 export default connect(
   state => ({
     loading: state.lease.loading,
-    car: state.lease.car,
+    InfoFromVin: state.lease.InfoFromVin,
   }),
   { checkHostHubInfo }
 )(HostHubScreen);
