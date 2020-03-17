@@ -17,8 +17,10 @@ import SelectMapInput from './SelectMapInput';
 import ProgressStep from './ProgressStep';
 import MapAutoCompleteSearch from './MapAutoCompleteSearch';
 import ButtonGroup from './ButtonGroup';
+import QRCodeGenModal from './QRCodeGenModal';
 
 export {
+  QRCodeGenModal,
   AppGradient,
   Avatar,
   Button,

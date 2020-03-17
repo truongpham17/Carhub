@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { ViewContainer, ListItem, Button, ConfirmPopup } from 'Components';
+import {
+  ViewContainer,
+  ListItem,
+  Button,
+  ConfirmPopup,
+  QRCodeGenModal,
+} from 'Components';
 import { NavigationType, RentDetailType } from 'types';
 import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
@@ -9,7 +15,6 @@ import { subtractDate } from 'Utils/common';
 import { getSpecificRental } from '@redux/actions/rentItemDetail';
 import firebase from 'react-native-firebase';
 import PriceSelectModal from './PriceSelectModal';
-import QRCodeGenModal from './QRCodeGenModal';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -67,7 +72,7 @@ const RentHistoryItemDetailScreen = ({
     const value = {
       id: rentDetail._id,
       type,
-      expired: new Date().getTime() + 120 * 1000,
+      expired: new Date().getTime() + 1 * 60000,
     };
     setValueForQR(JSON.stringify(value));
   };
@@ -191,7 +196,7 @@ const RentHistoryItemDetailScreen = ({
       />
       <ConfirmPopup
         title="Successfully"
-        description="Your QR Code has been scanned successfully, dont open it again"
+        description="Your QR Code has been scanned successfully!"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
         onConfirm={() => setPopupVisible(false)}

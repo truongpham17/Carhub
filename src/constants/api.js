@@ -10,7 +10,7 @@
 // export const API_URL = 'https://car-hub-production.herokuapp.com/';
 
 // dat
-export const API_URL = 'http://192.168.1.33:5068/';
+export const API_URL = 'http://192.168.1.190:5068/';
 
 export const GOOGLE_KEY = 'AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y';
 
@@ -23,6 +23,7 @@ export const METHODS = {
   get: 'GET',
   post: 'POST',
   patch: 'PATCH',
+  put: 'PUT',
   delete: 'DELETE',
 };
 

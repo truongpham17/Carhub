@@ -1,17 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { ViewContainer, ListItem, Button, ConfirmPopup } from 'Components';
+import {
+  ViewContainer,
+  ListItem,
+  Button,
+  ConfirmPopup,
+  QRCodeGenModal,
+} from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
-import { getLease } from '@redux/actions/lease';
+import { updateLeaseStatus } from '@redux/actions/lease';
+import firebase from 'react-native-firebase';
 
 type PropTypes = {
   navigation: NavigationType,
+  // {
+  //   state: {
+  //     params: {
+  //       onUpdateSuccess: () => void,
+  //     },
+  //   },
+  //   goBack: () => void,
+  // },
   leaseDetail: LeaseDetailType,
-  getLease: () => void,
+  // getLease: () => void,
+  updateLeaseStatus: () => void,
   isLoading: Boolean,
 };
 
@@ -19,32 +35,74 @@ const LeaseHistoryItemDetailScreen = ({
   navigation,
   leaseDetail,
   isLoading,
+  updateLeaseStatus,
 }: PropTypes) => {
   const [popupVisible, setPopupVisible] = useState(false);
-  // useEffect(() => {
-  //   const id = navigation.getParam('itemID', '');
-  //   getLease({ id });
-  //   // console.log('Getting data!!!');
-  // }, []);
-  console.log(leaseDetail);
+  const [valueForQR, setValueForQR] = useState('');
+  const [generateNewQR, setGenerateNewQR] = useState(true);
+  const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
+  useEffect(() => {
+    if (qrCodeModalVisible && generateNewQR) {
+      generateValue('return');
+      openListenner();
+    }
+  }, [qrCodeModalVisible, generateNewQR]);
+  const openListenner = () => {
+    console.log('open listener');
+    firebase
+      .database()
+      .ref(`scanQRCode/${leaseDetail._id}`)
+      .set({
+        _id: leaseDetail._id,
+        status: 'waiting',
+      });
+    firebase
+      .database()
+      .ref(`scanQRCode/${leaseDetail._id}`)
+      .on('value', snapShot => {
+        if (snapShot.val().status === 'completed') {
+          setQrCodeModalVisible(false);
+          setTimeout(() => {
+            setPopupVisible(true);
+          }, 500);
+        }
+      });
+  };
+  const generateValue = type => {
+    const value = {
+      id: leaseDetail._id,
+      type,
+      expired: new Date().getTime() + 1 * 60000,
+    };
+    setValueForQR(JSON.stringify(value));
+  };
   const startDateFormat = moment(leaseDetail.startDate).format('D MMMM, YYYY');
   const endDateFormat = moment(leaseDetail.endDate).format('D MMMM, YYYY');
   const duration = subtractDate(leaseDetail.startDate, leaseDetail.endDate);
   const daysleft = subtractDate(new Date(), leaseDetail.endDate);
-  console.log(leaseDetail.car.carModel.name);
+  const genStatus = () => {
+    switch (leaseDetail.status) {
+      case 'WAIT_TO_RETURN':
+        return 'Wait to return';
+      default:
+        return leaseDetail.status;
+    }
+  };
+  // const { onUpdateSuccess } = navigation.state.params;
   const showAttr = [
-    // leaseDetail.car.carModel.name ||
-
     { value: leaseDetail.car.carModel.name, label: 'Car Name' },
     { value: startDateFormat, label: 'From date' },
     { value: endDateFormat, label: 'To date' },
-    { value: `${duration} days`, label: 'Duration' },
-    { value: `${leaseDetail.price || 0} $`, label: 'Price Per Day' },
-    { value: `${leaseDetail.totalEarn} $`, label: 'Total earn' },
+    { value: `${duration} day(s)`, label: 'Duration' },
+    {
+      value: leaseDetail.price > 0 ? `$ ${leaseDetail.price}` : `$ 0`,
+      label: 'Price Per Day',
+    },
+    { value: `$ ${leaseDetail.totalEarn}`, label: 'Total earn' },
     // leaseDetail.hub.name
     { value: leaseDetail.hub.name, label: 'Hub' },
     { value: daysleft > 0 ? daysleft : 'None', label: 'Days left' },
-    { value: leaseDetail.status, label: 'Status' },
+    { value: genStatus(), label: 'Status' },
   ];
 
   if (leaseDetail.status === 'PENDING' || leaseDetail.status === 'PAST') {
@@ -53,15 +111,25 @@ const LeaseHistoryItemDetailScreen = ({
 
   // const { data } = leaseDetail;
   const onBackPress = () => {
-    navigation.pop();
+    navigation.goBack();
   };
 
   const handleRequestReceive = () => {
     setPopupVisible(true);
   };
-
-  const handleconfirm = () => {};
-
+  const onCloseQrCodeModal = () => {
+    setQrCodeModalVisible(false);
+  };
+  const handleconfirm = () => {
+    setQrCodeModalVisible(true);
+  };
+  const handleConfirmRequest = () => {
+    updateLeaseStatus({
+      id: leaseDetail._id,
+      status: 'WAIT_TO_RETURN',
+    });
+    setPopupVisible(false);
+  };
   return (
     <ViewContainer
       haveBackHeader
@@ -101,11 +169,16 @@ const LeaseHistoryItemDetailScreen = ({
       )}
       <ConfirmPopup
         title="CONFIRM"
-        description="Would you like to request 
-        returning your car?"
+        description="Would you like to request returning your car?"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
-        onConfirm={() => setPopupVisible(false)}
+        onConfirm={handleConfirmRequest}
+      />
+      <QRCodeGenModal
+        valueForQR={valueForQR}
+        visible={qrCodeModalVisible}
+        onClose={onCloseQrCodeModal}
+        setGenerateNewQR={setGenerateNewQR}
       />
     </ViewContainer>
   );
@@ -128,5 +201,5 @@ export default connect(
     ),
     isLoading: state.lease.loading,
   }),
-  { getLease }
+  { updateLeaseStatus }
 )(LeaseHistoryItemDetailScreen);

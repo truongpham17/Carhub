@@ -4,6 +4,9 @@ import {
   GET_LEASE_FAILURE,
   GET_LEASE_REQUEST,
   GET_LEASE_SUCCESS,
+  UPDATE_LEASE_ITEM_FAILURE,
+  UPDATE_LEASE_ITEM_REQUEST,
+  UPDATE_LEASE_ITEM_SUCCESS,
   // GET_LEASE_ITEM_FAILURE,
   // GET_LEASE_ITEM_REQUEST,
   // GET_LEASE_ITEM_SUCCESS,
@@ -33,7 +36,7 @@ export const getCustomerCarList = (id, callback) => async dispatch => {
       method: METHODS.get,
     });
     if (data.status === 200) {
-      console.log(data.data);
+      // console.log(data.data);
       dispatch({ type: GET_LEASE_CAR_SUCCESS, payload: data.data });
       callback.onSuccess();
     } else {
@@ -95,41 +98,49 @@ export const addLease = (
 ) => async dispatch => {
   try {
     dispatch({ type: ADD_LEASE_REQUEST });
-    const carModel = await query({
-      endpoint: 'carModel',
-      method: METHODS.post,
-      data: { name },
-    });
+    // const carModel = await query({
+    //   endpoint: 'carModel',
+    //   method: METHODS.post,
+    //   data: { name },
+    // });
 
-    if (carModel.status === 201) {
-      const car = await query({
-        endpoint: 'car',
+    // if (carModel.status === 201) {
+    const car = await query({
+      endpoint: 'car',
+      method: METHODS.post,
+      data: {
+        customer,
+        hub,
+        odometer,
+        images,
+        VIN,
+        carModel: '5e69a07d06c4710835a20231',
+        usingYears,
+      },
+    });
+    if (car.status === 201) {
+      // console.log(car.data);
+      const lease = await query({
+        endpoint: 'lease',
         method: METHODS.post,
         data: {
           customer,
           hub,
-          odometer,
-          images,
-          VIN,
-          carModel: carModel._id,
-          usingYears,
+          startDate,
+          endDate,
+          car: car.data.car._id,
+          cardNumber,
         },
       });
-      if (car.status === 201) {
-        const lease = await query({
-          endpoint: 'lease',
-          method: METHODS.post,
-          data: { customer, hub, startDate, endDate, car: car._id, cardNumber },
+      if (lease.status === 201) {
+        dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
+        callback.onSuccess();
+      } else {
+        dispatch({
+          type: ADD_LEASE_FAILURE,
         });
-        if (lease.status === 201) {
-          dispatch({ type: ADD_LEASE_SUCCESS, payload: lease.data });
-          callback.onSuccess();
-        } else {
-          dispatch({
-            type: ADD_LEASE_FAILURE,
-          });
-        }
       }
+      // }
     } else {
       dispatch({
         type: ADD_LEASE_FAILURE,
@@ -150,10 +161,10 @@ export const getLeaseList = (
       type: GET_LEASE_REQUEST,
     });
     const result = await query({ endpoint: ENDPOINTS.lease });
-    // console.log(result.data);
+    // console.warn(result.data);
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_LEASE_SUCCESS, payload: result.data });
-      callback.success();
+      callback.onSuccess();
     } else {
       dispatch({ type: GET_LEASE_FAILURE });
       callback.onFailure();
@@ -190,6 +201,32 @@ export const getLeaseList = (
 //     callback.onFailure();
 //   }
 // };
+
+export const updateLeaseStatus = (
+  { id, status },
+  callback = INITIAL_CALLBACK
+) => async dispatch => {
+  try {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_REQUEST,
+    });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.lease}/${id}`,
+      data: { status },
+    });
+    if (result.status === 200) {
+      dispatch({ type: UPDATE_LEASE_ITEM_SUCCESS, payload: result.data });
+      callback.onSuccess();
+    }
+  } catch (error) {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_FAILURE,
+      payload: error,
+    });
+    callback.onFailure();
+  }
+};
 
 export const setLeaseDetailId = _id => ({
   type: SET_LEASE_DETAIL_ID,
