@@ -12,21 +12,23 @@ import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
-import { getSpecificRental } from '@redux/actions/rentItemDetail';
 import firebase from 'react-native-firebase';
+import { updateSpecificRental } from '@redux/actions/getRentalsList';
+import Geolocation from '@react-native-community/geolocation';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
   navigation: NavigationType,
   rentDetail: RentDetailType,
-  getSpecificRental: () => void,
   isLoading: Boolean,
+  updateSpecificRental: () => void,
 };
 
 const RentHistoryItemDetailScreen = ({
   navigation,
   rentDetail,
   isLoading,
+  updateSpecificRental,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
@@ -38,7 +40,6 @@ const RentHistoryItemDetailScreen = ({
   //   const id = navigation.getParam('itemID', '');
   //   getSpecificRental({ id });
   // }, []);
-
   useEffect(() => {
     if (qrCodeModalVisible && generateNewQR) {
       generateValue('return');
@@ -108,8 +109,24 @@ const RentHistoryItemDetailScreen = ({
     navigation.pop();
   };
 
-  const handleReturn = () => {
-    setQrCodeModalVisible(true);
+  const [curPos, setCurPos] = useState(null);
+
+  const getCurrentPosition = () => {
+    Geolocation.getCurrentPosition(info => {
+      setCurPos({ lat: info.coords.latitude, lng: info.coords.longitude });
+    });
+  };
+
+  const handleActionButton = () => {
+    switch (rentDetail.status) {
+      case 'SHARING':
+        return updateSpecificRental(
+          { id: rentDetail._id, status: 'CURRENT' },
+          { success() {} }
+        );
+      default:
+        return setQrCodeModalVisible(true);
+    }
   };
 
   const onShowPriceModal = () => {
@@ -125,7 +142,17 @@ const RentHistoryItemDetailScreen = ({
   };
 
   const handleSubmitSharing = value => {
-    console.log(value);
+    // Agree sharing
+    getCurrentPosition();
+    updateSpecificRental(
+      {
+        id: rentDetail._id,
+        status: 'SHARING',
+        geometry: curPos,
+        totalCost: value,
+      },
+      { success() {} }
+    );
   };
   const getActionLabel = () => {
     // 'UPCOMING', 'CURRENT', 'OVERDUE', 'SHARING', 'SHARED', 'PAST'
@@ -137,6 +164,8 @@ const RentHistoryItemDetailScreen = ({
         return 'RETURN CAR';
       case 'PAST':
         return 'HIRE THIS CAR';
+      case 'SHARING':
+        return 'CANCEL SHARING';
       default:
         return '';
     }
@@ -170,7 +199,7 @@ const RentHistoryItemDetailScreen = ({
       ))}
       <Button
         label={getActionLabel()}
-        onPress={handleReturn}
+        onPress={handleActionButton}
         style={styles.button}
       />
       <QRCodeGenModal
@@ -222,5 +251,5 @@ export default connect(
     ),
     isLoading: state.rentalsList.isLoading,
   }),
-  { getSpecificRental }
+  { updateSpecificRental }
 )(RentHistoryItemDetailScreen);

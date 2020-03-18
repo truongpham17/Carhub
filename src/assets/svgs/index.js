@@ -12,6 +12,8 @@ import RightArrow from './RightArrow';
 import MarkerIcon from './MarkerIcon';
 import Tick from './Tick';
 import SecurityDraw from './SecurityDraw';
+import CarIcon from './CarIcon';
+import CarIconSelected from './CarIconSelected';
 
 export {
   RemoveIcon,
@@ -28,6 +30,8 @@ export {
   MarkerIcon,
   Tick,
   SecurityDraw,
+  CarIcon,
+  CarIconSelected,
 };
 
 export function getSvg(svg) {

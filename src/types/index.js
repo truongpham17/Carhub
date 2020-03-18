@@ -66,6 +66,18 @@ export type UserType = {
   account: String,
 };
 
+export type SharingType = {
+  _id: String,
+  geometry: {
+    lat: Number,
+    lng: Number,
+  },
+  location?: String,
+  distance?: number,
+  rental: RentDetailType,
+  totalCost: Number,
+};
+
 export type GeoLocationType = {
   geometry: {
     lat: Number,
