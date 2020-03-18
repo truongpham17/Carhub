@@ -131,7 +131,7 @@ const ViewContainer = ({
         backType={backType}
         style={{
           marginHorizontal: scaleHor(24),
-          // paddingTop: scaleVer(24),
+          paddingTop: scaleVer(16),
         }}
       />
     );
@@ -168,7 +168,7 @@ const ViewContainer = ({
       style={[styles.containerStyle, containerStyle]}
       safe={safeArea}
     >
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" hidden />
       {renderBackTitle()}
       {renderComponent()}
       {renderLoading()}

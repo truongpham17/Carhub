@@ -33,13 +33,11 @@ const RentHistoryScreen = ({
     setRentDetailId(id);
     navigation.navigate('RentHistoryItemDetailScreen', { itemID: id });
   };
-  // console.log(rentList);
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
     <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
   );
   // const data = ['1', '2', '3', '4'];
-  // console.log(rentList);
 
   // const handleRenderItem = () => <HistoryItem />;
 

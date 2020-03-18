@@ -11,6 +11,13 @@ import {
   ADD_LEASE_FAILURE,
   SCAN_VIN_CODE_SUCCESS,
   SET_VALUE_SUCCESS,
+  // GET_LEASE_ITEM_REQUEST,
+  // GET_LEASE_ITEM_SUCCESS,
+  // GET_LEASE_ITEM_FAILURE,
+  SET_LEASE_DETAIL_ID,
+  UPDATE_LEASE_ITEM_FAILURE,
+  UPDATE_LEASE_ITEM_REQUEST,
+  UPDATE_LEASE_ITEM_SUCCESS,
 } from '@redux/constants/lease';
 
 const INITIAL_STATE = {
@@ -35,6 +42,7 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+<<<<<<< HEAD
     case GET_CAR_BY_VIN_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case GET_CAR_BY_VIN_FAILURE:
@@ -76,6 +84,42 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, ...action.payload, loading: false };
     case SET_VALUE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
+=======
+    // Geet Lease List
+    case GET_LEASE_REQUEST:
+      return { ...state, loading: true };
+    case GET_LEASE_SUCCESS:
+      return { ...state, loading: false, data: { ...action.payload } };
+    case GET_LEASE_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+    // case GET_LEASE_ITEM_REQUEST:
+    //   return { ...state, loading: true };
+    // case GET_LEASE_ITEM_SUCCESS:
+    //   return { ...state, loading: false, data: action.payload };
+    // case GET_LEASE_ITEM_FAILURE:
+    //   return { ...state, loading: false, error: action.payload };
+    case SET_LEASE_DETAIL_ID:
+      return { ...state, selectedId: action.payload };
+    // Update Lease
+    case UPDATE_LEASE_ITEM_REQUEST:
+      return { ...state, loading: true };
+    case UPDATE_LEASE_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        // data: {
+        //   ...state.data,
+        //   leases: state.data.leases.map(item => {
+        //     if (item !== action.payload._id) {
+        //       return item;
+        //     }
+        //     return action.payload;
+        //   }),
+        // },
+      };
+    case UPDATE_LEASE_ITEM_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+>>>>>>> 34b44c9b05360031aa7788429d93e8475fc9cd0c
     default:
       return { ...state };
   }

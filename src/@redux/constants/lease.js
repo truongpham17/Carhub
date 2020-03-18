@@ -22,3 +22,7 @@ export const GET_LEASE_ITEM_FAILURE = 'get-lease-item-failure';
 export const GET_LEASE_ITEM_SUCCESS = 'get-lease-item-success';
 
 export const SET_LEASE_DETAIL_ID = 'set-lease-detail-id';
+
+export const UPDATE_LEASE_ITEM_REQUEST = 'update-lease-item-request';
+export const UPDATE_LEASE_ITEM_FAILURE = 'update-lease-item-failure';
+export const UPDATE_LEASE_ITEM_SUCCESS = 'update-lease-item-success';

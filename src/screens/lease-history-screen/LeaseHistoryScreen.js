@@ -25,16 +25,19 @@ const LeaseHistoryScreen = ({
     if (refreshing) {
       getLeaseList();
       setRefreshing(false);
+      // console.log(leaseList);
     }
   }, [refreshing]);
   const onGetDetail = id => {
     setLeaseDetailId(id);
     navigation.navigate('LeaseHistoryItemDetailScreen');
+    setRefreshing(true);
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
     <LeaseHistoryItem leaseDetail={item} onGetDetail={onGetDetail} />
   );
+
   const handleKeyExtractor = (item, index) => index.toString();
   return (
     <FlatList

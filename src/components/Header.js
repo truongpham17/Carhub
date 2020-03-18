@@ -56,14 +56,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'stretch',
-    marginBottom: scaleVer(32),
+    paddingBottom: scaleVer(32),
   },
   arrow: {
     position: 'absolute',
     left: 0,
     top: 0,
-    bottom: 0,
+    bottom: 12,
+    // width: 32,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   rightComponent: {
     position: 'absolute',

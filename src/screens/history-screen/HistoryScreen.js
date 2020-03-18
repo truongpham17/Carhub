@@ -42,6 +42,7 @@ const HistoryScreen = ({
   return (
     <ViewContainer
       haveBackHeader
+      haveBack={false}
       title="History"
       onBackPress={onBackPress}
       loading={rentLoading && leaseLoading}

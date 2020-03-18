@@ -102,7 +102,7 @@ export function searchCarList(data, callback = INITIAL_CALLBACK) {
         data,
       });
 
-      console.log(result.status, result.data);
+      // console.log(result.status, result.data);
 
       if (result.status === STATUS.OK) {
         console.log('success!!');

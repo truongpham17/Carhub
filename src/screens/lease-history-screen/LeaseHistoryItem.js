@@ -23,6 +23,7 @@ const LeaseHistoryItem = ({ leaseDetail, onGetDetail }: PropTypes) => {
   const handleOnClick = () => {
     onGetDetail(leaseDetail._id);
   };
+  // console.log(leaseDetail);
   const startDateFormat = moment(leaseDetail.startDate).format('MMM Do, YYYY');
   const endDateFormat = moment(leaseDetail.endDate).format('MMM Do, YYYY');
   const totalEarn = leaseDetail.totalEarn || 0;

@@ -4,6 +4,7 @@ import {
   GET_LEASE_FAILURE,
   GET_LEASE_REQUEST,
   GET_LEASE_SUCCESS,
+<<<<<<< HEAD
   GET_PREVIOUS_CAR_LIST_SUCCESS,
   GET_PREVIOUS_CAR_LIST_FAILURE,
   GET_CAR_BY_VIN_SUCCESS,
@@ -11,6 +12,14 @@ import {
   ADD_HOST_HUB_INFO_SUCCESS,
   ADD_LEASE_SUCCESS,
   ADD_LEASE_FAILURE,
+=======
+  UPDATE_LEASE_ITEM_FAILURE,
+  UPDATE_LEASE_ITEM_REQUEST,
+  UPDATE_LEASE_ITEM_SUCCESS,
+  // GET_LEASE_ITEM_FAILURE,
+  // GET_LEASE_ITEM_REQUEST,
+  // GET_LEASE_ITEM_SUCCESS,
+>>>>>>> 34b44c9b05360031aa7788429d93e8475fc9cd0c
   SET_LEASE_DETAIL_ID,
   SCAN_VIN_CODE_SUCCESS,
   SET_VALUE_SUCCESS,
@@ -80,7 +89,12 @@ export const getCustomerPreviousCarList = (id, callback) => async dispatch => {
       method: METHODS.get,
     });
     if (data.status === 200) {
+<<<<<<< HEAD
       dispatch({ type: GET_PREVIOUS_CAR_LIST_SUCCESS, payload: data.data });
+=======
+      // console.log(data.data);
+      dispatch({ type: GET_LEASE_CAR_SUCCESS, payload: data.data });
+>>>>>>> 34b44c9b05360031aa7788429d93e8475fc9cd0c
       callback.onSuccess();
     } else {
       dispatch({
@@ -207,10 +221,10 @@ export const getLeaseList = (
       type: GET_LEASE_REQUEST,
     });
     const result = await query({ endpoint: ENDPOINTS.lease });
-    // console.log(result.data);
+    // console.warn(result.data);
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_LEASE_SUCCESS, payload: result.data });
-      callback.success();
+      callback.onSuccess();
     } else {
       dispatch({ type: GET_LEASE_FAILURE });
       callback.onFailure();
@@ -247,6 +261,32 @@ export const getLeaseList = (
 //     callback.onFailure();
 //   }
 // };
+
+export const updateLeaseStatus = (
+  { id, status },
+  callback = INITIAL_CALLBACK
+) => async dispatch => {
+  try {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_REQUEST,
+    });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.lease}/${id}`,
+      data: { status },
+    });
+    if (result.status === 200) {
+      dispatch({ type: UPDATE_LEASE_ITEM_SUCCESS, payload: result.data });
+      callback.onSuccess();
+    }
+  } catch (error) {
+    dispatch({
+      type: UPDATE_LEASE_ITEM_FAILURE,
+      payload: error,
+    });
+    callback.onFailure();
+  }
+};
 
 export const setLeaseDetailId = _id => ({
   type: SET_LEASE_DETAIL_ID,
