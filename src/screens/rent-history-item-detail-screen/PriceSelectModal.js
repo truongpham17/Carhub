@@ -23,11 +23,11 @@ const PriceSelectModal = ({
   maximumCost,
   minimumCost = 50,
 }: PropType) => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(suggestCost);
 
-  useEffect(() => {
-    handleValueChange(suggestCost);
-  }, []);
+  // useEffect(() => {
+  //   handleValueChange(suggestCost);
+  // }, []);
 
   const handleValueChange = val => {
     setValue(val);
@@ -54,7 +54,7 @@ const PriceSelectModal = ({
             value={value}
             onValueChange={handleValueChange}
             minimumValue={minimumCost}
-            maximumValue={maximumCost}
+            maximumValue={maximumCost * 0.8}
             step={1}
             thumbTintColor={colors.secondary}
             minimumTrackTintColor={colors.secondary}

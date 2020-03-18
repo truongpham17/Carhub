@@ -21,6 +21,7 @@ const LeaseHistoryScreen = ({
   setLeaseDetailId,
 }: PropsType) => {
   const [refreshing, setRefreshing] = useState(true);
+
   useEffect(() => {
     if (refreshing) {
       getLeaseList();
@@ -28,6 +29,7 @@ const LeaseHistoryScreen = ({
       // console.log(leaseList);
     }
   }, [refreshing]);
+
   const onGetDetail = id => {
     setLeaseDetailId(id);
     navigation.navigate('LeaseHistoryItemDetailScreen');
