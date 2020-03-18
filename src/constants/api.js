@@ -3,7 +3,7 @@
  */
 
 // cuong
-export const API_URL = 'http://192.168.1.7:5068/';
+export const API_URL = 'http://192.168.1.190:5068/';
 
 // truong
 // export const API_URL = 'http://192.168.1.33:5068/';
@@ -26,7 +26,6 @@ export const METHODS = {
   get: 'GET',
   post: 'POST',
   patch: 'PATCH',
-  put: 'PUT',
   delete: 'DELETE',
 };
 

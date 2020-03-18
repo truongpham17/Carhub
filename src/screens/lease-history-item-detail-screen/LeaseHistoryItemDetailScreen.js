@@ -129,6 +129,7 @@ const LeaseHistoryItemDetailScreen = ({
       status: 'WAIT_TO_RETURN',
     });
     setPopupVisible(false);
+    navigation.popToTop();
   };
   return (
     <ViewContainer

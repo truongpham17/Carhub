@@ -141,6 +141,11 @@ const RentHistoryItemDetailScreen = ({
     setPriceModalVisible(false);
   };
 
+  const handleConfirmPopup = () => {
+    setPopupVisible(false);
+    navigation.popToTop();
+  };
+
   const handleSubmitSharing = value => {
     // Agree sharing
     getCurrentPosition();
@@ -197,11 +202,13 @@ const RentHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
-      <Button
-        label={getActionLabel()}
-        onPress={handleActionButton}
-        style={styles.button}
-      />
+      {rentDetail.status !== 'DECLINED' && (
+        <Button
+          label={getActionLabel()}
+          onPress={handleActionButton}
+          style={styles.button}
+        />
+      )}
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
@@ -227,8 +234,8 @@ const RentHistoryItemDetailScreen = ({
         title="Successfully"
         description="Your QR Code has been scanned successfully!"
         modalVisible={popupVisible}
-        onClose={() => setPopupVisible(false)}
-        onConfirm={() => setPopupVisible(false)}
+        onClose={() => handleConfirmPopup}
+        onConfirm={() => handleConfirmPopup}
       />
     </ViewContainer>
   );

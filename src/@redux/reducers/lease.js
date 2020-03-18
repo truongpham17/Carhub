@@ -71,18 +71,52 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
       };
-    case GET_LEASE_REQUEST:
-      return { ...state, loading: true };
-    case GET_LEASE_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
+    // case GET_LEASE_REQUEST:
+    //   return { ...state, loading: true };
+    // case GET_LEASE_FAILURE:
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     error: action.payload,
+    //   };
     case SCAN_VIN_CODE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case SET_VALUE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
+    // Geet Lease List
+    case GET_LEASE_REQUEST:
+      return { ...state, loading: true };
+    case GET_LEASE_SUCCESS:
+      return { ...state, loading: false, data: { ...action.payload } };
+    case GET_LEASE_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+    // case GET_LEASE_ITEM_REQUEST:
+    //   return { ...state, loading: true };
+    // case GET_LEASE_ITEM_SUCCESS:
+    //   return { ...state, loading: false, data: action.payload };
+    // case GET_LEASE_ITEM_FAILURE:
+    //   return { ...state, loading: false, error: action.payload };
+    case SET_LEASE_DETAIL_ID:
+      return { ...state, selectedId: action.payload };
+    // Update Lease
+    case UPDATE_LEASE_ITEM_REQUEST:
+      return { ...state, loading: true };
+    case UPDATE_LEASE_ITEM_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        // data: {
+        //   ...state.data,
+        //   leases: state.data.leases.map(item => {
+        //     if (item !== action.payload._id) {
+        //       return item;
+        //     }
+        //     return action.payload;
+        //   }),
+        // },
+      };
+    case UPDATE_LEASE_ITEM_FAILURE:
+      return { ...state, loading: false, error: action.payload };
     default:
       return { ...state };
   }

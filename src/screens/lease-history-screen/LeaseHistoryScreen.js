@@ -26,7 +26,6 @@ const LeaseHistoryScreen = ({
     if (refreshing) {
       getLeaseList();
       setRefreshing(false);
-      // console.log(leaseList);
     }
   }, [refreshing]);
 
