@@ -42,7 +42,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-<<<<<<< HEAD
     case GET_CAR_BY_VIN_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case GET_CAR_BY_VIN_FAILURE:
@@ -72,19 +71,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
       };
-    case GET_LEASE_REQUEST:
-      return { ...state, loading: true };
-    case GET_LEASE_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
+
     case SCAN_VIN_CODE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case SET_VALUE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
-=======
     // Geet Lease List
     case GET_LEASE_REQUEST:
       return { ...state, loading: true };
@@ -119,7 +110,6 @@ export default (state = INITIAL_STATE, action) => {
       };
     case UPDATE_LEASE_ITEM_FAILURE:
       return { ...state, loading: false, error: action.payload };
->>>>>>> 34b44c9b05360031aa7788429d93e8475fc9cd0c
     default:
       return { ...state };
   }
