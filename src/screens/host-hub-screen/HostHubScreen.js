@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { ViewContainer, InputForm, Button, DatePicker } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
+import { NavigationType, CarType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
@@ -19,12 +19,14 @@ type PropTypes = () => {
   navigation: NavigationType,
   checkHostHubInfo: () => void,
   loading: Boolean,
+  InfoFromVin: [],
 };
 
 const HostHubScreen = ({
   checkHostHubInfo,
   loading,
   navigation,
+  InfoFromVin,
 }: PropTypes) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -35,8 +37,16 @@ const HostHubScreen = ({
     navigation.pop();
   };
   const handleNextStep = () => {
-    checkHostHubInfo({ startDate, endDate, cardNumber, selectedHub });
-    navigation.navigate('HostReviewScreen');
+    const name = `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`;
+    checkHostHubInfo(
+      { startDate, endDate, cardNumber, selectedHub, name },
+      {
+        onSuccess: () => navigation.navigate('HostReviewScreen'),
+        onFailure: () => {
+          console.log('error');
+        },
+      }
+    );
   };
   const handleChangeDate = (type, date) => {
     if (type === 'start') {
@@ -101,8 +111,8 @@ const HostHubScreen = ({
 
 export default connect(
   state => ({
-    hub: state.leaseRequest.hub,
-    loading: state.leaseRequest.loading,
+    loading: state.lease.loading,
+    InfoFromVin: state.lease.InfoFromVin,
   }),
   { checkHostHubInfo }
 )(HostHubScreen);

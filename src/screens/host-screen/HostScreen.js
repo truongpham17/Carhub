@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -19,17 +20,24 @@ import { NavigationType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
-import { checkCarByVin, getCustomerCarList } from '@redux/actions/lease';
+import {
+  checkCarByVin,
+  getCustomerPreviousCarList,
+  setValue,
+} from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Seperator from './Seperator';
-import Extra from './Extra';
 
 type PropTypes = {
   checkCarByVin: () => void,
-  getCustomerCarList: () => void,
+  getCustomerPreviousCarList: () => void,
+  setValue: () => void,
   navigation: NavigationType,
   loading: Boolean,
   user: UserType,
+  vin: String,
+  usingYears: String,
+  odometers: String,
 };
 
 const HostScreen = ({
@@ -37,21 +45,23 @@ const HostScreen = ({
   navigation,
   loading,
   user,
-  getCustomerCarList,
+  vin,
+  usingYears,
+  odometers,
+  getCustomerPreviousCarList,
+  setValue,
 }: PropTypes) => {
-  const [vin, setVin] = useState('');
-  const [usingYears, setUsingYears] = useState('');
-  const [odometers, setOdometers] = useState('');
+  console.log({ vin, usingYears, odometers });
   const [images, setImages] = useState(['']);
 
   const handleChangeVin = vin => {
-    setVin(vin);
+    setValue({ vin });
   };
   const handleChangeUsingYears = usingYears => {
-    setUsingYears(usingYears);
+    setValue({ usingYears });
   };
   const handleChangeOdometers = odometers => {
-    setOdometers(odometers);
+    setValue({ odometers });
   };
   const handleAddImage = () => {
     selectImage(image => setImages([...images, image]));
@@ -64,17 +74,28 @@ const HostScreen = ({
   };
   const handleNextStep = () => {
     checkCarByVin(
-      { vin, usingYears, odometers, images: images.filter((_, i) => i > 0) },
+      {
+        vin,
+        usingYears,
+        odometers,
+        images: images.filter((_, i) => i > 0),
+      },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
         onFailure: () => {
+          Alert.alert(
+            'Car is not found',
+            'Your VIN code maybe wrong. Please input again',
+            [{ text: 'OK', onPress: () => console.log('OK') }],
+            { cancelable: false }
+          );
           console.log('error');
         },
       }
     );
   };
   const handlePreviousCar = () => {
-    getCustomerCarList(
+    getCustomerPreviousCarList(
       { id: user._id },
       {
         onSuccess: () => navigation.navigate('HostListCarScreen'),
@@ -84,7 +105,9 @@ const HostScreen = ({
       }
     );
   };
-  const handleScan = () => {};
+  const handleScan = () => {
+    navigation.navigate('HostScanCameraScreen');
+  };
   return (
     <ViewContainer
       scrollable
@@ -158,9 +181,11 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    car: state.leaseRequest.car,
-    loading: state.leaseRequest.loading,
+    loading: state.lease.loading,
     user: state.user,
+    vin: state.lease.vin,
+    usingYears: state.lease.usingYears,
+    odometers: state.lease.odometers,
   }),
-  { checkCarByVin, getCustomerCarList }
+  { checkCarByVin, getCustomerPreviousCarList, setValue }
 )(HostScreen);

@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   FlatList,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import {
@@ -15,7 +16,7 @@ import {
   ListItem,
 } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType, UserType, CarType, HubType } from 'types';
+import { NavigationType, UserType, CarType, HubType, CarModel } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
@@ -31,35 +32,45 @@ type PropTypes = {
   navigation: NavigationType,
   addLease: () => void,
   loading: Boolean,
-  car: CarType,
   user: UserType,
   startDate: Date,
   endDate: Date,
   cardNumber: String,
   selectedHub: HubType,
+  carModel: CarModel,
+  InfoFromVin: [],
+  vin: String,
+  usingYears: Number,
+  odometers: Number,
+  images: [],
 };
 
 const HostReviewScreen = ({
   navigation,
   loading,
-  car,
   addLease,
   user,
   startDate,
   endDate,
   cardNumber,
   selectedHub,
+  carModel,
+  InfoFromVin,
+  vin,
+  usingYears,
+  odometers,
+  images,
 }: PropTypes) => {
-  const review = [
+  const leaseContract = [
     {
       id: 'name',
       label: 'Car name',
-      content: `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`,
+      content: `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`,
     },
     {
       id: 'status',
       label: 'Car status',
-      content: `${car.usingYears} years, ${car.odometers} kilometers`,
+      content: `${usingYears} years, ${odometers} kilometers`,
     },
     {
       id: 'from',
@@ -100,43 +111,75 @@ const HostReviewScreen = ({
     },
     {
       id: 'revenue',
-      label: 'You can earn up to',
-      content: '$2020',
+      label: `${
+        carModel
+          ? `${
+              carModel.price
+                ? 'You can earn up to'
+                : 'You can make a lot of money'
+            }`
+          : 'You can make a lot of money'
+      }`,
+      content: `${
+        carModel
+          ? `${
+              carModel.price
+                ? `$${carModel.price *
+                    parseInt(
+                      (endDate.getTime() - startDate.getTime()) /
+                        (1000 * 3600 * 24)
+                    )}`
+                : ''
+            }`
+          : ''
+      }`,
     },
   ];
   const onPressBack = () => {
     navigation.pop();
   };
   const handleNextStep = async () => {
-    const images = [];
+    const imagesURL = [];
     await Promise.all(
-      car.images.map(async element => {
+      images.map(async element => {
         const id = uuidv4(element);
         const snapshot = await firebase
           .storage()
           .ref(`lease-car/${user._id}/${id}`)
           .putFile(element);
-        images.push(await snapshot.downloadURL);
+        imagesURL.push(await snapshot.downloadURL);
       })
     );
     addLease(
       {
-        odometer: car.odometers,
-        images,
+        odometer: odometers,
+        images: imagesURL,
         startDate,
         endDate,
-        usingYears: car.usingYears,
-        name: `${car.valueData[1].value} ${car.valueData[3].value} ${car.valueData[4].value}`,
-        VIN: car.vin,
+        usingYears,
+        name: `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`,
+        VIN: vin,
         customer: user._id,
         hub: selectedHub._id,
         cardNumber,
       },
       {
         onSuccess: () => {
-          navigation.navigate('HostScreen');
+          Alert.alert(
+            'Successful',
+            'You has been created lease request successfully',
+            [{ text: 'OK', onPress: () => navigation.navigate('HostScreen') }],
+            { cancelable: false }
+          );
         },
-        onFailure: () => {},
+        onFailure: () => {
+          Alert.alert(
+            'Something went wrong!',
+            'Please make sure the your device connected to the internet',
+            [{ text: 'OK', onPress: () => console.log('OK') }],
+            { cancelable: false }
+          );
+        },
       }
     );
   };
@@ -148,12 +191,12 @@ const HostReviewScreen = ({
       onBackPress={onPressBack}
       loading={loading}
     >
-      {review.map((item, index) => (
+      {leaseContract.map((item, index) => (
         <ListItem
           type="detail"
           label={item.label}
           detail={item.content}
-          showSeparator={index !== review.length - 1}
+          showSeparator={index !== leaseContract.length - 1}
           key={item.label}
           pressable={false}
         />
@@ -169,13 +212,18 @@ const HostReviewScreen = ({
 
 export default connect(
   state => ({
-    loading: state.leaseRequest.loading,
-    car: state.leaseRequest.car,
+    loading: state.lease.loading,
     user: state.user,
-    startDate: state.leaseRequest.startDate,
-    endDate: state.leaseRequest.endDate,
-    cardNumber: state.leaseRequest.cardNumber,
-    selectedHub: state.leaseRequest.selectedHub,
+    startDate: state.lease.startDate,
+    endDate: state.lease.endDate,
+    cardNumber: state.lease.cardNumber,
+    selectedHub: state.lease.selectedHub,
+    carModel: state.lease.carModel,
+    InfoFromVin: state.lease.InfoFromVin,
+    vin: state.lease.vin,
+    usingYears: state.lease.usingYears,
+    odometers: state.lease.odometers,
+    images: state.lease.images,
   }),
   { addLease }
 )(HostReviewScreen);

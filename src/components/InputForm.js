@@ -21,7 +21,7 @@ import colors from 'Constants/colors';
 
 type PropTypes = {
   label: string,
-  value: string,
+  value: string | Number,
   onChangeText: string => void,
   multiline: boolean,
   containerStyle: StyleProp<ViewStyle>,
