@@ -27,7 +27,11 @@ const SelectLocationScreen = ({ navigation }: PropTypes) => {
   const { callback } = navigation.state.params;
 
   return (
-    <ViewContainer haveBackHeader title="Search Car" onBackPress={onBackPress}>
+    <ViewContainer
+      haveBackHeader
+      title="Select address"
+      onBackPress={onBackPress}
+    >
       <MapAutoCompleteSearch
         onRequestMap={() =>
           navigation.navigate('SelectMapScreen', {

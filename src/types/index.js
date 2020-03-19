@@ -13,7 +13,7 @@ export type RentDetailType = {
   _id: String,
   carModel: CarModel,
   pickupHub: HubType,
-  status: String,
+  status: 'UPCOMING' | 'CURRENT' | 'OVERDUE' | 'SHARING' | 'SHARED' | 'PAST',
   type: String,
   __v: 0,
 };
@@ -27,7 +27,14 @@ export type LeaseDetailType = {
   hub: HubType,
   price: Number,
   totalEarn: Number,
-  status: String,
+  status:
+    | 'PENDING'
+    | 'ACCEPTED'
+    | 'DECLINED'
+    | 'AVAILABLE'
+    | 'HIRING'
+    | 'WAIT_TO_RETURN'
+    | 'PAST',
 };
 
 export type RentailCarDetailType = {
@@ -64,6 +71,18 @@ export type UserType = {
   email: String,
   phone: String,
   account: String,
+};
+
+export type SharingType = {
+  _id: String,
+  geometry: {
+    lat: Number,
+    lng: Number,
+  },
+  location?: String,
+  distance?: number,
+  rental: RentDetailType,
+  totalCost: Number,
 };
 
 export type GeoLocationType = {

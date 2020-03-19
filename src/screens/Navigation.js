@@ -30,6 +30,7 @@ import HistoryScreen from './history-screen/HistoryScreen';
 import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
+import SelectSharingCarScreen from './select-sharing-car-screen/SelectSharingCarScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -42,6 +43,7 @@ const RentalStack = createStackNavigator(
     InfoExplainScreen,
     LicenseScreen,
     SuccessBookingRental,
+    SelectSharingCarScreen,
   },
   {
     headerMode: 'none',
@@ -69,6 +71,8 @@ const HistoryStack = createStackNavigator(
     HistoryScreen,
     RentHistoryItemDetailScreen,
     LeaseHistoryItemDetailScreen,
+    SelectMapScreen,
+    SelectLocationScreen,
   },
   {
     headerMode: 'none',
@@ -113,14 +117,14 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-const scanScreen = createStackNavigator(
-  {
-    ScanQrCodeScreen,
-  },
-  {
-    headerMode: 'none',
-  }
-);
+// const scanScreen = createStackNavigator(
+//   {
+//     SelectSharingCarScreen,
+//   },
+//   {
+//     headerMode: 'none',
+//   }
+// );
 
 const App = createAppContainer(AppNavigation);
 export default App;

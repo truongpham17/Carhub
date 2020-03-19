@@ -42,7 +42,7 @@ const textStyle = StyleSheet.create({
   },
   labelRegular: {
     fontSize: scaleFont(12),
-    fontFamily: 'SFUIDisplay',
+    fontFamily: 'SFUIDisplay-Bold',
   },
 });
 

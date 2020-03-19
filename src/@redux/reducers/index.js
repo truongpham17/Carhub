@@ -9,6 +9,7 @@ import car from './car';
 import payment from './payment';
 import rentItemDetail from './rentItemDetail';
 import lease from './lease';
+import sharing from './sharing';
 
 export default combineReducers({
   lease,
@@ -21,4 +22,5 @@ export default combineReducers({
   car,
   payment,
   rentItemDetail,
+  sharing,
 });

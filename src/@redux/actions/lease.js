@@ -37,6 +37,8 @@ export const checkCarByVin = (data, callback) => async dispatch => {
         InfoFromVin.push({ key: item.Variable, value: item.Value });
       }
     });
+
+    console.log(InfoFromVin);
     if (InfoFromVin[1].value !== null && InfoFromVin[3].value !== null) {
       dispatch({
         type: GET_CAR_BY_VIN_SUCCESS,
@@ -165,6 +167,7 @@ export const addLease = (
           VIN,
           carModel: carModel.data._id,
           usingYears,
+          currentHub: hub,
         },
       });
       if (car.status === 201) {
@@ -204,10 +207,7 @@ export const addLease = (
   }
 };
 
-export const getLeaseList = (
-  data,
-  callback = INITIAL_CALLBACK
-) => async dispatch => {
+export const getLeaseList = (callback = INITIAL_CALLBACK) => async dispatch => {
   try {
     dispatch({
       type: GET_LEASE_REQUEST,

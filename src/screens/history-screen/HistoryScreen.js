@@ -45,7 +45,7 @@ const HistoryScreen = ({
       haveBack={false}
       title="History"
       onBackPress={onBackPress}
-      loading={rentLoading && leaseLoading}
+      // loading={rentLoading && leaseLoading}
     >
       <ButtonGroup
         // theme={theme}
