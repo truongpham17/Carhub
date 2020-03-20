@@ -7,7 +7,7 @@ export const GET_RENTAL_ITEM_FAILURE = 'get-rental-item-failure';
 export const GET_RENTAL_ITEM_SUCCESS = 'get-rental-item-success';
 
 export const UPDATE_RENTAL_ITEM_REQUEST = 'update-rental-item-request';
-export const UPDATE_RENTAL_ITEM_FAILURE = 'update-rental-item-request';
-export const UPDATE_RENTAL_ITEM_SUCCESS = 'update-rental-item-request';
+export const UPDATE_RENTAL_ITEM_FAILURE = 'update-rental-item-failure';
+export const UPDATE_RENTAL_ITEM_SUCCESS = 'update-rental-item-success';
 
 export const SET_RENT_DETAIL_ID = 'set-rent-detail-id';

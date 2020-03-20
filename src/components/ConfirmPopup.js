@@ -12,6 +12,7 @@ type PropTypes = {
   description: string,
   cancelLabel?: string,
   confirmLabel?: string,
+  onDecline: () => void,
 };
 
 const ConfirmPopup = ({
@@ -22,13 +23,14 @@ const ConfirmPopup = ({
   description,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
+  onDecline,
 }: PropTypes) => (
   <ModalContainer modalVisible={modalVisible} onClose={onClose}>
     <View style={styles.containerStyle}>
       <Text style={textStyle.widgetItem}>{title}</Text>
       <Text style={textStyle.bodyText}>{description}</Text>
       <View style={styles.action}>
-        <TouchableOpacity style={styles.item} onPress={onClose}>
+        <TouchableOpacity style={styles.item} onPress={onDecline}>
           <Text style={textStyle.bodyText}>{cancelLabel}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.item} onPress={onConfirm}>

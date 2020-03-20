@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, Alert } from 'react-native';
 import {
   ViewContainer,
   ListItem,
@@ -13,8 +13,21 @@ import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
 import firebase from 'react-native-firebase';
-import { updateSpecificRental } from '@redux/actions/getRentalsList';
+import {
+  updateSpecificRental,
+  getRentalsList,
+} from '@redux/actions/getRentalsList';
+
+import { confirmTransaction } from '@redux/actions/transaction';
 import Geolocation from '@react-native-community/geolocation';
+import {
+  COMPLETED,
+  WAITING_FOR_CONFIRM,
+  WAITING_FOR_SCAN,
+  WAITING_FOR_USER_CONFIRM,
+  CANCEL,
+} from 'Constants/status';
+import { changeTransactionStatus } from 'Utils/database';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
@@ -22,6 +35,8 @@ type PropTypes = {
   rentDetail: RentDetailType,
   isLoading: Boolean,
   updateSpecificRental: () => void,
+  confirmTransaction: () => void,
+  getRentalsList: () => void,
 };
 
 const RentHistoryItemDetailScreen = ({
@@ -29,42 +44,60 @@ const RentHistoryItemDetailScreen = ({
   rentDetail,
   isLoading,
   updateSpecificRental,
+  confirmTransaction,
+  getRentalsList,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
   const [priceModalVisible, setPriceModalVisible] = useState(false);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [popupVisible, setPopupVisible] = useState(false);
-
+  const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
+  const [employeeID, setEmployeeID] = useState(null);
   // useEffect(() => {
   //   const id = navigation.getParam('itemID', '');
   //   getSpecificRental({ id });
   // }, []);
-  useEffect(() => {
-    if (qrCodeModalVisible && generateNewQR) {
-      generateValue('return');
-      openListenner();
-    }
-  }, [qrCodeModalVisible, generateNewQR]);
+  // useEffect(() => {
+  //   if (qrCodeModalVisible && generateNewQR) {
+  //     generateValue('return');
+  //     openListenner();
+  //   }
+  // }, [qrCodeModalVisible, generateNewQR]);
 
   const openListenner = () => {
-    console.log('open listener');
-    firebase
-      .database()
-      .ref(`scanQRCode/${rentDetail._id}`)
-      .set({
-        _id: rentDetail._id,
-        status: 'waiting',
-      });
+    changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
     firebase
       .database()
       .ref(`scanQRCode/${rentDetail._id}`)
       .on('value', snapShot => {
-        if (snapShot.val().status === 'completed') {
-          setQrCodeModalVisible(false);
-          setTimeout(() => {
-            setPopupVisible(true);
-          }, 500);
+        console.log(snapShot.val());
+        if (!employeeID && snapShot.val().employeeID) {
+          setEmployeeID(snapShot.val().employeeID);
+        }
+        switch (snapShot.val().status) {
+          case COMPLETED: {
+            setQrCodeModalVisible(false);
+            setTimeout(() => {
+              setPopupVisible(true);
+            }, 500);
+            break;
+          }
+          case WAITING_FOR_CONFIRM: {
+            setQrCodeModalVisible(false);
+            setTimeout(() => {
+              Alert.alert('Waiting for hub confirm');
+            }, 500);
+            break;
+          }
+          case WAITING_FOR_USER_CONFIRM: {
+            setQrCodeModalVisible(false);
+            setConfirmPopupVisible(true);
+            break;
+          }
+          default: {
+            console.log('error');
+          }
         }
       });
   };
@@ -109,24 +142,21 @@ const RentHistoryItemDetailScreen = ({
     navigation.pop();
   };
 
-  const [curPos, setCurPos] = useState(null);
-
-  const getCurrentPosition = () => {
-    Geolocation.getCurrentPosition(info => {
-      setCurPos({ lat: info.coords.latitude, lng: info.coords.longitude });
-    });
-  };
-
   const handleActionButton = () => {
     switch (rentDetail.status) {
-      case 'SHARING':
-        return updateSpecificRental(
-          { id: rentDetail._id, status: 'CURRENT' },
-          { success() {} }
-        );
+      case 'CURRENT':
+      case 'OVERDUE':
+      case 'UPCOMING':
+        onRequestTransaction();
+        break;
       default:
-        return setQrCodeModalVisible(true);
     }
+  };
+
+  const onRequestTransaction = () => {
+    generateValue('rental');
+    openListenner();
+    setQrCodeModalVisible(true);
   };
 
   const onShowPriceModal = () => {
@@ -148,16 +178,29 @@ const RentHistoryItemDetailScreen = ({
 
   const handleSubmitSharing = value => {
     // Agree sharing
-    getCurrentPosition();
-    updateSpecificRental(
-      {
-        id: rentDetail._id,
-        status: 'SHARING',
-        geometry: curPos,
-        totalCost: value,
+    setPriceModalVisible(false);
+    navigation.navigate('SelectLocationScreen', {
+      callback(location) {
+        console.log(location);
+        updateSpecificRental(
+          {
+            id: rentDetail._id,
+            status: 'SHARING',
+            geometry: location.geometry,
+            totalCost: value,
+            location: location.address,
+          },
+          {
+            onSuccess() {
+              Alert.alert('Success!');
+            },
+            onFailure() {
+              Alert.alert('Error!');
+            },
+          }
+        );
       },
-      { success() {} }
-    );
+    });
   };
   const getActionLabel = () => {
     // 'UPCOMING', 'CURRENT', 'OVERDUE', 'SHARING', 'SHARED', 'PAST'
@@ -174,6 +217,26 @@ const RentHistoryItemDetailScreen = ({
       default:
         return '';
     }
+  };
+
+  const onConfirmReceiveCar = () => {
+    changeTransactionStatus(rentDetail._id, COMPLETED);
+    setConfirmPopupVisible(false);
+    console.log(employeeID);
+    confirmTransaction(
+      { id: rentDetail._id, type: 'rental', employeeID },
+      {
+        onSuccess() {
+          getRentalsList();
+          navigation.pop();
+        },
+      }
+    );
+  };
+
+  const onCancelTransaction = () => {
+    changeTransactionStatus(rentDetail._id, CANCEL);
+    setConfirmPopupVisible(false);
   };
 
   return (
@@ -232,10 +295,18 @@ const RentHistoryItemDetailScreen = ({
       />
       <ConfirmPopup
         title="Successfully"
-        description="Your QR Code has been scanned successfully!"
+        description="Transaction success"
         modalVisible={popupVisible}
         onClose={() => handleConfirmPopup}
         onConfirm={() => handleConfirmPopup}
+      />
+      <ConfirmPopup
+        title="Confirm take car?"
+        description="Are you sure to confirm take your car?"
+        modalVisible={confirmPopupVisibie}
+        onDecline={onCancelTransaction}
+        onConfirm={onConfirmReceiveCar}
+        onClose={() => setConfirmPopupVisible(false)}
       />
     </ViewContainer>
   );
@@ -258,5 +329,5 @@ export default connect(
     ),
     isLoading: state.rentalsList.isLoading,
   }),
-  { updateSpecificRental }
+  { updateSpecificRental, confirmTransaction, getRentalsList }
 )(RentHistoryItemDetailScreen);
