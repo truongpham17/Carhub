@@ -54,7 +54,7 @@ const HostScreen = ({
 }: PropTypes) => {
   console.log({ vin, usingYears, odometers });
   const [images, setImages] = useState(['']);
-  const [modelVisible, setModelVisible] = useState(false);
+  const [loadingRecognize, setLoading] = useState(false);
   const base64Refs = useRef([]);
 
   const predict = async image => {
@@ -93,6 +93,7 @@ const HostScreen = ({
   };
 
   const handleTestImage = async () => {
+    setLoading(true);
     const errors = [];
     console.log(base64Refs);
     const predictions = await Promise.all(
@@ -116,11 +117,15 @@ const HostScreen = ({
       }
     });
 
+    setLoading(false);
+
     if (errors.length > 0) {
-      Alert.alert(
-        'Cannot recognize your car',
-        'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
-      );
+      setTimeout(() => {
+        Alert.alert(
+          'Cannot recognize your car',
+          'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
+        );
+      }, 300);
     } else {
       handleNextStep();
     }
@@ -168,7 +173,7 @@ const HostScreen = ({
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
-      loading={loading}
+      loading={loading || loadingRecognize}
     >
       <TouchableOpacity style={styles.container} onPress={handleScan}>
         <Text style={textStyle.bodyTextBold}> Scan VIN Code </Text>
