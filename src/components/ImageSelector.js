@@ -29,7 +29,7 @@ const ImageSelector = ({
   onAddPress,
 }: PropTypes) => {
   const handleRemovePress = () => {
-    onRemovePress(data);
+    onRemovePress(data.key);
   };
   if (!data) {
     return (
@@ -44,7 +44,11 @@ const ImageSelector = ({
   return (
     <View style={[styles.container, style]}>
       <View style={styles.img}>
-        <Image source={{ uri: data }} style={{ flex: 1 }} resizeMode="cover" />
+        <Image
+          source={{ uri: data.uri }}
+          style={{ flex: 1 }}
+          resizeMode="cover"
+        />
       </View>
 
       <TouchableOpacity style={styles.remove} onPress={handleRemovePress}>

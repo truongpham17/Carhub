@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import colors from 'Constants/colors';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { getCurrentPosition } from 'services/maps';
-import { GOOGLE_KEY } from 'Constants/api';
+import { GOOGLE_KEY } from 'Constants/key';
 
 const SELECT_ON_MAPS = 'Select on Maps';
 

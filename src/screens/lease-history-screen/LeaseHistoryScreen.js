@@ -27,8 +27,8 @@ const LeaseHistoryScreen = ({
       setRefreshing(false);
     }
   }, [refreshing]);
-    getLeaseList();
-  }, []);
+  //   getLeaseList();
+  // }, []);
 
   // useEffect(() => {
   //   if (refreshing) {

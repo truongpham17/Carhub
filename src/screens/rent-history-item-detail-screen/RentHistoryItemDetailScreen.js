@@ -79,7 +79,7 @@ const RentHistoryItemDetailScreen = ({
           case COMPLETED: {
             setQrCodeModalVisible(false);
             setTimeout(() => {
-              setPopupVisible(true);
+              // setPopupVisible(true);
             }, 500);
             break;
           }
@@ -93,6 +93,13 @@ const RentHistoryItemDetailScreen = ({
           case WAITING_FOR_USER_CONFIRM: {
             setQrCodeModalVisible(false);
             setConfirmPopupVisible(true);
+            break;
+          }
+          case CANCEL: {
+            setQrCodeModalVisible(false);
+            setTimeout(() => {
+              Alert.alert('Transaction declined!');
+            }, 500);
             break;
           }
           default: {
