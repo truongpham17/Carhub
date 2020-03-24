@@ -39,6 +39,7 @@ type PropTypes = {
   vin: String,
   usingYears: String,
   odometers: String,
+  images: [],
 };
 
 const HostScreen = ({
@@ -51,9 +52,8 @@ const HostScreen = ({
   odometers,
   getCustomerPreviousCarList,
   setValue,
+  images,
 }: PropTypes) => {
-  console.log({ vin, usingYears, odometers });
-  const [images, setImages] = useState(['']);
   const [loadingRecognize, setLoading] = useState(false);
   const base64Refs = useRef([]);
 
@@ -75,7 +75,8 @@ const HostScreen = ({
   };
   const handleAddImage = () => {
     selectImage(async image => {
-      setImages(images => [...images, { uri: image.uri, key: image.key }]);
+      setValue({ images: [...images, { uri: image.uri, key: image.key }] });
+      // setImages(images => [...images, { uri: image.uri, key: image.key }]);
       base64Refs.current.push({ data: image.data, key: image.key });
       // console.log('start analyze data');
       // const result = await predict(image.data);
@@ -84,7 +85,8 @@ const HostScreen = ({
   };
 
   const handleRemoveImage = key => {
-    setImages(images => images.filter(image => image.key !== key));
+    setValue({ images: images.filter(image => image.key !== key) });
+    // setImages(images => images.filter(image => image.key !== key));
     base64Refs.current = base64Refs.current.filter(image => image.key !== key);
   };
 
@@ -93,41 +95,51 @@ const HostScreen = ({
   };
 
   const handleTestImage = async () => {
-    setLoading(true);
-    const errors = [];
-    console.log(base64Refs);
-    const predictions = await Promise.all(
-      base64Refs.current.map(base64 => predict(base64.data))
-    );
-
-    predictions.forEach((prediction, index) => {
-      const { concepts } = prediction.outputs[0].data;
-      let isValidate = false;
-      for (let i = 0; i < concepts.length; i++) {
-        if (
-          concepts[i].name.includes('car') ||
-          concepts[i].name.includes('vehicle')
-        ) {
-          isValidate = true;
-          break;
-        }
-      }
-      if (!isValidate) {
-        errors.push(index);
-      }
-    });
-
-    setLoading(false);
-
-    if (errors.length > 0) {
-      setTimeout(() => {
-        Alert.alert(
-          'Cannot recognize your car',
-          'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
-        );
-      }, 300);
+    if (images.length === 1) {
+      Alert.alert('Please add your car images');
+    } else if (!vin) {
+      Alert.alert('Please input VIN');
+    } else if (isNaN(usingYears) || !usingYears) {
+      Alert.alert('Please input using year', 'Using years must be a number');
+    } else if (isNaN(odometers) || !odometers) {
+      Alert.alert('Please input odometers', 'Odometers must be a number');
     } else {
-      handleNextStep();
+      setLoading(true);
+      const errors = [];
+      const predictions = await Promise.all(
+        base64Refs.current.map(base64 => predict(base64.data))
+      );
+
+      predictions.forEach((prediction, index) => {
+        const { concepts } = prediction.outputs[0].data;
+        let isValidate = false;
+        for (let i = 0; i < concepts.length; i++) {
+          console.log('name: ', concepts[i].name);
+          if (
+            concepts[i].name.includes('car') ||
+            concepts[i].name.includes('vehicle')
+          ) {
+            isValidate = true;
+            break;
+          }
+        }
+        if (!isValidate) {
+          errors.push(index);
+        }
+      });
+
+      setLoading(false);
+
+      if (errors.length > 0) {
+        setTimeout(() => {
+          Alert.alert(
+            'Cannot recognize your car',
+            'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
+          );
+        }, 300);
+      } else {
+        handleNextStep();
+      }
     }
   };
 
@@ -137,7 +149,7 @@ const HostScreen = ({
         vin,
         usingYears,
         odometers,
-        images: images.filter((_, i) => i > 0),
+        images,
       },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
@@ -153,6 +165,7 @@ const HostScreen = ({
       }
     );
   };
+
   const handlePreviousCar = () => {
     getCustomerPreviousCarList(
       { id: user._id },
@@ -245,6 +258,7 @@ export default connect(
     vin: state.lease.vin,
     usingYears: state.lease.usingYears,
     odometers: state.lease.odometers,
+    images: state.lease.images,
   }),
   { checkCarByVin, getCustomerPreviousCarList, setValue }
 )(HostScreen);
