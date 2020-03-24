@@ -19,6 +19,6 @@ export default (state = INITIAL_STATE, action) => {
     case GET_RENTAL_ITEM_FAILURE:
       return { ...state, isLoading: false, error: action.payload };
     default:
-      return state;
+      return { ...state };
   }
 };

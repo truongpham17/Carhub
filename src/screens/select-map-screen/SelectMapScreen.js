@@ -10,7 +10,7 @@ import { dimension } from 'Constants';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { connect } from 'react-redux';
 import { MarkerIcon } from 'Assets/svgs';
-import { GOOGLE_KEY } from 'Constants/api';
+import { GOOGLE_KEY } from 'Constants/key';
 
 type PropTypes = {
   navigation: NavigationType,

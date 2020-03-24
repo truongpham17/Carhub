@@ -9,7 +9,7 @@ import {
 import MapView, { Marker } from 'react-native-maps';
 import { NavigationType, SharingType } from 'types';
 import { CarIcon, CarIconSelected } from 'Assets/svgs';
-import { GOOGLE_KEY } from 'Constants/api';
+import { GOOGLE_KEY } from 'Constants/key';
 import { MapAutoCompleteSearch } from 'Components';
 import { connect } from 'react-redux';
 import { getSharing } from '@redux/actions/sharing';

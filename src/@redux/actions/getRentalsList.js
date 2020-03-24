@@ -27,6 +27,8 @@ export const getRentalsList = (
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
       callback.success();
+    } else {
+      dispatch({ type: GET_RENTAL_FAILURE });
     }
   } catch (error) {
     dispatch({
@@ -54,6 +56,7 @@ export const updateSpecificRental = (
         status: data.status,
       },
     });
+
     if (result.status === STATUS.OK) {
       if (data.status === 'SHARING') {
         const newSharing = await query({
@@ -66,18 +69,22 @@ export const updateSpecificRental = (
             },
             rental: data.id,
             totalCost: data.totalCost,
+            location: data.location,
           },
         });
-        if (newSharing.status !== STATUS.OK) {
-          await updateSpecificRental({ id: data.id, status: 'CURRENT' });
+        if (newSharing.status === STATUS.OK) {
+          dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
+          callback.onSuccess();
+        } else {
+          dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
         }
       }
-      dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
-      callback.success();
     } else {
       dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
+      callback.onFailure();
     }
   } catch (error) {
     dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE, payload: error });
+    callback.onFailure();
   }
 };

@@ -79,6 +79,7 @@ export default (state = INITIAL_STATE, action) => {
     //     loading: false,
     //     error: action.payload,
     //   };
+
     case SCAN_VIN_CODE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case SET_VALUE_SUCCESS:

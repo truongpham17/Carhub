@@ -10,6 +10,6 @@ export default (state = INITIAL_STATE, action) => {
         count: state.count + 1,
       };
     default:
-      return state;
+      return { ...state };
   }
 };

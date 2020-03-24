@@ -43,6 +43,7 @@ const RentalStack = createStackNavigator(
     InfoExplainScreen,
     LicenseScreen,
     SuccessBookingRental,
+    SelectSharingCarScreen,
   },
   {
     headerMode: 'none',
@@ -70,6 +71,8 @@ const HistoryStack = createStackNavigator(
     HistoryScreen,
     RentHistoryItemDetailScreen,
     LeaseHistoryItemDetailScreen,
+    SelectMapScreen,
+    SelectLocationScreen,
   },
   {
     headerMode: 'none',
@@ -114,14 +117,14 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-const scanScreen = createStackNavigator(
-  {
-    SelectSharingCarScreen,
-  },
-  {
-    headerMode: 'none',
-  }
-);
+// const scanScreen = createStackNavigator(
+//   {
+//     SelectSharingCarScreen,
+//   },
+//   {
+//     headerMode: 'none',
+//   }
+// );
 
-const App = createAppContainer(scanScreen);
+const App = createAppContainer(AppNavigation);
 export default App;

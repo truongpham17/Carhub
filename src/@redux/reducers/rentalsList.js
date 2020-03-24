@@ -23,6 +23,6 @@ export default (state = INITIAL_STATE, action) => {
     case SET_RENT_DETAIL_ID:
       return { ...state, selectedId: action.payload };
     default:
-      return state;
+      return { ...state };
   }
 };

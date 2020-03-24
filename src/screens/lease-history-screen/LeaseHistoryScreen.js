@@ -20,19 +20,28 @@ const LeaseHistoryScreen = ({
   getLeaseList,
   setLeaseDetailId,
 }: PropsType) => {
-  const [refreshing, setRefreshing] = useState(true);
-
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     if (refreshing) {
       getLeaseList();
       setRefreshing(false);
     }
   }, [refreshing]);
+  //   getLeaseList();
+  // }, []);
+
+  // useEffect(() => {
+  //   if (refreshing) {
+  //     getLeaseList();
+  //     setRefreshing(false);
+  //     // console.log(leaseList);
+  //   }
+  // }, [refreshing]);
 
   const onGetDetail = id => {
     setLeaseDetailId(id);
     navigation.navigate('LeaseHistoryItemDetailScreen');
-    setRefreshing(true);
+    // setRefreshing(true);
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
@@ -43,7 +52,16 @@ const LeaseHistoryScreen = ({
   return (
     <FlatList
       refreshing={refreshing}
-      onRefresh={() => setRefreshing(true)}
+      onRefresh={() =>
+        getLeaseList({
+          onSuccess() {
+            setRefreshing(false);
+          },
+          onFailure() {
+            setRefreshing(false);
+          },
+        })
+      }
       data={leaseList}
       renderItem={handleRenderItem}
       keyExtractor={handleKeyExtractor}

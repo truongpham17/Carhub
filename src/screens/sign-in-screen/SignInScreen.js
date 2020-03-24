@@ -31,7 +31,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   const handleUserLogin = () => {
     // console.log('come here');
     signIn(
-      { username, password },
+      { username: 'customer1', password: '123456' },
       {
         onSuccess() {
           navigation.navigate('MainApp');

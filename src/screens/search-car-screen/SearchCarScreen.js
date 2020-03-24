@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ViewContainer, InputForm, DatePicker, Button } from 'Components';
 import { NavigationType } from 'types';
-import { scaleVer } from 'Constants/dimensions';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setRentalSearch } from '@redux/actions/car';
 import moment from 'moment';
 import { connect } from 'react-redux';
+import { textStyle } from 'Constants/textStyles';
+import { shadowStyle } from 'Constants';
+import colors from 'Constants/colors';
+import Seperator from './Seperator';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -80,14 +84,22 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
           endDate={endDate}
           onChangeDate={handleChangeDate}
         />
-      </View>
+        <Seperator />
 
-      <Button
-        label="Search"
-        onPress={onSearchPress}
-        style={{ marginBottom: scaleVer(32) }}
-        disable={!(startLocation && endLocation)}
-      />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('SelectSharingCarScreen')}
+        >
+          <Text style={textStyle.bodyTextBold}> Hire sharing car </Text>
+        </TouchableOpacity>
+
+        <Button
+          label="Search"
+          onPress={onSearchPress}
+          style={{ marginBottom: scaleVer(32) }}
+          disable={!(startLocation && endLocation)}
+        />
+      </View>
     </ViewContainer>
   );
 };
@@ -97,5 +109,14 @@ export default connect(state => ({}), { setRentalSearch })(SearchCarScreen);
 const styles = StyleSheet.create({
   input: {
     marginBottom: scaleVer(32),
+  },
+  button: {
+    height: scaleHor(64),
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadowStyle.ELEVATION_3,
+    backgroundColor: colors.white,
+    marginVertical: scaleVer(16),
   },
 });

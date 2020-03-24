@@ -14,7 +14,11 @@ export function selectImage(callback) {
       console.log('error at select image');
       console.log(response.error);
     } else {
-      callback(response.uri);
+      callback({
+        uri: response.uri,
+        data: response.data,
+        key: response.fileName,
+      });
     }
   });
 }

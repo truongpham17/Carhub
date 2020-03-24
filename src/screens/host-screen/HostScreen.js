@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  View,
   TouchableOpacity,
   Text,
   StyleSheet,
@@ -8,13 +7,7 @@ import {
   Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
-import {
-  ViewContainer,
-  InputForm,
-  ListItem,
-  Button,
-  ImageSelector,
-} from 'Components';
+import { ViewContainer, InputForm, Button, ImageSelector } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import { NavigationType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
@@ -26,7 +19,15 @@ import {
   setValue,
 } from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
+import Clarifai from 'clarifai';
+import { CLARIFY_KEY } from 'Constants/key';
 import Seperator from './Seperator';
+
+const clarifai = new Clarifai.App({
+  apiKey: CLARIFY_KEY,
+});
+
+process.nextTick = setImmediate;
 
 type PropTypes = {
   checkCarByVin: () => void,
@@ -53,6 +54,15 @@ const HostScreen = ({
 }: PropTypes) => {
   console.log({ vin, usingYears, odometers });
   const [images, setImages] = useState(['']);
+  const [loadingRecognize, setLoading] = useState(false);
+  const base64Refs = useRef([]);
+
+  const predict = async image => {
+    const predictions = await clarifai.models.predict(Clarifai.GENERAL_MODEL, {
+      base64: image,
+    });
+    return predictions;
+  };
 
   const handleChangeVin = vin => {
     setValue({ vin });
@@ -64,14 +74,63 @@ const HostScreen = ({
     setValue({ odometers });
   };
   const handleAddImage = () => {
-    selectImage(image => setImages([...images, image]));
+    selectImage(async image => {
+      setImages(images => [...images, { uri: image.uri, key: image.key }]);
+      base64Refs.current.push({ data: image.data, key: image.key });
+      // console.log('start analyze data');
+      // const result = await predict(image.data);
+      // console.log(result);
+    });
   };
-  const handleRemoveImage = uri => {
-    setImages(images => images.filter(image => image !== uri));
+
+  const handleRemoveImage = key => {
+    setImages(images => images.filter(image => image.key !== key));
+    base64Refs.current = base64Refs.current.filter(image => image.key !== key);
   };
+
   const onPressBack = () => {
     navigation.pop();
   };
+
+  const handleTestImage = async () => {
+    setLoading(true);
+    const errors = [];
+    console.log(base64Refs);
+    const predictions = await Promise.all(
+      base64Refs.current.map(base64 => predict(base64.data))
+    );
+
+    predictions.forEach((prediction, index) => {
+      const { concepts } = prediction.outputs[0].data;
+      let isValidate = false;
+      for (let i = 0; i < concepts.length; i++) {
+        if (
+          concepts[i].name.includes('car') ||
+          concepts[i].name.includes('vehicle')
+        ) {
+          isValidate = true;
+          break;
+        }
+      }
+      if (!isValidate) {
+        errors.push(index);
+      }
+    });
+
+    setLoading(false);
+
+    if (errors.length > 0) {
+      setTimeout(() => {
+        Alert.alert(
+          'Cannot recognize your car',
+          'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
+        );
+      }, 300);
+    } else {
+      handleNextStep();
+    }
+  };
+
   const handleNextStep = () => {
     checkCarByVin(
       {
@@ -114,7 +173,7 @@ const HostScreen = ({
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
-      loading={loading}
+      loading={loading || loadingRecognize}
     >
       <TouchableOpacity style={styles.container} onPress={handleScan}>
         <Text style={textStyle.bodyTextBold}> Scan VIN Code </Text>
@@ -161,7 +220,7 @@ const HostScreen = ({
       <Button
         style={{ marginVertical: scaleVer(32) }}
         label="Next step"
-        onPress={handleNextStep}
+        onPress={handleTestImage}
       />
     </ViewContainer>
   );
