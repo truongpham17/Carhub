@@ -229,7 +229,7 @@ const RentHistoryItemDetailScreen = ({
 
   const handleConfirmPopup = () => {
     setPopupVisible(false);
-    navigation.popToTop();
+    popToHistoryScreen();
   };
 
   const handleSubmitSharing = value => {
@@ -297,7 +297,7 @@ const RentHistoryItemDetailScreen = ({
       {
         onSuccess() {
           getRentalsList();
-          navigation.pop();
+          popToHistoryScreen();
         },
       }
     );
