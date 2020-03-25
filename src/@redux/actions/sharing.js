@@ -74,7 +74,7 @@ export const sendSharingRequest = (
     dispatch({ type: SEND_SHARING_REQ_REQUEST });
     const result = await query({
       method: METHODS.post,
-      endpoint: `${ENDPOINTS.sharingRequest}`,
+      endpoint: `${ENDPOINTS.rentalRequest}`,
       data: {
         sharing: data.id,
         customer: data.customer,
