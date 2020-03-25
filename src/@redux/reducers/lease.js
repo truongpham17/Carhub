@@ -24,7 +24,7 @@ const INITIAL_STATE = {
   vin: null,
   usingYears: null,
   odometers: null,
-  images: [],
+  images: [''],
   InfoFromVin: [],
   listPreviousCar: [],
   error: null,
@@ -65,6 +65,7 @@ export default (state = INITIAL_STATE, action) => {
         vin: null,
         usingYears: null,
         odometers: null,
+        images: [''],
       };
     case ADD_LEASE_FAILURE:
       return {
