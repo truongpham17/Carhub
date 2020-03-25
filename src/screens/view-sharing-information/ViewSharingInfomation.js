@@ -55,6 +55,7 @@ const ViewSharingInfomation = ({
       {
         onSuccess() {
           alert('Your request is sent successfully!');
+          navigation.popToTop();
         },
       }
     );

@@ -32,7 +32,15 @@ import { changeTransactionStatus } from 'Utils/database';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
-  navigation: NavigationType,
+  navigation: {
+    state: {
+      params: {
+        popToHistoryScreen: () => void,
+      },
+    },
+    navigate: () => void,
+    pop: () => void,
+  },
   rentDetail: RentDetailType,
   isLoading: Boolean,
   updateSpecificRental: () => void,
@@ -57,6 +65,8 @@ const RentHistoryItemDetailScreen = ({
   const [popupVisible, setPopupVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [employeeID, setEmployeeID] = useState(null);
+
+  const { popToHistoryScreen } = navigation.state.params;
 
   const openListenner = () => {
     changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
@@ -167,7 +177,7 @@ const RentHistoryItemDetailScreen = ({
             onSuccess() {
               alert('Cancel sharing successfully');
               setTimeout(() => {
-                navigation.popToTop();
+                popToHistoryScreen();
               }, 1000);
             },
             onFailure() {
@@ -220,7 +230,7 @@ const RentHistoryItemDetailScreen = ({
             onSuccess() {
               Alert.alert('Success!');
               setTimeout(() => {
-                navigation.popToTop();
+                popToHistoryScreen();
               }, 1000);
             },
             onFailure() {

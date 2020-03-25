@@ -26,7 +26,7 @@ export const getRentalsList = (
     const result = await query({ endpoint: ENDPOINTS.rental });
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
-      callback.success();
+      callback.onSuccess();
     } else {
       dispatch({ type: GET_RENTAL_FAILURE });
     }
@@ -61,7 +61,19 @@ export const updateSpecificRental = (
     });
 
     if (result.status === STATUS.OK) {
-      if (data.status === 'SHARING') {
+      if (data.log.type === 'CANCEL_SHARING') {
+        const removedSharing = await query({
+          method: METHODS.delete,
+          endpoint: `${ENDPOINTS.sharing}/latest/rental/${data.id}`,
+        });
+        if (removedSharing.status === STATUS.OK) {
+          dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
+          callback.onSuccess();
+        } else {
+          dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
+          callback.onFailure();
+        }
+      } else if (data.status === 'SHARING') {
         const newSharing = await query({
           method: METHODS.post,
           endpoint: ENDPOINTS.sharing,
@@ -90,8 +102,6 @@ export const updateSpecificRental = (
       callback.onFailure();
     }
   } catch (error) {
-    console.log(error);
-
     dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE, payload: error });
     callback.onFailure();
   }
