@@ -19,6 +19,7 @@ import {
 } from '@redux/actions/getRentalsList';
 
 import { confirmTransaction } from '@redux/actions/transaction';
+import { getSharingByRentalId } from '@redux/actions/sharing';
 import Geolocation from '@react-native-community/geolocation';
 import {
   COMPLETED,
@@ -37,6 +38,7 @@ type PropTypes = {
   updateSpecificRental: () => void,
   confirmTransaction: () => void,
   getRentalsList: () => void,
+  getSharingByRentalId: () => void,
 };
 
 const RentHistoryItemDetailScreen = ({
@@ -46,6 +48,7 @@ const RentHistoryItemDetailScreen = ({
   updateSpecificRental,
   confirmTransaction,
   getRentalsList,
+  getSharingByRentalId,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
@@ -54,16 +57,6 @@ const RentHistoryItemDetailScreen = ({
   const [popupVisible, setPopupVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [employeeID, setEmployeeID] = useState(null);
-  // useEffect(() => {
-  //   const id = navigation.getParam('itemID', '');
-  //   getSpecificRental({ id });
-  // }, []);
-  // useEffect(() => {
-  //   if (qrCodeModalVisible && generateNewQR) {
-  //     generateValue('return');
-  //     openListenner();
-  //   }
-  // }, [qrCodeModalVisible, generateNewQR]);
 
   const openListenner = () => {
     changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
@@ -135,7 +128,8 @@ const RentHistoryItemDetailScreen = ({
   if (!typeofDate) {
     showAttr.splice(6, 2);
   }
-  const maximumValue = daysdiff >= 3 ? daysdiff * rentDetail.price : 10;
+
+  const maximumValue = daysdiff >= 3 ? rentDetail.price : 10;
 
   // const { data } = rentDetail;
   const onBackPress = () => {
@@ -148,6 +142,39 @@ const RentHistoryItemDetailScreen = ({
       case 'OVERDUE':
       case 'UPCOMING':
         onRequestTransaction();
+        break;
+      case 'SHARED':
+        getSharingByRentalId(
+          { rentalId: rentDetail._id },
+          {
+            onSuccess() {
+              navigation.navigate('SharingDetailScreen');
+            },
+          }
+        );
+        break;
+      case 'SHARING':
+        updateSpecificRental(
+          {
+            id: rentDetail._id,
+            status: 'CURRENT',
+            log: {
+              type: 'CANCEL_SHARING',
+              title: 'Cancel sharing car',
+            },
+          },
+          {
+            onSuccess() {
+              alert('Cancel sharing successfully');
+              setTimeout(() => {
+                navigation.popToTop();
+              }, 1000);
+            },
+            onFailure() {
+              alert('Something went wrong');
+            },
+          }
+        );
         break;
       default:
     }
@@ -182,15 +209,26 @@ const RentHistoryItemDetailScreen = ({
             id: rentDetail._id,
             status: 'SHARING',
             geometry: location.geometry,
-            totalCost: value,
-            location: location.address,
+            price: value,
+            address: location.address,
+            log: {
+              type: 'CREATE_SHARING',
+              title: 'Request sharing car',
+            },
           },
           {
             onSuccess() {
               Alert.alert('Success!');
+              setTimeout(() => {
+                navigation.popToTop();
+              }, 1000);
             },
             onFailure() {
               Alert.alert('Error!');
+              updateSpecificRental({
+                id: rentDetail._id,
+                status: rentDetail.status,
+              });
             },
           }
         );
@@ -209,6 +247,8 @@ const RentHistoryItemDetailScreen = ({
         return 'HIRE THIS CAR';
       case 'SHARING':
         return 'CANCEL SHARING';
+      case 'SHARED':
+        return 'VIEW SHARING';
       default:
         return '';
     }
@@ -322,5 +362,10 @@ export default connect(
     ),
     isLoading: state.rentalsList.isLoading,
   }),
-  { updateSpecificRental, confirmTransaction, getRentalsList }
+  {
+    updateSpecificRental,
+    confirmTransaction,
+    getRentalsList,
+    getSharingByRentalId,
+  }
 )(RentHistoryItemDetailScreen);

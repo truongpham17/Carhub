@@ -53,7 +53,10 @@ export const updateSpecificRental = (
       method: METHODS.patch,
       endpoint: `${ENDPOINTS.rental}/${data.id}`,
       data: {
-        status: data.status,
+        data: {
+          status: data.status,
+        },
+        log: data.log,
       },
     });
 
@@ -68,8 +71,8 @@ export const updateSpecificRental = (
               lng: data.geometry.lng,
             },
             rental: data.id,
-            totalCost: data.totalCost,
-            location: data.location,
+            price: data.price,
+            address: data.address,
           },
         });
         if (newSharing.status === STATUS.OK) {
@@ -78,12 +81,17 @@ export const updateSpecificRental = (
         } else {
           dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
         }
+      } else {
+        dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
+        callback.onSuccess();
       }
     } else {
       dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
       callback.onFailure();
     }
   } catch (error) {
+    console.log(error);
+
     dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE, payload: error });
     callback.onFailure();
   }
