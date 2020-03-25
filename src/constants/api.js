@@ -3,7 +3,7 @@
  */
 
 // cuong
-export const API_URL = 'http://192.168.1.190:5068/';
+export const API_URL = 'http://192.168.1.11:5068/';
 
 // truong
 // export const API_URL = 'http://192.168.1.33:5068/';
@@ -46,6 +46,7 @@ export const ENDPOINTS = {
   rental: 'rental',
   lease: 'lease',
   sharing: 'sharing',
+  rentalRequest: 'rentalSharingRequest',
 };
 
 export const INITIAL_CALLBACK = {

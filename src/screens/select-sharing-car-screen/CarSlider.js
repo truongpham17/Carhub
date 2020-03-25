@@ -21,9 +21,16 @@ type PropsType = {
   itemIndex: {},
   carRef: {},
   moveToIndex: () => void,
+  goToNextStep: () => void,
 };
 
-const CarSlider = ({ sharing, itemIndex, carRef, moveToIndex }: PropsType) => {
+const CarSlider = ({
+  sharing,
+  itemIndex,
+  carRef,
+  moveToIndex,
+  goToNextStep,
+}: PropsType) => {
   // const CarRef = useRef(null);
 
   const getItemLayout = useRef((data, index) => ({
@@ -44,7 +51,7 @@ const CarSlider = ({ sharing, itemIndex, carRef, moveToIndex }: PropsType) => {
   });
 
   const renderItem = ({ item }) => (
-    <TouchableWithoutFeedback>
+    <TouchableWithoutFeedback onPress={goToNextStep}>
       <View style={styles.sliderItem}>
         <View style={[styles.itemContainer]}>
           <View>
@@ -60,7 +67,7 @@ const CarSlider = ({ sharing, itemIndex, carRef, moveToIndex }: PropsType) => {
               {moment(item.rental.startDate).format('MMM Do')} -{' '}
               {moment(item.rental.endDate).format('MMM Do')}
             </Text>
-            <Text style={textStyle.labelRegular}>{item.totalCost} $</Text>
+            <Text style={textStyle.labelRegular}>{item.price} $</Text>
             <Text style={textStyle.labelRegular}>
               {Math.abs(subtractDate(new Date(), item.rental.endDate))} days
             </Text>
