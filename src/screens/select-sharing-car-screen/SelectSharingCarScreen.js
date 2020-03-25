@@ -10,12 +10,13 @@ import MapView, { Marker } from 'react-native-maps';
 import { NavigationType, SharingType } from 'types';
 import { CarIcon, CarIconSelected } from 'Assets/svgs';
 import { GOOGLE_KEY } from 'Constants/key';
-import { MapAutoCompleteSearch } from 'Components';
+import { MapAutoCompleteSearch, ModalContainer } from 'Components';
 import { connect } from 'react-redux';
-import { getSharing } from '@redux/actions/sharing';
+import { getSharing, setSelectSharing } from '@redux/actions/sharing';
 import { textStyle } from 'Constants/textStyles';
-import { scaleVer } from 'Constants/dimensions';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { dimension } from 'Constants';
+import colors from 'Constants/colors';
 import CarSlider from './CarSlider';
 
 type PropsType = {
@@ -23,6 +24,7 @@ type PropsType = {
   isLoading: Boolean,
   sharing: [SharingType],
   getSharing: () => void,
+  setSelectSharing: () => void,
 };
 
 const INIT_LAT_DELTA = 0.0922;
@@ -33,6 +35,7 @@ const SelectSharingCarScreen = ({
   isLoading,
   sharing,
   getSharing,
+  setSelectSharing,
 }: PropsType) => {
   const [region, setRegion] = useState({
     latitude: 10.805915,
@@ -40,7 +43,9 @@ const SelectSharingCarScreen = ({
     latitudeDelta: INIT_LAT_DELTA,
     longitudeDelta: INIT_LNG_DELTA,
   });
-  const [selectCar, setSelectCar] = useState(sharing[0]);
+  const [selectCar, setSelectCar] = useState(null);
+
+  // const [modalVisible, setModalVisible] = useState(false);
 
   // const map = useRef(null);
   const itemIndex = useRef(0);
@@ -75,6 +80,15 @@ const SelectSharingCarScreen = ({
   };
 
   const onSelectLocation = () => {};
+
+  const handleNextStep = () => {
+    if (selectCar === null) {
+      alert('No car selected!');
+      return;
+    }
+    setSelectSharing(selectCar._id);
+    navigation.navigate('ViewSharingInfomation');
+  };
 
   const renderCarMarker = (sharingCar: SharingType) => {
     const coordinate = {
@@ -137,6 +151,7 @@ const SelectSharingCarScreen = ({
           selectCar={selectCar}
           onSelectCar={onSelectCar}
           moveToIndex={moveToIndex}
+          goToNextStep={handleNextStep}
         />
       </View>
     </View>
@@ -155,5 +170,5 @@ export default connect(
     sharing: state.sharing.data,
     isLoading: state.sharing.isLoading,
   }),
-  { getSharing }
+  { getSharing, setSelectSharing }
 )(SelectSharingCarScreen);

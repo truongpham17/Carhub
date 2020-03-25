@@ -19,6 +19,11 @@ import {
 } from '@redux/actions/getRentalsList';
 
 import { confirmTransaction } from '@redux/actions/transaction';
+import {
+  getSharingByRentalId,
+  getRentalRequestBySharing,
+  getLatestSharingByRental,
+} from '@redux/actions/sharing';
 import Geolocation from '@react-native-community/geolocation';
 import {
   COMPLETED,
@@ -31,12 +36,23 @@ import { changeTransactionStatus } from 'Utils/database';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
-  navigation: NavigationType,
+  navigation: {
+    state: {
+      params: {
+        popToHistoryScreen: () => void,
+      },
+    },
+    navigate: () => void,
+    pop: () => void,
+  },
   rentDetail: RentDetailType,
   isLoading: Boolean,
   updateSpecificRental: () => void,
   confirmTransaction: () => void,
   getRentalsList: () => void,
+  getSharingByRentalId: () => void,
+  getRentalRequestBySharing: () => void,
+  getLatestSharingByRental: () => void,
 };
 
 const RentHistoryItemDetailScreen = ({
@@ -46,6 +62,9 @@ const RentHistoryItemDetailScreen = ({
   updateSpecificRental,
   confirmTransaction,
   getRentalsList,
+  getSharingByRentalId,
+  getLatestSharingByRental,
+  getRentalRequestBySharing,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
@@ -54,16 +73,8 @@ const RentHistoryItemDetailScreen = ({
   const [popupVisible, setPopupVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [employeeID, setEmployeeID] = useState(null);
-  // useEffect(() => {
-  //   const id = navigation.getParam('itemID', '');
-  //   getSpecificRental({ id });
-  // }, []);
-  // useEffect(() => {
-  //   if (qrCodeModalVisible && generateNewQR) {
-  //     generateValue('return');
-  //     openListenner();
-  //   }
-  // }, [qrCodeModalVisible, generateNewQR]);
+
+  const { popToHistoryScreen } = navigation.state.params;
 
   const openListenner = () => {
     changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
@@ -142,7 +153,8 @@ const RentHistoryItemDetailScreen = ({
   if (!typeofDate) {
     showAttr.splice(6, 2);
   }
-  const maximumValue = daysdiff >= 3 ? daysdiff * rentDetail.price : 10;
+
+  const maximumValue = daysdiff >= 3 ? rentDetail.price : 10;
 
   // const { data } = rentDetail;
   const onBackPress = () => {
@@ -155,6 +167,39 @@ const RentHistoryItemDetailScreen = ({
       case 'OVERDUE':
       case 'UPCOMING':
         onRequestTransaction();
+        break;
+      case 'SHARED':
+        getSharingByRentalId(
+          { rentalId: rentDetail._id },
+          {
+            onSuccess() {
+              navigation.navigate('SharingDetailScreen');
+            },
+          }
+        );
+        break;
+      case 'SHARING':
+        updateSpecificRental(
+          {
+            id: rentDetail._id,
+            status: 'CURRENT',
+            log: {
+              type: 'CANCEL_SHARING',
+              title: 'Cancel sharing car',
+            },
+          },
+          {
+            onSuccess() {
+              alert('Cancel sharing successfully');
+              setTimeout(() => {
+                popToHistoryScreen();
+              }, 1000);
+            },
+            onFailure() {
+              alert('Something went wrong');
+            },
+          }
+        );
         break;
       default:
     }
@@ -194,15 +239,26 @@ const RentHistoryItemDetailScreen = ({
             id: rentDetail._id,
             status: 'SHARING',
             geometry: location.geometry,
-            totalCost: value,
-            location: location.address,
+            price: value,
+            address: location.address,
+            log: {
+              type: 'CREATE_SHARING',
+              title: 'Request sharing car',
+            },
           },
           {
             onSuccess() {
               Alert.alert('Success!');
+              setTimeout(() => {
+                popToHistoryScreen();
+              }, 1000);
             },
             onFailure() {
               Alert.alert('Error!');
+              updateSpecificRental({
+                id: rentDetail._id,
+                status: rentDetail.status,
+              });
             },
           }
         );
@@ -221,6 +277,8 @@ const RentHistoryItemDetailScreen = ({
         return 'HIRE THIS CAR';
       case 'SHARING':
         return 'CANCEL SHARING';
+      case 'SHARED':
+        return 'VIEW SHARING';
       default:
         return '';
     }
@@ -244,6 +302,26 @@ const RentHistoryItemDetailScreen = ({
   const onCancelTransaction = () => {
     changeTransactionStatus(rentDetail._id, CANCEL);
     setConfirmPopupVisible(false);
+  };
+
+  const getRequestListBySharing = id => {
+    getRentalRequestBySharing({ id });
+  };
+
+  const handleViewRequestList = () => {
+    getLatestSharingByRental(
+      { id: rentDetail._id },
+      {
+        onSuccess() {
+          navigation.navigate('RentSharingRequestScreen', {
+            getRequestListBySharing,
+          });
+        },
+        onFailure() {
+          alert('Something wrong here!');
+        },
+      }
+    );
   };
 
   return (
@@ -292,6 +370,13 @@ const RentHistoryItemDetailScreen = ({
           style={styles.button}
         />
       )}
+      {rentDetail.status === 'SHARING' && (
+        <Button
+          label="Request list"
+          onPress={handleViewRequestList}
+          style={styles.button}
+        />
+      )}
       <PriceSelectModal
         visible={priceModalVisible}
         onClose={onClosePriceModal}
@@ -336,5 +421,12 @@ export default connect(
     ),
     isLoading: state.rentalsList.isLoading,
   }),
-  { updateSpecificRental, confirmTransaction, getRentalsList }
+  {
+    updateSpecificRental,
+    confirmTransaction,
+    getRentalsList,
+    getSharingByRentalId,
+    getRentalRequestBySharing,
+    getLatestSharingByRental,
+  }
 )(RentHistoryItemDetailScreen);

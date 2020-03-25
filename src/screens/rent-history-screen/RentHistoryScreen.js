@@ -29,9 +29,22 @@ const RentHistoryScreen = ({
     }
   }, [refreshing]);
 
+  const popToHistoryScreen = () => {
+    getRentalsList(
+      {},
+      {
+        onSuccess() {
+          navigation.popToTop();
+        },
+      }
+    );
+  };
+
   const onGetDetail = id => {
     setRentDetailId(id);
-    navigation.navigate('RentHistoryItemDetailScreen', { itemID: id });
+    navigation.navigate('RentHistoryItemDetailScreen', {
+      popToHistoryScreen,
+    });
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
