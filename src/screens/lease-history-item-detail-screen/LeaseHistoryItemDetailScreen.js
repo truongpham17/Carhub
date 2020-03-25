@@ -169,6 +169,16 @@ const LeaseHistoryItemDetailScreen = ({
   if (leaseDetail.status === 'PENDING' || leaseDetail.status === 'PAST') {
     showAttr.splice(7, 1);
   }
+  if (
+    leaseDetail.status !== 'PENDING' &&
+    leaseDetail.status !== 'DECLINED' &&
+    leaseDetail.status !== 'ACCEPTED'
+  ) {
+    showAttr.splice(1, 0, {
+      value: leaseDetail.car.licensePlates,
+      label: 'License Plate',
+    });
+  }
 
   // const { data } = leaseDetail;
   const onBackPress = () => {

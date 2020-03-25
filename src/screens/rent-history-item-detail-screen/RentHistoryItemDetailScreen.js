@@ -128,19 +128,23 @@ const RentHistoryItemDetailScreen = ({
     typeofDate = 'Days overdue';
   }
   const showAttr = [
-    // rentDetail.carModel.name
     { value: rentDetail.carModel.name, label: 'Name' },
     { value: startDateFormat, label: 'Date Of Hire' },
     { value: `${duration} days`, label: 'Duration' },
     { value: `${rentDetail.price} $`, label: 'Price Per Day' },
     { value: `${rentDetail.totalCost} $`, label: 'Total' },
-    // rentDetail.pickupHub.name
     { value: rentDetail.pickupHub.name, label: 'Store' },
     { value: daysdiff, label: typeofDate },
     { value: rentDetail.status, label: 'Status' },
   ];
   if (!typeofDate) {
     showAttr.splice(6, 2);
+  }
+  if (rentDetail.status !== 'UPCOMING' && rentDetail.status !== 'DECLINED') {
+    showAttr.splice(1, 0, {
+      value: rentDetail.car.licensePlates,
+      label: 'License Plate',
+    });
   }
   const maximumValue = daysdiff >= 3 ? daysdiff * rentDetail.price : 10;
 
