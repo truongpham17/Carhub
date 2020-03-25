@@ -24,7 +24,7 @@ const INITIAL_STATE = {
   vin: null,
   usingYears: null,
   odometers: null,
-  images: [],
+  images: [''],
   InfoFromVin: [],
   listPreviousCar: [],
   error: null,
@@ -65,12 +65,21 @@ export default (state = INITIAL_STATE, action) => {
         vin: null,
         usingYears: null,
         odometers: null,
+        images: [''],
       };
     case ADD_LEASE_FAILURE:
       return {
         ...state,
         loading: false,
       };
+    // case GET_LEASE_REQUEST:
+    //   return { ...state, loading: true };
+    // case GET_LEASE_FAILURE:
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     error: action.payload,
+    //   };
 
     case SCAN_VIN_CODE_SUCCESS:
       return { ...state, ...action.payload, loading: false };

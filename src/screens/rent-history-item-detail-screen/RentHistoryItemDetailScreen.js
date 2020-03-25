@@ -90,7 +90,7 @@ const RentHistoryItemDetailScreen = ({
           case COMPLETED: {
             setQrCodeModalVisible(false);
             setTimeout(() => {
-              setPopupVisible(true);
+              // setPopupVisible(true);
             }, 500);
             break;
           }
@@ -104,6 +104,13 @@ const RentHistoryItemDetailScreen = ({
           case WAITING_FOR_USER_CONFIRM: {
             setQrCodeModalVisible(false);
             setConfirmPopupVisible(true);
+            break;
+          }
+          case CANCEL: {
+            setQrCodeModalVisible(false);
+            setTimeout(() => {
+              Alert.alert('Transaction declined!');
+            }, 500);
             break;
           }
           default: {
@@ -214,6 +221,11 @@ const RentHistoryItemDetailScreen = ({
 
   const onClosePriceModal = () => {
     setPriceModalVisible(false);
+  };
+
+  const handleConfirmPopup = () => {
+    setPopupVisible(false);
+    navigation.popToTop();
   };
 
   const handleSubmitSharing = value => {
@@ -338,11 +350,13 @@ const RentHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
-      <Button
-        label={getActionLabel()}
-        onPress={handleActionButton}
-        style={styles.button}
-      />
+      {rentDetail.status !== 'DECLINED' && (
+        <Button
+          label={getActionLabel()}
+          onPress={handleActionButton}
+          style={styles.button}
+        />
+      )}
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
@@ -375,8 +389,8 @@ const RentHistoryItemDetailScreen = ({
         title="Successfully"
         description="Transaction success"
         modalVisible={popupVisible}
-        onClose={() => setPopupVisible(false)}
-        onConfirm={() => setPopupVisible(false)}
+        onClose={() => handleConfirmPopup}
+        onConfirm={() => handleConfirmPopup}
       />
       <ConfirmPopup
         title="Confirm take car?"

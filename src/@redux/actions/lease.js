@@ -26,6 +26,9 @@ import axios from 'axios';
 export const checkCarByVin = (data, callback) => async dispatch => {
   try {
     dispatch({ type: GET_LEASE_REQUEST });
+    console.log(
+      `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`
+    );
     const result = await axios({
       url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`,
     });

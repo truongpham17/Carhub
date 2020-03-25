@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   FlatList,
+  Alert,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { ViewContainer, InputForm, Button, DatePicker } from 'Components';
@@ -37,16 +38,24 @@ const HostHubScreen = ({
     navigation.pop();
   };
   const handleNextStep = () => {
-    const name = `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`;
-    checkHostHubInfo(
-      { startDate, endDate, cardNumber, selectedHub, name },
-      {
-        onSuccess: () => navigation.navigate('HostReviewScreen'),
-        onFailure: () => {
-          console.log('error');
-        },
-      }
-    );
+    if (!selectedHub) {
+      Alert.alert('Please choose a hub');
+    } else if (!cardNumber) {
+      Alert.alert('Please input card number');
+    } else if (startDate >= endDate) {
+      Alert.alert('The selected date is wrong');
+    } else {
+      const name = `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`;
+      checkHostHubInfo(
+        { startDate, endDate, cardNumber, selectedHub, name },
+        {
+          onSuccess: () => navigation.navigate('HostReviewScreen'),
+          onFailure: () => {
+            console.log('error');
+          },
+        }
+      );
+    }
   };
   const handleChangeDate = (type, date) => {
     if (type === 'start') {

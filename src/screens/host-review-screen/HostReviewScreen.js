@@ -21,8 +21,9 @@ import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import moment from 'moment';
-import { addLease } from '@redux/actions/lease';
+import { addLease, setValue } from '@redux/actions/lease';
 import firebase from 'react-native-firebase';
+import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
 const showProperties = ['vin', 'odometers', 'usingYears'];
@@ -42,6 +43,7 @@ type PropTypes = {
   usingYears: Number,
   odometers: Number,
   images: [],
+  setValue: () => void,
 };
 
 const HostReviewScreen = ({
@@ -59,7 +61,9 @@ const HostReviewScreen = ({
   usingYears,
   odometers,
   images,
+  setValue,
 }: PropTypes) => {
+  const [loadingRecognize, setLoading] = useState(false);
   const leaseContract = [
     {
       id: 'name',
@@ -138,16 +142,19 @@ const HostReviewScreen = ({
     navigation.pop();
   };
   const handleNextStep = async () => {
+    setLoading(true);
     const imagesURL = [];
     await Promise.all(
-      images.map(async element => {
-        const id = uuidv4(element);
-        const snapshot = await firebase
-          .storage()
-          .ref(`lease-car/${user._id}/${id}`)
-          .putFile(element);
-        imagesURL.push(await snapshot.downloadURL);
-      })
+      images
+        .filter((_, i) => i > 0)
+        .map(async element => {
+          const id = uuidv4(element);
+          const snapshot = await firebase
+            .storage()
+            .ref(`lease-car/${user._id}/${id}`)
+            .putFile(element.uri);
+          imagesURL.push(await snapshot.downloadURL);
+        })
     );
     addLease(
       {
@@ -167,7 +174,12 @@ const HostReviewScreen = ({
           Alert.alert(
             'Successful',
             'You has been created lease request successfully',
-            [{ text: 'OK', onPress: () => navigation.navigate('HostScreen') }],
+            [
+              {
+                text: 'OK',
+                onPress: () => navigation.navigate('HostScreen'),
+              },
+            ],
             { cancelable: false }
           );
         },
@@ -188,7 +200,7 @@ const HostReviewScreen = ({
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
-      loading={loading}
+      loading={loading || loadingRecognize}
     >
       {leaseContract.map((item, index) => (
         <ListItem
@@ -224,5 +236,5 @@ export default connect(
     odometers: state.lease.odometers,
     images: state.lease.images,
   }),
-  { addLease }
+  { addLease, setValue }
 )(HostReviewScreen);

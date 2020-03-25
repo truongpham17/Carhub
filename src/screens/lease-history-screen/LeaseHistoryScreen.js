@@ -22,8 +22,13 @@ const LeaseHistoryScreen = ({
 }: PropsType) => {
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    getLeaseList();
-  }, []);
+    if (refreshing) {
+      getLeaseList();
+      setRefreshing(false);
+    }
+  }, [refreshing]);
+  //   getLeaseList();
+  // }, []);
 
   // useEffect(() => {
   //   if (refreshing) {
