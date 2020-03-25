@@ -19,7 +19,11 @@ import {
 } from '@redux/actions/getRentalsList';
 
 import { confirmTransaction } from '@redux/actions/transaction';
-import { getSharingByRentalId } from '@redux/actions/sharing';
+import {
+  getSharingByRentalId,
+  getRentalRequestBySharing,
+  getLatestSharingByRental,
+} from '@redux/actions/sharing';
 import Geolocation from '@react-native-community/geolocation';
 import {
   COMPLETED,
@@ -47,6 +51,8 @@ type PropTypes = {
   confirmTransaction: () => void,
   getRentalsList: () => void,
   getSharingByRentalId: () => void,
+  getRentalRequestBySharing: () => void,
+  getLatestSharingByRental: () => void,
 };
 
 const RentHistoryItemDetailScreen = ({
@@ -57,6 +63,8 @@ const RentHistoryItemDetailScreen = ({
   confirmTransaction,
   getRentalsList,
   getSharingByRentalId,
+  getLatestSharingByRental,
+  getRentalRequestBySharing,
 }: PropTypes) => {
   const [valueForQR, setValueForQR] = useState('');
   const [generateNewQR, setGenerateNewQR] = useState(true);
@@ -284,6 +292,26 @@ const RentHistoryItemDetailScreen = ({
     setConfirmPopupVisible(false);
   };
 
+  const getRequestListBySharing = id => {
+    getRentalRequestBySharing({ id });
+  };
+
+  const handleViewRequestList = () => {
+    getLatestSharingByRental(
+      { id: rentDetail._id },
+      {
+        onSuccess() {
+          navigation.navigate('RentSharingRequestScreen', {
+            getRequestListBySharing,
+          });
+        },
+        onFailure() {
+          alert('Something wrong here!');
+        },
+      }
+    );
+  };
+
   return (
     <ViewContainer
       haveBackHeader
@@ -325,6 +353,13 @@ const RentHistoryItemDetailScreen = ({
         <Button
           label="SHARE TO OTHER"
           onPress={onShowPriceModal}
+          style={styles.button}
+        />
+      )}
+      {rentDetail.status === 'SHARING' && (
+        <Button
+          label="Request list"
+          onPress={handleViewRequestList}
           style={styles.button}
         />
       )}
@@ -377,5 +412,7 @@ export default connect(
     confirmTransaction,
     getRentalsList,
     getSharingByRentalId,
+    getRentalRequestBySharing,
+    getLatestSharingByRental,
   }
 )(RentHistoryItemDetailScreen);

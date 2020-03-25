@@ -10,6 +10,7 @@ import { dimension } from 'Constants';
 import { subtractDate } from 'Utils/common';
 import colors from 'Constants/colors';
 import { sendSharingRequest } from '@redux/actions/sharing';
+import { textStyle } from 'Constants/textStyles';
 import ItemContainer from './ItemContainer';
 
 type PropsType = {
@@ -130,27 +131,29 @@ const ViewSharingInfomation = ({
             />
           ))}
         </ItemContainer>
-        <ItemContainer title="User">
-          <View style={{ alignSelf: 'center', paddingTop: scaleVer(8) }}>
-            <Avatar
-              size="xlarge"
-              rounded
-              source={{
-                uri: avatar,
-              }}
-            />
-          </View>
-          {data.customer.map((item, index) => (
-            <ListItem
-              key={index.toString()}
-              label={item.label}
-              detail={item.value}
-              type="detail"
-              pressable={false}
-              showSeparator={index !== data.customer.length - 1}
-            />
-          ))}
-        </ItemContainer>
+        {user._id !== sharingCar.rental.customer._id && (
+          <ItemContainer title="User">
+            <View style={{ alignSelf: 'center', paddingTop: scaleVer(8) }}>
+              <Avatar
+                size="xlarge"
+                rounded
+                source={{
+                  uri: avatar,
+                }}
+              />
+            </View>
+            {data.customer.map((item, index) => (
+              <ListItem
+                key={index.toString()}
+                label={item.label}
+                detail={item.value}
+                type="detail"
+                pressable={false}
+                showSeparator={index !== data.customer.length - 1}
+              />
+            ))}
+          </ItemContainer>
+        )}
         {/* <ItemContainer title="Choose date"> */}
         {/* <DatePicker
             startDate={startDate}
@@ -172,13 +175,27 @@ const ViewSharingInfomation = ({
           type="detail"
           pressable={false}
         />
-        {/* </ItemContainer> */}
+        {user._id === sharingCar.rental.customer._id && (
+          <Text
+            style={[
+              textStyle.labelRegular,
+              {
+                color: colors.error,
+                alignSelf: 'center',
+                marginBottom: scaleVer(6),
+              },
+            ]}
+          >
+            This sharing is yours, so you cannot go to next step
+          </Text>
+        )}
         <Button
           label="Send request"
           onPress={handleSendRequest}
           colorEnd={colors.primary}
           colorStart={colors.primaryLight}
           style={{ marginBottom: scaleVer(16) }}
+          disable={user._id === sharingCar.rental.customer._id}
         />
       </View>
     </ViewContainer>

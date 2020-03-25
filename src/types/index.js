@@ -149,3 +149,12 @@ export type CarModel = {
   price: number,
   _id: String,
 };
+export type RentalRequestType = {
+  message: String,
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED',
+  _id: String,
+  sharing: SharingType,
+  customer: UserType,
+  createdAt: Date,
+  updatedAt: Date,
+};
