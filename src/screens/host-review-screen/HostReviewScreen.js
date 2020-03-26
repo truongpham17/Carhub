@@ -26,8 +26,6 @@ import firebase from 'react-native-firebase';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
 
-const showProperties = ['vin', 'odometers', 'usingYears'];
-
 type PropTypes = {
   navigation: NavigationType,
   addLease: () => void,

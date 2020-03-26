@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
-import { getRentalsList, setRentDetailId } from '@redux/actions/getRentalsList';
+import { getRentalsList, setRentDetailId } from '@redux/actions/rental';
 import { connect } from 'react-redux';
 
 // import HistoryItem from 'Components/HistoryItem';
@@ -44,7 +44,7 @@ const RentHistoryScreen = ({
   const handleKeyExtractor = (item, index) => index.toString();
   return (
     <FlatList
-      data={rentList}
+      data={rentList.sort((a, b) => a.startDate - b.startDate)}
       renderItem={handleRenderItem}
       keyExtractor={handleKeyExtractor}
       showsVerticalScrollIndicator={false}
@@ -56,7 +56,7 @@ const RentHistoryScreen = ({
 
 export default connect(
   state => ({
-    rentList: state.rentalsList.data.rentals,
+    rentList: state.rental.data.rentals,
   }),
   { getRentalsList, setRentDetailId }
 )(RentHistoryScreen);

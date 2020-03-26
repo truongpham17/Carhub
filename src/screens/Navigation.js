@@ -31,6 +31,7 @@ import SuccessBookingRental from './success-booking-rental/SuccessBookingRental'
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
 import SelectSharingCarScreen from './select-sharing-car-screen/SelectSharingCarScreen';
+import TimeLineScreen from './time-line-screen/TimeLineScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -73,6 +74,7 @@ const HistoryStack = createStackNavigator(
     LeaseHistoryItemDetailScreen,
     SelectMapScreen,
     SelectLocationScreen,
+    TimeLineScreen,
   },
   {
     headerMode: 'none',

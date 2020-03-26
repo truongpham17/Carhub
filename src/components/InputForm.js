@@ -21,7 +21,7 @@ import colors from 'Constants/colors';
 
 type PropTypes = {
   label: string,
-  value: string | Number,
+  value: string,
   onChangeText: string => void,
   multiline: boolean,
   containerStyle: StyleProp<ViewStyle>,
@@ -36,6 +36,7 @@ type PropTypes = {
   autoFocus?: boolean,
   error?: string,
   onTextFocus: () => void,
+  keyboardType: 'default' | 'numeric',
 };
 
 const InputForm = ({
@@ -53,6 +54,7 @@ const InputForm = ({
   selectedItem,
   autoFocus = false,
   error,
+  keyboardType,
   onTextFocus = defaultFunction,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
@@ -112,6 +114,7 @@ const InputForm = ({
             autoFocus={autoFocus}
             onFocus={handleTextInputFocus}
             onBlur={handleTextInputBlur}
+            keyboardType={keyboardType}
           />
         );
       case 'calendar':

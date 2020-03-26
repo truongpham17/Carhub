@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Alert } from 'react-native';
+import { Image, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
 import {
   ViewContainer,
   ListItem,
@@ -7,19 +7,15 @@ import {
   ConfirmPopup,
   QRCodeGenModal,
 } from 'Components';
-import { NavigationType, RentDetailType } from 'types';
+import { NavigationType, RentDetailType, CarType } from 'types';
 import { connect } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
 import firebase from 'react-native-firebase';
-import {
-  updateSpecificRental,
-  getRentalsList,
-} from '@redux/actions/getRentalsList';
+import { updateSpecificRental, getRentalsList } from '@redux/actions/rental';
 
 import { confirmTransaction } from '@redux/actions/transaction';
-import Geolocation from '@react-native-community/geolocation';
 import {
   COMPLETED,
   WAITING_FOR_CONFIRM,
@@ -28,6 +24,8 @@ import {
   CANCEL,
 } from 'Constants/status';
 import { changeTransactionStatus } from 'Utils/database';
+import { textStyle } from 'Constants/textStyles';
+import colors from 'Constants/colors';
 import PriceSelectModal from './PriceSelectModal';
 
 type PropTypes = {
@@ -54,16 +52,7 @@ const RentHistoryItemDetailScreen = ({
   const [popupVisible, setPopupVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [employeeID, setEmployeeID] = useState(null);
-  // useEffect(() => {
-  //   const id = navigation.getParam('itemID', '');
-  //   getSpecificRental({ id });
-  // }, []);
-  // useEffect(() => {
-  //   if (qrCodeModalVisible && generateNewQR) {
-  //     generateValue('return');
-  //     openListenner();
-  //   }
-  // }, [qrCodeModalVisible, generateNewQR]);
+  const [selectedCar, setSelectedCar]: [CarType] = useState({ carModel: {} });
 
   const openListenner = () => {
     changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
@@ -71,16 +60,22 @@ const RentHistoryItemDetailScreen = ({
       .database()
       .ref(`scanQRCode/${rentDetail._id}`)
       .on('value', snapShot => {
-        console.log(snapShot.val());
-        if (!employeeID && snapShot.val().employeeID) {
-          setEmployeeID(snapShot.val().employeeID);
+        const val = snapShot.val();
+        if (!employeeID && val.employeeID) {
+          setEmployeeID(val.employeeID);
         }
-        switch (snapShot.val().status) {
+        switch (val.status) {
           case COMPLETED: {
             setQrCodeModalVisible(false);
-            setTimeout(() => {
-              // setPopupVisible(true);
-            }, 500);
+            getRentalsList({
+              onSuccess() {
+                Alert.alert('Return car successfully!');
+              },
+              onFailure() {
+                navigation.pop();
+              },
+            });
+
             break;
           }
           case WAITING_FOR_CONFIRM: {
@@ -92,6 +87,8 @@ const RentHistoryItemDetailScreen = ({
           }
           case WAITING_FOR_USER_CONFIRM: {
             setQrCodeModalVisible(false);
+            setSelectedCar(val.car);
+
             setConfirmPopupVisible(true);
             break;
           }
@@ -130,6 +127,10 @@ const RentHistoryItemDetailScreen = ({
   const showAttr = [
     // rentDetail.carModel.name
     { value: rentDetail.carModel.name, label: 'Name' },
+    {
+      value: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
+      label: 'License Plate',
+    },
     { value: startDateFormat, label: 'Date Of Hire' },
     { value: `${duration} days`, label: 'Duration' },
     { value: `${rentDetail.price} $`, label: 'Price Per Day' },
@@ -229,13 +230,13 @@ const RentHistoryItemDetailScreen = ({
   const onConfirmReceiveCar = () => {
     changeTransactionStatus(rentDetail._id, COMPLETED);
     setConfirmPopupVisible(false);
-    console.log(employeeID);
+
     confirmTransaction(
-      { id: rentDetail._id, type: 'rental', employeeID },
+      { id: rentDetail._id, type: 'rental', car: selectedCar._id },
       {
         onSuccess() {
           getRentalsList();
-          navigation.pop();
+          // navigation.pop();
         },
       }
     );
@@ -272,6 +273,17 @@ const RentHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
+
+      <TouchableOpacity
+        style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
+        onPress={() =>
+          navigation.navigate('TimeLineScreen', { id: rentDetail._id })
+        }
+      >
+        <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
+          Time line
+        </Text>
+      </TouchableOpacity>
       {rentDetail.status !== 'DECLINED' && (
         <Button
           label={getActionLabel()}
@@ -292,6 +304,7 @@ const RentHistoryItemDetailScreen = ({
           style={styles.button}
         />
       )}
+
       <PriceSelectModal
         visible={priceModalVisible}
         onClose={onClosePriceModal}
@@ -309,7 +322,7 @@ const RentHistoryItemDetailScreen = ({
       />
       <ConfirmPopup
         title="Confirm take car?"
-        description="Are you sure to confirm take your car?"
+        description={`Are you sure to take the ${selectedCar.carModel.name} with license plates: ${selectedCar.licensePlates}?`}
         modalVisible={confirmPopupVisibie}
         onDecline={onCancelTransaction}
         onConfirm={onConfirmReceiveCar}
@@ -331,10 +344,10 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    rentDetail: state.rentalsList.data.rentals.find(
-      item => item._id === state.rentalsList.selectedId
+    rentDetail: state.rental.data.rentals.find(
+      item => item._id === state.rental.selectedId
     ),
-    isLoading: state.rentalsList.isLoading,
+    isLoading: state.rental.isLoading,
   }),
   { updateSpecificRental, confirmTransaction, getRentalsList }
 )(RentHistoryItemDetailScreen);

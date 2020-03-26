@@ -16,7 +16,6 @@ import {
 import { SET_RENT_DETAIL_ID } from '../constants/rental';
 
 export const getRentalsList = (
-  data,
   callback = INITIAL_CALLBACK
 ) => async dispatch => {
   try {
@@ -26,11 +25,13 @@ export const getRentalsList = (
     const result = await query({ endpoint: ENDPOINTS.rental });
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
-      callback.success();
+      callback.onSuccess();
     } else {
+      callback.onFailure();
       dispatch({ type: GET_RENTAL_FAILURE });
     }
   } catch (error) {
+    callback.onFailure();
     dispatch({
       type: GET_RENTAL_FAILURE,
       payload: error,

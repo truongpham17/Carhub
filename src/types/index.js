@@ -16,6 +16,7 @@ export type RentDetailType = {
   status: 'UPCOMING' | 'CURRENT' | 'OVERDUE' | 'SHARING' | 'SHARED' | 'PAST',
   type: String,
   __v: 0,
+  car: CarType,
 };
 
 export type LeaseDetailType = {
@@ -121,6 +122,7 @@ export type CarType = {
   VIN: String,
   usingYears: Number,
   valueData: [{ value: String }],
+  licensePlates: string,
 };
 
 export type LicenseType = {
