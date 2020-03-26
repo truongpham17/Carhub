@@ -37,6 +37,7 @@ type PropTypes = {
   error?: string,
   onTextFocus: () => void,
   keyboardType: 'default' | 'numeric',
+  secureTextEntry: boolean,
 };
 
 const InputForm = ({
@@ -56,6 +57,7 @@ const InputForm = ({
   error,
   keyboardType,
   onTextFocus = defaultFunction,
+  secureTextEntry,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
   const [showDropList, setShowDropDownList] = useState(false);
@@ -115,6 +117,7 @@ const InputForm = ({
             onFocus={handleTextInputFocus}
             onBlur={handleTextInputBlur}
             keyboardType={keyboardType}
+            secureTextEntry={secureTextEntry}
           />
         );
       case 'calendar':

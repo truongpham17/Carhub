@@ -235,7 +235,7 @@ const HostScreen = ({
       <Button
         style={{ marginVertical: scaleVer(32) }}
         label="Next step"
-        onPress={handleNextStep}
+        onPress={handleTestImage}
       />
     </ViewContainer>
   );

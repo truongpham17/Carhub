@@ -9,3 +9,10 @@ export function changeTransactionStatus(id, status) {
       status,
     });
 }
+
+export function changeSharingStatus(id, status) {
+  firebase
+    .database()
+    .ref(`sharing/${id}`)
+    .set({ status });
+}

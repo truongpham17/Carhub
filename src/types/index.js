@@ -2,6 +2,7 @@ export type NavigationType = {
   pop: () => void,
   navigate: (screenName: string) => void,
   goBack: () => void,
+  popToTop: () => void,
 };
 export type RentDetailType = {
   leaser: UserType,
@@ -13,10 +14,12 @@ export type RentDetailType = {
   _id: String,
   carModel: CarModel,
   pickupHub: HubType,
+  pickoffHub: HubType,
   status: 'UPCOMING' | 'CURRENT' | 'OVERDUE' | 'SHARING' | 'SHARED' | 'PAST',
   type: String,
   __v: 0,
   car: CarType,
+  shareRequest: string,
 };
 
 export type LeaseDetailType = {
@@ -80,10 +83,11 @@ export type SharingType = {
     lat: Number,
     lng: Number,
   },
-  location?: String,
+  address?: String,
   distance?: number,
   rental: RentDetailType,
-  totalCost: Number,
+  customer: UserType,
+  price: Number,
 };
 
 export type GeoLocationType = {
@@ -147,4 +151,13 @@ export type CarModel = {
   description: String,
   price: number,
   _id: String,
+};
+export type RentalRequestType = {
+  message: String,
+  status: 'PENDING' | 'ACCEPTED' | 'DECLINED',
+  _id: String,
+  sharing: SharingType,
+  customer: UserType,
+  createdAt: Date,
+  updatedAt: Date,
 };

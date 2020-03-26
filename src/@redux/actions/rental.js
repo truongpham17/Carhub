@@ -15,16 +15,35 @@ import {
 } from '@redux/constants/sharing';
 import { SET_RENT_DETAIL_ID } from '../constants/rental';
 
-export const getRentalsList = (
+export const getRentalList = dispatch => async (
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({
       type: GET_RENTAL_REQUEST,
     });
     const result = await query({ endpoint: ENDPOINTS.rental });
+    const sharing = await query({
+      endpoint: `${ENDPOINTS.rentalRequest}/customer`,
+    });
+
+    console.log('sharing day, ahihi', sharing.data);
+
     if (result.status === STATUS.OK) {
-      dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
+      dispatch({
+        type: GET_RENTAL_SUCCESS,
+        payload: {
+          total: result.data.total,
+          rentals: [
+            ...result.data.rentals,
+            ...sharing.data.map(item => ({
+              ...item.sharing.rental,
+              status: `SHARE_REQUEST/${item.status}`,
+              shareRequest: item._id,
+            })),
+          ],
+        },
+      });
       callback.onSuccess();
     } else {
       callback.onFailure();
@@ -54,12 +73,27 @@ export const updateSpecificRental = (
       method: METHODS.patch,
       endpoint: `${ENDPOINTS.rental}/${data.id}`,
       data: {
-        status: data.status,
+        data: {
+          status: data.status,
+        },
+        log: data.log,
       },
     });
 
     if (result.status === STATUS.OK) {
-      if (data.status === 'SHARING') {
+      if (data.log.type === 'CANCEL_SHARING') {
+        const removedSharing = await query({
+          method: METHODS.delete,
+          endpoint: `${ENDPOINTS.sharing}/latest/rental/${data.id}`,
+        });
+        if (removedSharing.status === STATUS.OK) {
+          dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
+          callback.onSuccess();
+        } else {
+          dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
+          callback.onFailure();
+        }
+      } else if (data.status === 'SHARING') {
         const newSharing = await query({
           method: METHODS.post,
           endpoint: ENDPOINTS.sharing,
@@ -69,8 +103,8 @@ export const updateSpecificRental = (
               lng: data.geometry.lng,
             },
             rental: data.id,
-            totalCost: data.totalCost,
-            location: data.location,
+            price: data.price,
+            address: data.address,
           },
         });
         if (newSharing.status === STATUS.OK) {
@@ -79,6 +113,9 @@ export const updateSpecificRental = (
         } else {
           dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });
         }
+      } else {
+        dispatch({ type: UPDATE_RENTAL_ITEM_SUCCESS, payload: result.data });
+        callback.onSuccess();
       }
     } else {
       dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE });

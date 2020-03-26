@@ -35,7 +35,7 @@ const ListItem = ({
   type = 'text',
   detail,
   containerStyle,
-  pressable = true,
+  pressable = false,
 }: PropTypes) => {
   const getAction = () => {
     switch (type) {

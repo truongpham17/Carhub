@@ -46,6 +46,7 @@ export const ENDPOINTS = {
   rental: 'rental',
   lease: 'lease',
   sharing: 'sharing',
+  rentalRequest: 'rentalSharingRequest',
 };
 
 export const INITIAL_CALLBACK = {
