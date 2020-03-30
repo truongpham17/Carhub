@@ -86,7 +86,7 @@ export type SharingType = {
   address?: String,
   distance?: number,
   rental: RentDetailType,
-  customer: UserType,
+  sharingRequest: RentalRequestType,
   price: Number,
 };
 

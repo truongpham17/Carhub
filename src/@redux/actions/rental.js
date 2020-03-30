@@ -105,6 +105,8 @@ export const updateSpecificRental = (
             rental: data.id,
             price: data.price,
             address: data.address,
+            fromDate: data.fromDate,
+            toDate: data.toDate,
           },
         });
         if (newSharing.status === STATUS.OK) {

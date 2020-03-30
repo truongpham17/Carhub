@@ -61,6 +61,13 @@ const RentHistoryItemDetailScreen = ({
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [selectedCar, setSelectedCar]: [CarType] = useState({ carModel: {} });
 
+  useEffect(() => {
+    if (generateNewQR) {
+      generateValue('');
+    }
+    setGenerateNewQR(false);
+  }, [generateNewQR]);
+
   const openListenner = () => {
     changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
     firebase
@@ -275,6 +282,7 @@ const RentHistoryItemDetailScreen = ({
     // Agree sharing
     setPriceModalVisible(false);
     navigation.navigate('SelectLocationScreen', {
+      titleScreen: 'Choose sharing location',
       callback(location) {
         console.log(location);
         updateSpecificRental(
@@ -284,6 +292,8 @@ const RentHistoryItemDetailScreen = ({
             geometry: location.geometry,
             price: value,
             address: location.address,
+            fromDate: Date.now(),
+            toDate: rentDetail.endDate,
             log: {
               type: 'CREATE_SHARING',
               title: 'Request sharing car',

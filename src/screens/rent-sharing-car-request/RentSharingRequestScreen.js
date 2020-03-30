@@ -45,9 +45,9 @@ const RentSharingRequestScreen = ({
   // const data = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
   const onAcceptRequest = id => {
-    const isAlreadyAccepted = requestList.findIndex(
-      item => item.status === 'ACCEPTED'
-    );
+    // const isAlreadyAccepted = requestList.findIndex(
+    //   item => item.status === 'ACCEPTED'
+    // );
     // if (isAlreadyAccepted !== -1) {
     //   alert({
     //     label: 'Action denied',
@@ -62,6 +62,26 @@ const RentSharingRequestScreen = ({
       onConfirm() {
         updateRentalRequest(
           { id, status: 'ACCEPTED' },
+          {
+            onSuccess() {
+              onRefresh();
+            },
+            onFailure() {
+              alert({ label: 'Something went wrong!' });
+            },
+          }
+        );
+      },
+    });
+  };
+
+  const onRejectRequest = id => {
+    alert({
+      label: 'Reject this rent request?',
+      detail: 'Are you sure to reject this rent request.',
+      onConfirm() {
+        updateRentalRequest(
+          { id, status: 'DECLINED' },
           {
             onSuccess() {
               onRefresh();
@@ -91,6 +111,7 @@ const RentSharingRequestScreen = ({
     <SharingRequestItem
       data={item}
       onAcceptRequest={onAcceptRequest}
+      onRejectRequest={onRejectRequest}
       onConfirm={() => navigation.navigate('ScanScreen')}
     />
   );

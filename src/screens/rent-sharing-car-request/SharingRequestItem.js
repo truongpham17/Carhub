@@ -11,7 +11,7 @@ import { textStyle } from 'Constants/textStyles';
 
 type PropTypes = {
   onAcceptRequest: () => void,
-  onDeclineRequest: () => void,
+  onRejectRequest: () => void,
   data: RentalRequestType,
   onConfirm: () => void,
 };
@@ -19,6 +19,7 @@ type PropTypes = {
 const SharingRequestItem = ({
   data,
   onAcceptRequest,
+  onRejectRequest,
   onConfirm,
 }: PropTypes) => (
   <View style={styles.itemContainer}>
@@ -57,13 +58,22 @@ const SharingRequestItem = ({
     )}
 
     {data.status === 'PENDING' && (
-      <Button
-        label="Accept"
-        colorStart={colors.primaryLight}
-        colorEnd={colors.primary}
-        style={styles.button}
-        onPress={() => onAcceptRequest(data._id)}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          label="Accept"
+          colorStart={colors.primaryLight}
+          colorEnd={colors.primary}
+          style={styles.button}
+          onPress={() => onAcceptRequest(data._id)}
+        />
+        <Button
+          label="Reject"
+          colorStart={colors.errorLight}
+          colorEnd={colors.error}
+          style={styles.button}
+          onPress={() => onRejectRequest(data._id)}
+        />
+      </View>
     )}
   </View>
 );
