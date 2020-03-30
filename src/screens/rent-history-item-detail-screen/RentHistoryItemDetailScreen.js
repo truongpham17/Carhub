@@ -60,6 +60,7 @@ const RentHistoryItemDetailScreen = ({
   const [popupVisible, setPopupVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
   const [selectedCar, setSelectedCar]: [CarType] = useState({ carModel: {} });
+  const { popToHistoryScreen } = navigation.state.params;
 
   useEffect(() => {
     if (generateNewQR) {
@@ -233,10 +234,9 @@ const RentHistoryItemDetailScreen = ({
           },
           {
             onSuccess() {
-              alert('Cancel sharing successfully');
-              // setTimeout(() => {
-              //   popToHistoryScreen();
-              // }, 1000);
+              Alert.alert('Success', 'Cancel sharing successfully', [
+                { text: 'OK', onPress: () => popToHistoryScreen() },
+              ]);
             },
             onFailure() {
               alert('Something went wrong');
@@ -275,10 +275,10 @@ const RentHistoryItemDetailScreen = ({
 
   const handleConfirmPopup = () => {
     setPopupVisible(false);
-    // popToHistoryScreen();
+    popToHistoryScreen();
   };
 
-  const handleSubmitSharing = value => {
+  const handleSubmitSharing = ({ price, fromDate, toDate }) => {
     // Agree sharing
     setPriceModalVisible(false);
     navigation.navigate('SelectLocationScreen', {
@@ -290,10 +290,10 @@ const RentHistoryItemDetailScreen = ({
             id: rentDetail._id,
             status: 'SHARING',
             geometry: location.geometry,
-            price: value,
+            price,
             address: location.address,
-            fromDate: Date.now(),
-            toDate: rentDetail.endDate,
+            fromDate,
+            toDate,
             log: {
               type: 'CREATE_SHARING',
               title: 'Request sharing car',
@@ -301,10 +301,9 @@ const RentHistoryItemDetailScreen = ({
           },
           {
             onSuccess() {
-              Alert.alert('Success!');
-              // setTimeout(() => {
-              //   popToHistoryScreen();
-              // }, 1000);
+              Alert.alert('Success!', 'Other can see your sharing', [
+                { text: 'OK', onPress: () => popToHistoryScreen() },
+              ]);
             },
             onFailure() {
               Alert.alert('Error!');
@@ -441,6 +440,7 @@ const RentHistoryItemDetailScreen = ({
         visible={priceModalVisible}
         onClose={onClosePriceModal}
         onSubmit={handleSubmitSharing}
+        endDate={rentDetail.endDate}
         suggestCost={maximumValue * 0.6}
         maximumCost={maximumValue}
         minimumCost={maximumValue * 0.3}

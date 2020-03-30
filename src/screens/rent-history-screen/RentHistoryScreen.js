@@ -30,12 +30,17 @@ const RentHistoryScreen = ({
 
   const onGetDetail = id => {
     setRentDetailId(id);
-    navigation.navigate('RentHistoryItemDetailScreen');
+    navigation.navigate('RentHistoryItemDetailScreen', { popToHistoryScreen });
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
     <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
   );
+
+  const popToHistoryScreen = () => {
+    navigation.popToTop();
+    setRefreshing(true);
+  };
   // const data = ['1', '2', '3', '4'];
 
   // const handleRenderItem = () => <HistoryItem />;
