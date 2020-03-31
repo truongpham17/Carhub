@@ -21,6 +21,7 @@ import {
 import { selectImage } from 'Utils/images';
 import Clarifai from 'clarifai';
 import { CLARIFY_KEY } from 'Constants/key';
+import { parse } from 'react-native-svg';
 import Seperator from './Seperator';
 
 const clarifai = new Clarifai.App({
@@ -95,12 +96,20 @@ const HostScreen = ({
   };
 
   const handleTestImage = async () => {
+    console.log(parseFloat(usingYears));
+    console.log(
+      parseFloat(usingYears) === parseInt(parseFloat(usingYears), 10)
+    );
     if (images.length === 1) {
       Alert.alert('Please add your car images');
     } else if (!vin) {
       Alert.alert('Please input VIN');
-    } else if (isNaN(usingYears) || !usingYears) {
-      Alert.alert('Please input using year', 'Using years must be a number');
+    } else if (
+      isNaN(usingYears) ||
+      !usingYears ||
+      !(parseFloat(usingYears) === parseInt(parseFloat(usingYears), 10))
+    ) {
+      Alert.alert('Please input using year', 'Using years must be an integer');
     } else if (isNaN(odometers) || !odometers) {
       Alert.alert('Please input odometers', 'Odometers must be a number');
     } else {

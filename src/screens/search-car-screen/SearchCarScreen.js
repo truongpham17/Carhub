@@ -38,9 +38,6 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
     navigation.navigate('SelectLocationScreen', {
       callback(location) {
         setStartLocation(location);
-        if (!endLocation) {
-          setEndLocation(location);
-        }
       },
     });
   };

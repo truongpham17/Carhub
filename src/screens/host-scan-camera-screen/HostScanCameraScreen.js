@@ -76,15 +76,12 @@ const HostScanCameraScreen = ({
           buttonPositive: 'Ok',
           buttonNegative: 'Cancel',
         }}
-      >
-        <View
-          style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}
-        >
-          <TouchableOpacity onPress={takePicture} style={styles.capture}>
-            <Text style={{ fontSize: 14 }}> SNAP </Text>
-          </TouchableOpacity>
-        </View>
-      </RNCamera>
+      />
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <TouchableOpacity onPress={takePicture} style={styles.capture}>
+          <Text style={{ fontSize: 14 }}>SNAP</Text>
+        </TouchableOpacity>
+      </View>
     </ViewContainer>
   );
 };
@@ -101,13 +98,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   capture: {
-    flex: 0,
+    flex: 1,
     backgroundColor: '#fff',
     borderRadius: 5,
     padding: 15,
     paddingHorizontal: 20,
     alignSelf: 'center',
     margin: 20,
+    alignItems: 'center',
   },
 });
 
