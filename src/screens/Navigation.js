@@ -112,14 +112,19 @@ const MainApp = createBottomTabNavigator(
   }
 );
 
-const AuthStack = createStackNavigator({
-  SignInScreen,
-});
+const SignInStack = createStackNavigator(
+  {
+    SignInScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
 
 const AppNavigation = createSwitchNavigator(
   {
     AuthScreen,
-    AuthStack,
+    SignInStack,
     MainApp,
   },
   {
