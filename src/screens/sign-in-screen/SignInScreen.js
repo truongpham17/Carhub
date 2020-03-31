@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ViewContainer, InputForm, Button, ProgressStep } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { signIn } from '@redux/actions/user';
+import { signIn, updateUser } from '@redux/actions/user';
 
 import { NavigationType } from 'types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { scaleVer } from 'Constants/dimensions';
 import { changeSharingStatus } from 'Utils/database';
+import firebase from 'react-native-firebase';
+import { createNotificationChannel } from 'services/notification';
 
 type PropTypes = {
   navigation: NavigationType,

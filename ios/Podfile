@@ -1,8 +1,9 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 pod 'Firebase/Core', '~> 6.3.0'
-pod 'Firebase/Storage'
-pod 'Firebase/Database'
+pod 'Firebase/Storage', '~> 6.3.0'
+pod 'Firebase/Database', '~> 6.3.0'
+pod 'Firebase/Messaging', '~> 6.3.0'
 
 
 target 'Carhub' do

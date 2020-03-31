@@ -7,6 +7,9 @@ import {
   ADD_LICENSE_REQUEST,
   ADD_LICENSE_SUCCESS,
   ADD_LICENSE_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAILURE,
 } from '@redux/constants/user';
 
 export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
@@ -32,6 +35,30 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
     }
   };
 }
+
+export const updateUser = dispatch => async (
+  { id, ...data },
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: UPDATE_USER_REQUEST });
+    const result = await query({
+      endpoint: `customer/${id}`,
+      method: METHODS.patch,
+      data,
+    });
+    if (result.status === 200) {
+      dispatch({ type: UPDATE_USER_SUCCESS, payload: result.data });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: UPDATE_USER_FAILURE });
+      callback.onFailure();
+    }
+  } catch (error) {
+    dispatch({ type: UPDATE_USER_FAILURE });
+    callback.onFailure();
+  }
+};
 
 export function addLicense(data, callback = INITIAL_CALLBACK) {
   return async dispatch => {

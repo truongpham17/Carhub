@@ -22,6 +22,11 @@ export type RentDetailType = {
   shareRequest: string,
 };
 
+export type CustomNotification = {
+  channel: 'Notification',
+  action: 'SHOW_ONLY' | 'NAVIGATE' | 'POP_UP',
+};
+
 export type LeaseDetailType = {
   _id: String,
   customer: UserType,
