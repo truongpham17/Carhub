@@ -33,7 +33,7 @@ import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/Lea
 import SelectSharingCarScreen from './select-sharing-car-screen/SelectSharingCarScreen';
 import TimeLineScreen from './time-line-screen/TimeLineScreen';
 import SharingDetailScreen from './sharing-detail-screen/SharingDetailScreen';
-import ViewSharingInfomation from './view-sharing-information/ViewSharingInfomation';
+import ViewSharingInformation from './view-sharing-information/ViewSharingInformation';
 import RentSharingRequestScreen from './rent-sharing-car-request/RentSharingRequestScreen';
 import ScanScreen from './scan-screen/ScanScreen';
 
@@ -49,7 +49,7 @@ const RentalStack = createStackNavigator(
     LicenseScreen,
     SuccessBookingRental,
     SelectSharingCarScreen,
-    ViewSharingInfomation,
+    ViewSharingInformation,
   },
   {
     headerMode: 'none',

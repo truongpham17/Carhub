@@ -78,12 +78,12 @@ export function setRentalSearch(data) {
   };
 }
 
-export function setSelectedCar(_id) {
-  return {
+export const setSelectedCar = dispatch => _id => {
+  dispatch({
     type: SET_SELECTED_CAR,
     payload: _id,
-  };
-}
+  });
+};
 
 export function setPickOffHub(hub) {
   return {
@@ -92,33 +92,34 @@ export function setPickOffHub(hub) {
   };
 }
 
-export function searchCarList(data, callback = INITIAL_CALLBACK) {
-  return async dispatch => {
-    try {
-      dispatch({ type: SEARCH_CAR_MODEL_REQUEST });
-      const result = await query({
-        endpoint: 'carModel/search',
-        method: METHODS.post,
-        data,
+export const searchCarList = dispatch => async (
+  data,
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: SEARCH_CAR_MODEL_REQUEST });
+    const result = await query({
+      endpoint: 'carModel/search',
+      method: METHODS.post,
+      data,
+    });
+
+    // console.log(result.status, result.data);
+
+    if (result.status === STATUS.OK) {
+      console.log('success!!');
+      dispatch({
+        type: SEARCH_CAR_MODEL_SUCCESS,
+        payload: result.data,
       });
-
-      // console.log(result.status, result.data);
-
-      if (result.status === STATUS.OK) {
-        console.log('success!!');
-        dispatch({
-          type: SEARCH_CAR_MODEL_SUCCESS,
-          payload: result.data,
-        });
-        callback.onSuccess();
-      } else {
-        dispatch({ type: SEARCH_CAR_MODEL_FAILURE });
-        callback.onFailure();
-      }
-    } catch (error) {
-      console.log(error);
-      dispatch({ type: SEARCH_CAR_MODEL_FAILURE, payload: error });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: SEARCH_CAR_MODEL_FAILURE });
       callback.onFailure();
     }
-  };
-}
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: SEARCH_CAR_MODEL_FAILURE, payload: error });
+    callback.onFailure();
+  }
+};

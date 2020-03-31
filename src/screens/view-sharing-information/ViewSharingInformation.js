@@ -5,7 +5,7 @@ import { NavigationType, SharingType, UserType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 import { Avatar } from 'react-native-elements';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { dimension } from 'Constants';
 import { subtractDate } from 'Utils/common';
 import colors from 'Constants/colors';
@@ -15,21 +15,27 @@ import ItemContainer from './ItemContainer';
 
 type PropsType = {
   navigation: NavigationType,
-  sharingCar: SharingType,
   sendSharingRequest: () => void,
   user: UserType,
 };
 
-const ViewSharingInfomation = ({
+const ViewSharingInformation = ({
   navigation,
-  sharingCar,
   sendSharingRequest,
   user,
 }: PropsType) => {
+  const sharingList: [SharingType] = useSelector(state => state.sharing.data);
+
+  const { selectedId } = navigation.state.params;
+
+  const sharingCar = sharingList.find(item => item._id === selectedId) || {};
+
   const [isLoading, setIsLoading] = useState(false);
-  const today = new Date();
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(sharingCar.rental.endDate);
+
+  const today = new Date();
+
   // const changeSharingCar = sharing => setSharingCar(sharing);
 
   const startDateFormat = moment(sharingCar.rental.startDate || today).format(
@@ -78,18 +84,16 @@ const ViewSharingInfomation = ({
         label: 'Car return address',
         value: sharingCar.rental.pickoffHub.address,
       },
-    ],
-    customer: [
-      { label: 'Name', value: sharingCar.rental.customer.fullName },
-      { label: 'Phone', value: sharingCar.rental.customer.phone },
-      { label: 'Email', value: sharingCar.rental.customer.email },
+      {
+        label: 'Sharing owner',
+        value: sharingCar.rental.customer.fullName,
+        pressable: true,
+        onItemPress: () => {
+          console.log('move to user profile screen');
+        },
+      },
     ],
   };
-
-  const avatar =
-    sharingCar !== null
-      ? sharingCar.rental.customer.avatar
-      : 'https://images.pexels.com/photos/675920/pexels-photo-675920.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260';
 
   return (
     <ViewContainer
@@ -102,13 +106,6 @@ const ViewSharingInfomation = ({
       <View>
         <ItemContainer title="Car detail">
           <View style={{ alignSelf: 'center', paddingTop: scaleVer(8) }}>
-            {/* <Avatar
-            size="xlarge"
-            rounded
-            source={{
-              uri: avatar,
-            }}
-          /> */}
             <Image
               source={{
                 uri:
@@ -126,40 +123,13 @@ const ViewSharingInfomation = ({
               label={item.label}
               detail={item.value}
               type="detail"
-              pressable={false}
+              pressable={item.pressable}
+              onItemPress={item.onItemPress}
               showSeparator={index !== data.rental.length - 1}
             />
           ))}
         </ItemContainer>
-        {user._id !== sharingCar.rental.customer._id && (
-          <ItemContainer title="User">
-            <View style={{ alignSelf: 'center', paddingTop: scaleVer(8) }}>
-              <Avatar
-                size="xlarge"
-                rounded
-                source={{
-                  uri: avatar,
-                }}
-              />
-            </View>
-            {data.customer.map((item, index) => (
-              <ListItem
-                key={index.toString()}
-                label={item.label}
-                detail={item.value}
-                type="detail"
-                pressable={false}
-                showSeparator={index !== data.customer.length - 1}
-              />
-            ))}
-          </ItemContainer>
-        )}
-        {/* <ItemContainer title="Choose date"> */}
-        {/* <DatePicker
-            startDate={startDate}
-            endDate={endDate}
-            onChangeDate={handleChangeDate}
-          /> */}
+
         <ListItem
           key="dayDiff"
           label="Duration"
@@ -206,10 +176,7 @@ const styles = StyleSheet.create({});
 
 export default connect(
   state => ({
-    sharingCar: state.sharing.data.find(
-      item => item._id === state.sharing.selectedId
-    ),
     user: state.user,
   }),
   { sendSharingRequest }
-)(ViewSharingInfomation);
+)(ViewSharingInformation);

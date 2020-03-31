@@ -92,6 +92,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     ...shadowStyle.ELEVATION_3,
     marginBottom: scaleVer(24),
+    marginHorizontal: scaleHor(24),
+    marginTop: scaleHor(12),
   },
   image: {
     // flex: 1,

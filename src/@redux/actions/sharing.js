@@ -22,10 +22,10 @@ import {
   CONFIRM_SHARING_SUCCESS,
 } from '@redux/constants/sharing';
 
-export const getSharing = (
+export const getSharing = dispatch => async (
   data,
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({ type: GET_SHARING_REQUEST });
     const result = await query({

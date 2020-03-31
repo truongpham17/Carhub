@@ -2,18 +2,26 @@ import React, { useEffect } from 'react';
 import { FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
 import {
-  CarType,
   NavigationType,
   HubType,
   CarModel,
   GeoLocationType,
+  SharingType,
 } from 'types';
+
+import { getSharing } from '@redux/actions/sharing';
 
 import { searchCarList, setSelectedCar } from '@redux/actions/car';
 
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectCarItem from './SelectCarItem';
 import Header from './Header';
+import { formatData } from './utils';
+
+type RentalSearchType = {
+  startLocation: GeoLocationType,
+  endLocation: GeoLocationType,
+};
 
 type PropTypes = {
   navigation: NavigationType,
@@ -21,74 +29,51 @@ type PropTypes = {
     lat: Number,
     lng: Number,
   },
-  carModels: [{ hub: HubType, carModel: CarModel }],
-  // getCarList: () => void,
-  searchCarList: () => void,
   loading: Boolean,
-  setSelectedCar: string => void,
-  rentalSearch: {
-    startLocation: GeoLocationType,
-    endLocation: GeoLocationType,
-  },
 };
 
-const SelectCarScreen = ({
-  navigation,
-  carModels,
-  searchCarList,
-  loading,
-  setSelectedCar,
-  rentalSearch,
-}: PropTypes) => {
+const SelectCarScreen = ({ navigation }: PropTypes) => {
+  const dispatch = useDispatch();
+
+  const carModels: [{ hub: HubType, carModel: CarModel }] = useSelector(
+    state => state.car.carModels
+  );
+  const loading = useSelector(state => state.car.loading);
+  const rentalSearch: RentalSearchType = useSelector(
+    state => state.car.rentalSearch
+  );
+
+  const sharingList: [SharingType] = useSelector(state => state.sharing.data);
+
   useEffect(() => {
-    searchCarList({
+    console.log({
+      startLocation: rentalSearch.startLocation,
+      endLocation: rentalSearch.endLocation,
+    });
+
+    getSharing(dispatch)();
+    searchCarList(dispatch)({
       startLocation: rentalSearch.startLocation,
       endLocation: rentalSearch.endLocation,
     });
   }, []);
+
   const onBackPress = () => {
     navigation.pop();
   };
 
   const handleCarPress = _id => {
-    setSelectedCar(_id);
-    navigation.navigate('RentalCarDetailScreen');
+    const selectedCarModel = carModels.find(item => item.carModel._id === _id);
+    if (selectedCarModel) {
+      setSelectedCar(dispatch)(_id);
+      navigation.navigate('RentalCarDetailScreen');
+    } else {
+      const selectedSharing = sharingList.find(item => item._id === _id);
+      if (selectedSharing) {
+        navigation.navigate('ViewSharingInformation', { selectedId: _id });
+      }
+    }
   };
-
-  const formatData = () =>
-    carModels
-      .sort((a, b) => a.hub.distance - b.hub.distance)
-      .map(info => ({
-        // image: car.images,
-        _id: info.carModel._id,
-        image: info.carModel.images[0],
-        name: info.carModel.name,
-        type: info.carModel.type,
-        distance: info.hub.distance,
-        rating: 3,
-        configs: [
-          {
-            icon: 'users',
-            type: 'passenger',
-            value: `${info.carModel.numberOfSeat} Passengers`,
-          },
-          {
-            icon: 'truck',
-            type: 'provided',
-            value: info.hub ? 'Provide hub' : 'Shared',
-          },
-          {
-            icon: 'briefcase',
-            type: 'bag',
-            value: `${info.carModel.numberOfBag || 6} Bags`,
-          },
-          {
-            icon: 'dollar-sign',
-            type: 'price',
-            value: `${info.carModel.price}$/day`,
-          },
-        ],
-      }));
 
   const renderItem = ({ item, index }) => (
     <SelectCarItem {...item} onItemPress={handleCarPress} />
@@ -102,10 +87,11 @@ const SelectCarScreen = ({
       title="Search Car"
       onBackPress={onBackPress}
       loading={loading}
+      style={{ paddingHorizontal: 0 }}
     >
       <Header />
       <FlatList
-        data={formatData()}
+        data={formatData(carModels, sharingList)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
@@ -114,18 +100,7 @@ const SelectCarScreen = ({
   );
 };
 
-export default connect(
-  state => ({
-    carModels: state.car.carModels,
-    loading: state.car.loading,
-    rentalSearch: state.car.rentalSearch,
-  }),
-  {
-    // getCarList,
-    setSelectedCar,
-    searchCarList,
-  }
-)(SelectCarScreen);
+export default SelectCarScreen;
 
 const data = [
   {

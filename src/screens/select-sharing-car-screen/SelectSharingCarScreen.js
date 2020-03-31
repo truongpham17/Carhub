@@ -87,7 +87,7 @@ const SelectSharingCarScreen = ({
       return;
     }
     setSelectSharing(selectCar._id);
-    navigation.navigate('ViewSharingInfomation');
+    navigation.navigate('ViewSharingInformation');
   };
 
   const renderCarMarker = (sharingCar: SharingType) => {

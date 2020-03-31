@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: scaleVer(16),
+    marginHorizontal: scaleHor(24),
   },
   button: {
     width: scaleHor(64),

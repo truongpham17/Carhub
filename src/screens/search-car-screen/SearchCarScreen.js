@@ -73,8 +73,8 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
 
   const onSearchPress = () => {
     setRentalSearch({
-      startLocation,
-      endLocation,
+      // startLocation,
+      // endLocation,
       startDate,
       endDate,
     });
@@ -102,22 +102,14 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
           endDate={endDate}
           onChangeDate={handleChangeDate}
         />
-        <Seperator />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('SelectSharingCarScreen')}
-        >
-          <Text style={textStyle.bodyTextBold}> Hire sharing car </Text>
-        </TouchableOpacity>
-
-        <Button
-          label="Search"
-          onPress={onSearchPress}
-          style={{ marginBottom: scaleVer(32) }}
-          disable={!(startLocation && endLocation)}
-        />
       </View>
+
+      <Button
+        label="Search"
+        onPress={onSearchPress}
+        style={{ marginBottom: scaleVer(32) }}
+        // disable={!(startLocation && endLocation)}
+      />
     </ViewContainer>
   );
 };
