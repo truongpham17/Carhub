@@ -5,6 +5,9 @@ import {
   ADD_LICENSE_REQUEST,
   ADD_LICENSE_SUCCESS,
   ADD_LICENSE_FAILURE,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
 } from '../constants/user';
 
 const INITIAL_STATE = {
@@ -31,7 +34,9 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, license: action.payload, loadingLicense: false };
     case ADD_LICENSE_FAILURE:
       return { ...state, loadingLicense: false };
+    case UPDATE_USER_SUCCESS:
+      return { ...state, ...action.payload };
     default:
-      return { ...state };
+      return state;
   }
 };
