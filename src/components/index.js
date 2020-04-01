@@ -19,6 +19,7 @@ import MapAutoCompleteSearch from './MapAutoCompleteSearch';
 import ButtonGroup from './ButtonGroup';
 import QRCodeGenModal from './QRCodeGenModal';
 import { alert } from './Alert';
+import ThankYouPopup from './ThankYouPopup';
 
 export {
   QRCodeGenModal,
@@ -42,4 +43,5 @@ export {
   ProgressStep,
   ButtonGroup,
   alert,
+  ThankYouPopup,
 };

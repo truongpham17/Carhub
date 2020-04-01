@@ -6,6 +6,7 @@ import { getSvg } from 'Assets/svgs';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
+import DiscountFlag from './DiscountFlag';
 
 type PropTypes = {
   image: string,
@@ -22,9 +23,11 @@ type PropTypes = {
   _id: String,
   onItemPress: () => void,
   distance: Number,
+  rentalType: 'SHARING' | 'HUB',
+  onPressInfo: () => void,
 };
 
-const ConfigItem = ({ icon, value }) => (
+const ConfigItem = ({ icon, value, special }) => (
   <View style={styles.item}>
     <Icon
       type="feather"
@@ -44,44 +47,67 @@ const SelectCarItem = ({
   onItemPress,
   _id,
   distance,
+  rentalType,
+  onPressInfo,
 }: PropTypes) => (
   <View style={styles.container}>
-    <Image source={{ uri: image }} resizeMode="cover" style={styles.image} />
-    <TouchableOpacity
-      style={styles.contentContainer}
-      onPress={() => onItemPress(_id)}
-    >
-      <View style={styles.title}>
-        <View>
-          <Text style={textStyle.widgetItem}>{name}</Text>
-          <Text style={textStyle.label}>{type}</Text>
-        </View>
-        <View style={{ alignItems: 'flex-end' }}>
-          <View style={styles.rating}>
-            <Text style={textStyle.widgetItem}>{rating}</Text>
+    <View style={{ overflow: 'hidden' }}>
+      {rentalType === 'SHARING' && (
+        <>
+          {/* <TouchableOpacity style={styles.exclamation}> */}
+          <Icon
+            type="simple-line-icon"
+            name="exclamation"
+            color={colors.primary}
+            size={16}
+            containerStyle={styles.exclamation}
+            onPress={() => onPressInfo(_id)}
+          />
+          <DiscountFlag discount={0.5} />
+        </>
+      )}
 
-            <Rating
-              imageSize={20}
-              readonly
-              startingValue={rating}
-              style={{ paddingStart: scaleHor(8) }}
-            />
+      <Image
+        source={{ uri: image }}
+        resizeMode="contain"
+        style={styles.image}
+      />
+      <TouchableOpacity
+        style={styles.contentContainer}
+        onPress={() => onItemPress(_id)}
+      >
+        <View style={styles.title}>
+          <View>
+            <Text style={textStyle.widgetItem}>{name}</Text>
+            <Text style={textStyle.label}>{type}</Text>
           </View>
-          <Text style={textStyle.bodyText}>
-            Distance:{' '}
-            <Text style={textStyle.bodyTextBold}>
-              {Math.round(distance * 100) / 100} Km
-            </Text>
-          </Text>
-        </View>
-      </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <View style={styles.rating}>
+              <Text style={textStyle.widgetItem}>{rating}</Text>
 
-      <View style={styles.config}>
-        {configs.map(item => (
-          <ConfigItem {...item} />
-        ))}
-      </View>
-    </TouchableOpacity>
+              <Rating
+                imageSize={20}
+                readonly
+                startingValue={rating}
+                style={{ paddingStart: scaleHor(8) }}
+              />
+            </View>
+            <Text style={textStyle.bodyText}>
+              Distance:{' '}
+              <Text style={textStyle.bodyTextBold}>
+                {Math.round(distance * 100) / 100} Km
+              </Text>
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.config}>
+          {configs.map(item => (
+            <ConfigItem {...item} />
+          ))}
+        </View>
+      </TouchableOpacity>
+    </View>
   </View>
 );
 
@@ -124,6 +150,12 @@ const styles = StyleSheet.create({
     width: '40%',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  exclamation: {
+    position: 'absolute',
+    right: 8,
+    top: 8,
+    zIndex: 2,
   },
 });
 

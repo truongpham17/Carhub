@@ -29,8 +29,9 @@ export const getSharing = dispatch => async (
   try {
     dispatch({ type: GET_SHARING_REQUEST });
     const result = await query({
-      method: METHODS.get,
-      endpoint: ENDPOINTS.sharing,
+      method: METHODS.post,
+      endpoint: `${ENDPOINTS.sharing}/suggestion`,
+      data,
     });
     if (result.status === STATUS.OK) {
       dispatch({ type: GET_SHARING_SUCCESS, payload: result.data });
@@ -69,19 +70,17 @@ export const setSelectSharing = _id => ({
   payload: _id,
 });
 
-export const sendSharingRequest = (
+export const sendSharingRequest = dispatch => async (
   data,
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
+  console.log('data at sharing request', data);
   try {
     dispatch({ type: SEND_SHARING_REQ_REQUEST });
     const result = await query({
       method: METHODS.post,
       endpoint: `${ENDPOINTS.rentalRequest}`,
-      data: {
-        sharing: data.id,
-        customer: data.customer,
-      },
+      data,
     });
     if (result.status === STATUS.OK) {
       dispatch({ type: SEND_SHARING_REQ_SUCCESS, payload: result.data });

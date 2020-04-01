@@ -29,6 +29,7 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
       .getToken()
       .then(token => {
         if (token) {
+          console.log(token);
           if (token !== user.fcmToken) {
             updateUser(dispatch)({ id: user._id, fcmToken: token });
           }

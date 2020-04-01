@@ -12,6 +12,9 @@ import {
   GET_LATEST_SHARING_FAILURE,
   GET_LATEST_SHARING_REQUEST,
   GET_LATEST_SHARING_SUCCESS,
+  SEND_SHARING_REQ_FAILURE,
+  SEND_SHARING_REQ_REQUEST,
+  SEND_SHARING_REQ_SUCCESS,
 } from '@redux/constants/sharing';
 
 const INITIAL_STATE = {
@@ -35,8 +38,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isLoading: false,
-        data: action.payload.sharing,
-        total: action.payload.total,
+        data: action.payload,
       };
     case GET_SHARING_ITEM_SUCCESS:
       return { ...state, isLoading: false, specificSharing: action.payload };
@@ -55,6 +57,14 @@ export default (state = INITIAL_STATE, action) => {
       };
     case GET_LATEST_SHARING_SUCCESS:
       return { ...state, isLoading: false, lastestSharing: action.payload };
+
+    case SEND_SHARING_REQ_REQUEST:
+      return { ...state, isLoading: true };
+    case SEND_SHARING_REQ_SUCCESS:
+      return { ...state, isLoading: false };
+
+    case SEND_SHARING_REQ_FAILURE:
+      return { ...state, isLoading: false };
     default:
       return { ...state };
   }

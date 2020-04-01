@@ -14,6 +14,7 @@ import Tick from './Tick';
 import SecurityDraw from './SecurityDraw';
 import CarIcon from './CarIcon';
 import CarIconSelected from './CarIconSelected';
+import Discount from './Discount';
 
 export {
   RemoveIcon,
@@ -32,6 +33,7 @@ export {
   SecurityDraw,
   CarIcon,
   CarIconSelected,
+  Discount,
 };
 
 export function getSvg(svg) {

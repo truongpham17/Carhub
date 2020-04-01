@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { ViewContainer } from 'Components';
 import {
@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import SelectCarItem from './SelectCarItem';
 import Header from './Header';
 import { formatData } from './utils';
+import SharingExplainModel from './ShareExplainModal';
 
 type RentalSearchType = {
   startLocation: GeoLocationType,
@@ -34,6 +35,8 @@ type PropTypes = {
 
 const SelectCarScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const carModels: [{ hub: HubType, carModel: CarModel }] = useSelector(
     state => state.car.carModels
@@ -46,12 +49,9 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
   const sharingList: [SharingType] = useSelector(state => state.sharing.data);
 
   useEffect(() => {
-    console.log({
-      startLocation: rentalSearch.startLocation,
-      endLocation: rentalSearch.endLocation,
+    getSharing(dispatch)({
+      ...rentalSearch,
     });
-
-    getSharing(dispatch)();
     searchCarList(dispatch)({
       startLocation: rentalSearch.startLocation,
       endLocation: rentalSearch.endLocation,
@@ -76,10 +76,17 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
   };
 
   const renderItem = ({ item, index }) => (
-    <SelectCarItem {...item} onItemPress={handleCarPress} />
+    <SelectCarItem
+      {...item}
+      onItemPress={handleCarPress}
+      onPressInfo={_id => {
+        setSelectedId(_id);
+        setModalVisible(true);
+      }}
+    />
   );
 
-  const keyExtractor = (item, index) => `${index}`;
+  const keyExtractor = (item, index) => item._id;
 
   return (
     <ViewContainer
@@ -96,156 +103,16 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
       />
+      <SharingExplainModel
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSeeDetail={() => {
+          setModalVisible(false);
+          handleCarPress(selectedId);
+        }}
+      />
     </ViewContainer>
   );
 };
 
 export default SelectCarScreen;
-
-const data = [
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-  {
-    image:
-      'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
-    name: 'Turbo X 2010',
-    type: 'Exclusive',
-    rating: 3,
-    configs: [
-      {
-        icon: 'users',
-        type: 'passenger',
-        value: '5 Passengers',
-      },
-      {
-        icon: 'truck',
-        type: 'provided',
-        value: 'Provide hub',
-      },
-      {
-        icon: 'briefcase',
-        type: 'bag',
-        value: '6 Bags',
-      },
-      {
-        icon: 'dollar-sign',
-        type: 'price',
-        value: '50$/day',
-      },
-    ],
-  },
-];

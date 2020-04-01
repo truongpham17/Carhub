@@ -6,11 +6,12 @@ export function formatData(
 ) {
   const sharingInfos = sharingList.map(sharing => ({
     // image: car.images,
+    rentalType: 'SHARING',
     _id: sharing._id,
     image: sharing.rental.carModel.images[0],
     name: sharing.rental.carModel.name,
     type: sharing.rental.carModel.type,
-    distance: 5,
+    distance: sharing.distance,
     rating: 3,
     configs: [
       {
@@ -32,6 +33,7 @@ export function formatData(
         icon: 'dollar-sign',
         type: 'price',
         value: `${sharing.price}$/day`,
+        special: '-50% OFF',
       },
     ],
   }));
@@ -41,6 +43,7 @@ export function formatData(
     .map(info => ({
       // image: car.images,
       _id: info.carModel._id,
+      rentalType: 'HUB',
       image: info.carModel.images[0],
       name: info.carModel.name,
       type: info.carModel.type,
