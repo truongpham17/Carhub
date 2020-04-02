@@ -59,7 +59,15 @@ const RentalCarDetailScreen = ({
   };
 
   const goToCheckOut = () => {
-    if (!returnHub) return;
+    if (!returnHub) {
+      alert('Choose pickoff location...', [
+        {
+          text: 'OK',
+          onPress: () => {},
+        },
+      ]);
+      return;
+    }
 
     setPickOffHub(returnHub);
 

@@ -24,12 +24,12 @@ const SelectLocationScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
 
-  const { callback } = navigation.state.params;
+  const { callback, titleScreen } = navigation.state.params;
 
   return (
     <ViewContainer
       haveBackHeader
-      title="Select address"
+      title={titleScreen ?? 'Select address'}
       onBackPress={onBackPress}
     >
       <MapAutoCompleteSearch

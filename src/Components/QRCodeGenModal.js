@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { ModalContainer, Button } from 'Components';
 import QRCode from 'react-native-qrcode-svg';
 import colors from 'Constants/colors';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
+import moment from 'moment';
+import Button from './Button';
+import ModalContainer from './ModalContainer';
 
 type PropsType = {
   valueForQR: String,
@@ -17,25 +19,45 @@ const QRCodeGenModal = ({
   visible,
   onClose,
   setGenerateNewQR,
-}: PropsType) => (
-  <ModalContainer modalVisible={visible} onClose={onClose}>
-    <View style={styles.modelContainer}>
-      <View style={{ alignItems: 'center' }}>
-        <QRCode
-          value={valueForQR || 'N/A'}
-          size={200}
-          color="black"
-          backgroundColor={colors.white}
+}: PropsType) => {
+  // useEffect(() => {
+  //   handleTimer();
+  // }, [timer]);
+
+  const handleGenerateNewCode = () => {
+    setGenerateNewQR(true);
+  };
+
+  // const handleTimer = () => {
+  //   if (!valueForQR) return;
+  //   const { expired } = JSON.parse(valueForQR);
+  //   const time = moment.duration(expired - Date.now());
+  //   setTimer(time.minutes() * 60 + time.seconds());
+  //   if (expired === Date.now()) {
+  //     onClose();
+  //   }
+  // };
+
+  return (
+    <ModalContainer modalVisible={visible} onClose={onClose}>
+      <View style={styles.modelContainer}>
+        <View style={{ alignItems: 'center' }}>
+          <QRCode
+            value={valueForQR || 'N/A'}
+            size={200}
+            color="black"
+            backgroundColor={colors.white}
+          />
+        </View>
+        <Button
+          label="Generate new code"
+          onPress={handleGenerateNewCode}
+          style={{ marginTop: scaleVer(24) }}
         />
       </View>
-      <Button
-        label="Generate new code"
-        onPress={() => setGenerateNewQR(true)}
-        style={{ marginTop: scaleVer(24) }}
-      />
-    </View>
-  </ModalContainer>
-);
+    </ModalContainer>
+  );
+};
 
 const styles = StyleSheet.create({
   modelContainer: {

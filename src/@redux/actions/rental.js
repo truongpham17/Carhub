@@ -15,22 +15,42 @@ import {
 } from '@redux/constants/sharing';
 import { SET_RENT_DETAIL_ID } from '../constants/rental';
 
-export const getRentalsList = (
-  data,
+export const getRentalList = dispatch => async (
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({
       type: GET_RENTAL_REQUEST,
     });
     const result = await query({ endpoint: ENDPOINTS.rental });
+    const sharing = await query({
+      endpoint: `${ENDPOINTS.rentalRequest}/customer`,
+    });
+
+    console.log('sharing day, ahihi', sharing.data);
+
     if (result.status === STATUS.OK) {
-      dispatch({ type: GET_RENTAL_SUCCESS, payload: result.data });
+      dispatch({
+        type: GET_RENTAL_SUCCESS,
+        payload: {
+          total: result.data.total,
+          rentals: [
+            ...result.data.rentals,
+            ...sharing.data.map(item => ({
+              ...item.sharing.rental,
+              status: `SHARE_REQUEST/${item.status}`,
+              shareRequest: item._id,
+            })),
+          ],
+        },
+      });
       callback.onSuccess();
     } else {
+      callback.onFailure();
       dispatch({ type: GET_RENTAL_FAILURE });
     }
   } catch (error) {
+    callback.onFailure();
     dispatch({
       type: GET_RENTAL_FAILURE,
       payload: error,
@@ -85,6 +105,8 @@ export const updateSpecificRental = (
             rental: data.id,
             price: data.price,
             address: data.address,
+            fromDate: data.fromDate,
+            toDate: data.toDate,
           },
         });
         if (newSharing.status === STATUS.OK) {

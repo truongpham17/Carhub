@@ -17,6 +17,9 @@ import {
   GET_LATEST_SHARING_FAILURE,
   GET_LATEST_SHARING_REQUEST,
   GET_LATEST_SHARING_SUCCESS,
+  CONFIRM_SHARING_FAILURE,
+  CONFIRM_SHARING_REQUEST,
+  CONFIRM_SHARING_SUCCESS,
 } from '@redux/constants/sharing';
 
 export const getSharing = (
@@ -91,20 +94,23 @@ export const sendSharingRequest = (
   }
 };
 
-export const getRentalRequestBySharing = (
-  data,
+export const getRentalRequestBySharing = dispatch => async (
+  id,
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({ type: GET_RENT_SHARING_REQUEST });
     const rentalRequests = await query({
       method: METHODS.get,
-      endpoint: `rentalSharingRequest/sharing/${data.id}`,
+      endpoint: `rentalSharingRequest/sharing/${id}`,
     });
+
+    console.log('come hree!!');
+    console.log(rentalRequests.data);
     if (rentalRequests.status === STATUS.OK) {
       dispatch({
         type: GET_RENT_SHARING_SUCCESS,
-        payload: rentalRequests.data,
+        payload: rentalRequests.data.filter(item => item.status !== 'DECLINED'),
       });
       callback.onSuccess();
     } else {
@@ -116,20 +122,21 @@ export const getRentalRequestBySharing = (
   }
 };
 
-export const getLatestSharingByRental = (
-  data,
+export const getLastestSharingByRental = dispatch => async (
+  id,
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({ type: GET_LATEST_SHARING_REQUEST });
-    const latestSharing = await query({
+    const lastestSharing = await query({
       method: METHODS.get,
-      endpoint: `${ENDPOINTS.sharing}/latest/rental/${data.id}`,
+      endpoint: `${ENDPOINTS.sharing}/latest/rental/${id}`,
     });
-    if (latestSharing.status === STATUS.OK) {
+
+    if (lastestSharing.status === STATUS.OK) {
       dispatch({
         type: GET_LATEST_SHARING_SUCCESS,
-        payload: latestSharing.data,
+        payload: lastestSharing.data,
       });
       callback.onSuccess();
     }
@@ -155,7 +162,31 @@ export const updateRentalRequest = (
       callback.onSuccess();
     }
   } catch (error) {
-    console.warn(error);
+    callback.onFailure();
+  }
+};
+
+export const confirmSharing = dispatch => async (
+  { id, requestId },
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: CONFIRM_SHARING_REQUEST });
+    const lastestSharing = await query({
+      method: METHODS.post,
+      endpoint: `${ENDPOINTS.sharing}/confirm/${id}`,
+      data: { requestId },
+    });
+
+    if (lastestSharing.status === STATUS.OK) {
+      dispatch({
+        type: CONFIRM_SHARING_SUCCESS,
+        payload: lastestSharing.data,
+      });
+      callback.onSuccess();
+    }
+  } catch (error) {
+    dispatch({ type: CONFIRM_SHARING_FAILURE, payload: error });
     callback.onFailure();
   }
 };

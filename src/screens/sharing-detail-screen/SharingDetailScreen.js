@@ -34,12 +34,12 @@ const SharingDetailScreen = ({
   //   return <ActivityIndicator />;
   // }
 
-  // console.log(sharing);
-
-  const startDateFormat = moment(sharing.rental.startDate).format(
+  const startDateFormat = moment(sharing.sharingRequest.fromDate).format(
     'D MMMM, YYYY'
   );
-  const endDateFormat = moment(sharing.rental.endDate).format('D MMMM, YYYY');
+  const endDateFormat = moment(sharing.sharingRequest.toDate).format(
+    'D MMMM, YYYY'
+  );
   // const duration = subtractDate(rentDetail.startDate, rentDetail.endDate);
 
   const data = {
@@ -49,15 +49,15 @@ const SharingDetailScreen = ({
       { label: 'Seats', value: sharing.rental.carModel.numberOfSeat },
       { label: 'Start Date', value: startDateFormat },
       { label: 'End Date', value: endDateFormat },
-      { label: 'Price per day', value: sharing.price },
-      { label: 'Total', value: sharing.totalCost },
+      { label: 'Price per day', value: `$ ${sharing.price}` },
+      { label: 'Total', value: `$ ${sharing.sharingRequest.totalCost}` },
       { label: 'Location', value: sharing.address },
       { label: 'Car return address', value: sharing.rental.pickoffHub.address },
     ],
     customer: [
-      { label: 'Name', value: sharing.customer.fullName },
-      { label: 'Email', value: sharing.customer.email },
-      { label: 'Phone', value: sharing.customer.phone },
+      { label: 'Name', value: sharing.sharingRequest.customer.fullName },
+      { label: 'Email', value: sharing.sharingRequest.customer.email },
+      { label: 'Phone', value: sharing.sharingRequest.customer.phone },
     ],
   };
   // const data = {
@@ -94,7 +94,7 @@ const SharingDetailScreen = ({
               size="xlarge"
               rounded
               source={{
-                uri: sharing.customer.avatar,
+                uri: sharing.sharingRequest.customer.avatar,
               }}
             />
           </View>

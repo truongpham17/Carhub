@@ -31,14 +31,27 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
   } else if (rentDetail.status === 'OVERDUE') {
     typeofDate = 'days overdue';
   }
+
+  const getStatus = status => {
+    const arr = status.split('/');
+    if (arr.length > 1) {
+      if (arr[1] === 'ACCEPTED') {
+        return 'WAITING';
+      }
+      if (arr[1] === 'CURRENT') {
+        return 'CURRENT';
+      }
+      return 'PENDING';
+    }
+    return status;
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleOnClick}>
       <View style={styles.container}>
         <View style={[styles.itemContainer, styles.firstItem]}>
           <View style={styles.inforContainer}>
-            <Text style={textStyle.widgetItem}>
-              {rentDetail.carModel.name || 'Camry'}
-            </Text>
+            <Text style={textStyle.widgetItem}>{rentDetail.carModel.name}</Text>
             <Text
               style={[
                 textStyle.label,
@@ -53,7 +66,8 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
           </View>
           <View style={styles.statusContainer}>
             <Text style={[textStyle.bodyTextBold, { color: colors.primary }]}>
-              {rentDetail.status}
+              {/* {rentDetail.status} */}
+              {getStatus(rentDetail.status)}
             </Text>
           </View>
         </View>

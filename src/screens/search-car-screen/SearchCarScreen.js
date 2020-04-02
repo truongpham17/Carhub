@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ViewContainer, InputForm, DatePicker, Button } from 'Components';
 import { NavigationType } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setRentalSearch } from '@redux/actions/car';
 import moment from 'moment';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { textStyle } from 'Constants/textStyles';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
+import firebase from 'react-native-firebase';
+import { updateUser } from '@redux/actions/user';
 import Seperator from './Seperator';
 
 type PropTypes = {
@@ -18,6 +20,22 @@ type PropTypes = {
 
 const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
   const onBackPress = () => {};
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
+
+  useEffect(() => {
+    firebase
+      .messaging()
+      .getToken()
+      .then(token => {
+        if (token) {
+          if (token !== user.fcmToken) {
+            updateUser(dispatch)({ id: user._id, fcmToken: token });
+          }
+        }
+      });
+  }, []);
+
   const today = new Date();
   const [startDate, setStartDate] = useState(today);
   const [startLocation, setStartLocation] = useState(null);
@@ -38,9 +56,9 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
     navigation.navigate('SelectLocationScreen', {
       callback(location) {
         setStartLocation(location);
-        if (!endLocation) {
-          setEndLocation(location);
-        }
+        // if (!endLocation) {
+        //   setEndLocation(location);
+        // }
       },
     });
   };

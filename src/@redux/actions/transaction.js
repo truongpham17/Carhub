@@ -7,7 +7,7 @@ import { INITIAL_CALLBACK, STATUS, METHODS } from 'Constants/api';
 import { query } from 'services/api';
 
 export function confirmTransaction(
-  { id, type, employeeID },
+  { id, type, toStatus, car },
   callback = INITIAL_CALLBACK
 ) {
   return async dispatch => {
@@ -16,9 +16,7 @@ export function confirmTransaction(
       const result = await query({
         endpoint: `${type}/transaction/${id}`,
         method: METHODS.post,
-        data: {
-          employeeID,
-        },
+        data: { toStatus, car },
       });
       if (result.status === STATUS.OK) {
         dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });

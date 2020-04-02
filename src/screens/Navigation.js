@@ -31,9 +31,11 @@ import SuccessBookingRental from './success-booking-rental/SuccessBookingRental'
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
 import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
 import SelectSharingCarScreen from './select-sharing-car-screen/SelectSharingCarScreen';
+import TimeLineScreen from './time-line-screen/TimeLineScreen';
 import SharingDetailScreen from './sharing-detail-screen/SharingDetailScreen';
 import ViewSharingInfomation from './view-sharing-information/ViewSharingInfomation';
 import RentSharingRequestScreen from './rent-sharing-car-request/RentSharingRequestScreen';
+import ScanScreen from './scan-screen/ScanScreen';
 
 const RentalStack = createStackNavigator(
   {
@@ -78,7 +80,9 @@ const HistoryStack = createStackNavigator(
     LeaseHistoryItemDetailScreen,
     SelectMapScreen,
     SelectLocationScreen,
+    TimeLineScreen,
     RentSharingRequestScreen,
+    ScanScreen,
   },
   {
     headerMode: 'none',
@@ -108,14 +112,19 @@ const MainApp = createBottomTabNavigator(
   }
 );
 
-const AuthStack = createStackNavigator({
-  SignInScreen,
-});
+const SignInStack = createStackNavigator(
+  {
+    SignInScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
 
 const AppNavigation = createSwitchNavigator(
   {
     AuthScreen,
-    AuthStack,
+    SignInStack,
     MainApp,
   },
   {

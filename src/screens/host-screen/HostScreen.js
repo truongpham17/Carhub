@@ -205,6 +205,7 @@ const HostScreen = ({
         onChangeText={handleChangeUsingYears}
         placeholder="Type using years..."
         containerStyle={{ marginVertical: scaleVer(16) }}
+        keyboardType="numeric"
       />
       <InputForm
         label="Odometers"
@@ -212,6 +213,7 @@ const HostScreen = ({
         onChangeText={handleChangeOdometers}
         placeholder="Type odometers..."
         containerStyle={{ marginVertical: scaleVer(16) }}
+        keyboardType="numeric"
       />
       <ScrollView horizontal>
         {images.map((item, index) => (

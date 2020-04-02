@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   specificSharing: {},
   selectedId: null,
   rentalRequestList: [],
-  latestSharing: {},
+  lastestSharing: {},
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -48,9 +48,13 @@ export default (state = INITIAL_STATE, action) => {
     case SET_SHARING_DETAIL:
       return { ...state, selectedId: action.payload };
     case GET_RENT_SHARING_SUCCESS:
-      return { ...state, isLoading: false, rentalRequestList: action.payload };
+      return {
+        ...state,
+        isLoading: false,
+        rentalRequestList: action.payload,
+      };
     case GET_LATEST_SHARING_SUCCESS:
-      return { ...state, isLoading: false, latestSharing: action.payload };
+      return { ...state, isLoading: false, lastestSharing: action.payload };
     default:
       return { ...state };
   }

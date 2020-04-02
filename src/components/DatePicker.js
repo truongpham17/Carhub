@@ -20,8 +20,7 @@ type PropTypes = {
   onChangeDate: string => void,
 };
 const Item = ({ date, type, onItemPress }: ItemTypes) => {
-  const a = 12;
-  const momentTime = moment(date.getTime());
+  const momentTime = moment(date);
   return (
     <View style={styles.itemContainer}>
       <Calendar />

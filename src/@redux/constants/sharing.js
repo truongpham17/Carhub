@@ -23,3 +23,7 @@ export const GET_RENT_SHARING_FAILURE = 'get-rent-sharing-failure';
 export const GET_LATEST_SHARING_REQUEST = 'get-latest-sharing-request';
 export const GET_LATEST_SHARING_SUCCESS = 'get-latest-sharing-success';
 export const GET_LATEST_SHARING_FAILURE = 'get-latest-sharing-failure';
+
+export const CONFIRM_SHARING_REQUEST = 'confirm-sharing-request';
+export const CONFIRM_SHARING_SUCCESS = 'confirm-sharing-success';
+export const CONFIRM_SHARING_FAILURE = 'confirm-sharing-failure';

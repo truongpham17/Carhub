@@ -18,6 +18,13 @@ export type RentDetailType = {
   status: 'UPCOMING' | 'CURRENT' | 'OVERDUE' | 'SHARING' | 'SHARED' | 'PAST',
   type: String,
   __v: 0,
+  car: CarType,
+  shareRequest: string,
+};
+
+export type CustomNotification = {
+  channel: 'Notification',
+  action: 'SHOW_ONLY' | 'NAVIGATE' | 'POP_UP',
 };
 
 export type LeaseDetailType = {
@@ -84,7 +91,7 @@ export type SharingType = {
   address?: String,
   distance?: number,
   rental: RentDetailType,
-  customer: UserType,
+  sharingRequest: RentalRequestType,
   price: Number,
 };
 
@@ -124,6 +131,7 @@ export type CarType = {
   VIN: String,
   usingYears: Number,
   valueData: [{ value: String }],
+  licensePlates: string,
 };
 
 export type LicenseType = {

@@ -6,8 +6,10 @@ import {
 } from '@redux/constants/rental';
 
 const INITIAL_STATE = {
-  data: [],
-  isLoading: false,
+  data: {
+    rentals: [],
+  },
+  loading: false,
   error: '',
   selectedId: null,
   listSharingRequest: [],
@@ -16,11 +18,11 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_RENTAL_REQUEST:
-      return { ...state, isLoading: true };
+      return { ...state, loading: true };
     case GET_RENTAL_SUCCESS:
-      return { ...state, isLoading: false, data: action.payload };
+      return { ...state, loading: false, data: action.payload };
     case GET_RENTAL_FAILURE:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
     case SET_RENT_DETAIL_ID:
       return { ...state, selectedId: action.payload };
     default:
