@@ -47,7 +47,7 @@ const ImageSelector = ({
         <Image
           source={{ uri: data.uri }}
           style={{ flex: 1 }}
-          resizeMode="cover"
+          resizeMode="center"
         />
       </View>
 

@@ -5,7 +5,12 @@ import {
   createStackNavigator,
   // createDrawerNavigator,
 } from 'react-navigation';
-import { Tabbar } from 'Components';
+import React from 'react';
+import { View } from 'react-native';
+import { Tabbar, Popup } from 'Components';
+import { connect, useSelector, useDispatch } from 'react-redux';
+import { defaultFunction } from 'Utils/common';
+import { cancelPopup } from '@redux/actions/app';
 import { TestScreen } from './test';
 import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
@@ -142,4 +147,43 @@ const AppNavigation = createSwitchNavigator(
 // );
 
 const App = createAppContainer(AppNavigation);
-export default App;
+
+const AppWithPopUp = () => {
+  const { popup } = useSelector(state => state.app);
+
+  const dispatch = useDispatch();
+
+  const onClosePopup = () => {
+    cancelPopup(dispatch);
+    if (typeof popup.onClose === 'function') {
+      popup.onClose();
+    }
+  };
+
+  const onConfirmPopup = data => {
+    cancelPopup(dispatch);
+    if (typeof popup.onConfirm === 'function') {
+      popup.onConfirm(data);
+    }
+  };
+  const onDeclinePopup = data => {
+    cancelPopup(dispatch);
+    if (typeof popup.onDecline === 'function') {
+      popup.onDecline(data);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <App />
+      <Popup
+        {...popup}
+        onClose={onClosePopup}
+        onConfirm={onConfirmPopup}
+        onDecline={onDeclinePopup}
+      />
+    </View>
+  );
+};
+
+export default AppWithPopUp;

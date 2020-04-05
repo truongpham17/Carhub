@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, Alert } from 'react-native';
+import { Image, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native';
 import {
   ViewContainer,
   ListItem,
@@ -8,7 +8,7 @@ import {
   QRCodeGenModal,
 } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { subtractDate } from 'Utils/common';
@@ -23,87 +23,114 @@ import {
 } from 'Constants/status';
 import { changeTransactionStatus } from 'Utils/database';
 import { confirmTransaction } from '@redux/actions/transaction';
+import { setPopUpData } from '@redux/actions';
+import { formatDate } from 'Utils/date';
+import { textStyle } from 'Constants/textStyles';
+import colors from 'Constants/colors';
+import { getData, getButtonData, getTransactionValue } from './utils';
 
 type PropTypes = {
   navigation: NavigationType,
-  // {
-  //   state: {
-  //     params: {
-  //       onUpdateSuccess: () => void,
-  //     },
-  //   },
-  //   goBack: () => void,
-  // },
-  leases: [LeaseDetailType],
   // getLease: () => void,
-  updateLeaseStatus: () => void,
-  isLoading: Boolean,
-  selectedId: string,
-  confirmTransaction: () => void,
-  getLeaseList: () => void,
 };
 
-const LeaseHistoryItemDetailScreen = ({
-  navigation,
-  leases,
-  isLoading,
-  updateLeaseStatus,
-  confirmTransaction,
-  getLeaseList,
-  selectedId,
-}: PropTypes) => {
+const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
+  const dispatch = useDispatch();
+  const leases: [LeaseDetailType] = useSelector(
+    state => state.lease.data.leases
+  );
+
+  const isLoading = useSelector(state => state.lease.loading);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [openSocket, setOpenSocket] = useState(false);
   const [valueForQR, setValueForQR] = useState('');
-  const [generateNewQR, setGenerateNewQR] = useState(true);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const [confirmPopupVisibie, setConfirmPopupVisible] = useState(false);
-  const leaseDetail = leases.find(item => item._id === selectedId);
+  const { selectedId, showStatusPopup } = navigation.state.params;
+  const leaseDetail: LeaseDetailType = leases.find(
+    item => item._id === selectedId
+  );
 
-  const startDateFormat = moment(leaseDetail.startDate).format('D MMMM, YYYY');
-  const endDateFormat = moment(leaseDetail.endDate).format('D MMMM, YYYY');
-  const duration = subtractDate(leaseDetail.startDate, leaseDetail.endDate);
-  const daysleft = subtractDate(new Date(), leaseDetail.endDate);
+  useEffect(() => {
+    if (showStatusPopup) {
+      if (leaseDetail.status === 'DECLINED') {
+        setPopUpData(dispatch)({
+          popupType: 'confirm',
+          acceptOnly: true,
+          title: 'Sorry, we cannot accept your lease request',
+          description: `Here is the reason: ${leaseDetail.message}.\nIf you think this is a mistake, please directly contact to us. Thank you for using our service`,
+        });
+      } else {
+        setPopUpData(dispatch)({
+          popupType: 'confirm',
+          acceptOnly: true,
+          title: 'Congratulations! Your lease request has been approved',
+          description: `Remember bring your car to ${
+            leaseDetail.hub.address
+          } on ${formatDate(
+            leaseDetail.startDate
+          )}. Thank you for using our service`,
+        });
+      }
+    }
+    return () => {
+      if (openSocket) {
+        firebase.database().off(`scanQRCode/${leaseDetail._id}`);
+      }
+    };
+  }, []);
 
-  // useEffect(
-  //   () =>
-  //     firebase
-  //       .database()
-  //       .ref(`scanQRCode/${leaseDetail._id}`)
-  //       .off('value'),
-  //   []
-  // );
+  const showAttr = getData(leaseDetail);
+
   const openListenner = () => {
+    setOpenSocket(true);
     changeTransactionStatus(leaseDetail._id, WAITING_FOR_SCAN);
     firebase
       .database()
       .ref(`scanQRCode/${leaseDetail._id}`)
       .on('value', snapShot => {
         switch (snapShot.val().status) {
+          // employee staring to scan the QR Code
           case WAITING_FOR_CONFIRM:
             setQrCodeModalVisible(false);
-            setTimeout(() => {
-              Alert.alert('Waiting for confirm!');
-            }, 500);
+            setPopUpData(dispatch)({
+              title: 'Scanning successfully',
+              description: 'Please wait for the staff to confirm',
+              acceptOnly: true,
+            });
             break;
+          // employee press confirm to receive car
           case COMPLETED: {
             setQrCodeModalVisible(false);
-            setTimeout(() => {
-              Alert.alert('Transaction success!');
-              getLeaseList();
-              navigation.pop();
-            }, 500);
+            setPopUpData(dispatch)({
+              popupType: 'success',
+              title: 'Success',
+              description:
+                'You has been placing your car at the hub successfully! Thank you for using service',
+              onConfirm() {
+                getLeaseList(dispatch)();
+                navigation.pop();
+              },
+            });
+
             break;
           }
+
+          // don't know :))
           case WAITING_FOR_USER_CONFIRM: {
             setQrCodeModalVisible(false);
             setConfirmPopupVisible(true);
             break;
           }
+          // employee press cancel receive car!
           case CANCEL: {
             setQrCodeModalVisible(false);
-            setTimeout(() => {
-              Alert.alert('Transaction declined!');
-            }, 500);
+            setPopUpData(dispatch)({
+              popupType: 'error',
+              title: 'Transaction denied!',
+              description:
+                'Your car has been denied. Please try again or cancel your leasing',
+            });
             break;
           }
           default: {
@@ -115,11 +142,11 @@ const LeaseHistoryItemDetailScreen = ({
   const onConfirmReceiveCar = () => {
     changeTransactionStatus(leaseDetail._id, COMPLETED);
     setConfirmPopupVisible(false);
-    confirmTransaction(
+    confirmTransaction(dispatch)(
       { id: leaseDetail._id, type: 'lease' },
       {
         onSuccess() {
-          getLeaseList();
+          getLeaseList(dispatch)();
           navigation.pop();
         },
       }
@@ -131,54 +158,12 @@ const LeaseHistoryItemDetailScreen = ({
     setConfirmPopupVisible(false);
   };
 
-  const generateValue = type => {
-    const value = {
-      id: leaseDetail._id,
-      type,
-      expired: new Date().getTime() + 1 * 60000,
-    };
-    setValueForQR(JSON.stringify(value));
-    setQrCodeModalVisible(true);
-  };
-
-  const genStatus = () => {
-    switch (leaseDetail.status) {
-      case 'WAIT_TO_RETURN':
-        return 'Wait to return';
-      default:
-        return leaseDetail.status;
+  const generateValue = () => {
+    setValueForQR(JSON.stringify(getTransactionValue(leaseDetail)));
+    if (!qrCodeModalVisible) {
+      setQrCodeModalVisible(true);
     }
   };
-  // const { onUpdateSuccess } = navigation.state.params;
-  const showAttr = [
-    { value: leaseDetail.car.carModel.name, label: 'Car Name' },
-    { value: startDateFormat, label: 'From date' },
-    { value: endDateFormat, label: 'To date' },
-    { value: `${duration} day(s)`, label: 'Duration' },
-    {
-      value: leaseDetail.price > 0 ? `$ ${leaseDetail.price}` : `$ 0`,
-      label: 'Price Per Day',
-    },
-    { value: `$ ${leaseDetail.totalEarn}`, label: 'Total earn' },
-    // leaseDetail.hub.name
-    { value: leaseDetail.hub.name, label: 'Hub' },
-    { value: daysleft > 0 ? daysleft : 'None', label: 'Days left' },
-    { value: genStatus(), label: 'Status' },
-  ];
-
-  if (leaseDetail.status === 'PENDING' || leaseDetail.status === 'PAST') {
-    showAttr.splice(7, 1);
-  }
-  if (
-    leaseDetail.status !== 'PENDING' &&
-    leaseDetail.status !== 'DECLINED' &&
-    leaseDetail.status !== 'ACCEPTED'
-  ) {
-    showAttr.splice(1, 0, {
-      value: leaseDetail.car.licensePlates,
-      label: 'License Plate',
-    });
-  }
 
   // const { data } = leaseDetail;
   const onBackPress = () => {
@@ -194,7 +179,7 @@ const LeaseHistoryItemDetailScreen = ({
   };
 
   const handleConfirmRequest = () => {
-    updateLeaseStatus({
+    updateLeaseStatus(dispatch)({
       id: leaseDetail._id,
       status: 'WAIT_TO_RETURN',
     });
@@ -208,21 +193,8 @@ const LeaseHistoryItemDetailScreen = ({
   };
 
   const onRequestTransaction = () => {
-    generateValue('lease');
+    generateValue();
     openListenner();
-  };
-
-  const getLabel = () => {
-    switch (leaseDetail.status) {
-      case 'AVAILABLE':
-        return 'Request receive';
-      case 'WAIT_TO_RETURN':
-        return 'Confirm receive';
-      case 'ACCEPTED':
-        return 'Confirm placing car';
-      default:
-        return 'Waiting for confirm';
-    }
   };
 
   const handleRequestAction = () => {
@@ -242,19 +214,16 @@ const LeaseHistoryItemDetailScreen = ({
   };
 
   const renderButton = () => {
-    if (
-      ['AVAILABLE', 'WAIT_TO_RETURN', 'ACCEPTED'].includes(leaseDetail.status)
-    ) {
+    const label = getButtonData(leaseDetail);
+    if (label) {
       return (
         <Button
-          label={getLabel()}
-          // label="Request receive"
+          label={label}
           onPress={handleRequestAction}
           style={styles.button}
         />
       );
     }
-    return null;
   };
 
   return (
@@ -280,20 +249,30 @@ const LeaseHistoryItemDetailScreen = ({
           showSeparator={index !== showAttr.length - 1}
         />
       ))}
+      <TouchableOpacity
+        style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
+        onPress={() =>
+          navigation.navigate('TimeLineScreen', { id: leaseDetail._id })
+        }
+      >
+        <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
+          Time line
+        </Text>
+      </TouchableOpacity>
       {renderButton()}
 
-      <ConfirmPopup
+      {/* <ConfirmPopup
         title="CONFIRM"
         description="Would you like to request returning your car?"
         modalVisible={popupVisible}
         onClose={() => setPopupVisible(false)}
         onConfirm={handleConfirmRequest}
-      />
+      /> */}
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
         onClose={onCloseQrCodeModal}
-        setGenerateNewQR={setGenerateNewQR}
+        setGenerateNewQR={generateValue}
       />
       {/* <ConfirmPopup
         title="Successfully"
@@ -302,14 +281,14 @@ const LeaseHistoryItemDetailScreen = ({
         onClose={() => handleConfirmPopup}
         onConfirm={() => handleConfirmPopup}
       /> */}
-      <ConfirmPopup
+      {/* <ConfirmPopup
         title="Confirm take car?"
         description="Are you sure to confirm take your car?"
         modalVisible={confirmPopupVisibie}
         onDecline={onCancelTransaction}
         onConfirm={onConfirmReceiveCar}
         onClose={() => setConfirmPopupVisible(false)}
-      />
+      /> */}
     </ViewContainer>
   );
 };
@@ -324,11 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(
-  state => ({
-    leases: state.lease.data.leases,
-    selectedId: state.lease.selectedId,
-    isLoading: state.lease.loading,
-  }),
-  { updateLeaseStatus, confirmTransaction, getLeaseList }
-)(LeaseHistoryItemDetailScreen);
+export default LeaseHistoryItemDetailScreen;

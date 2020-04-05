@@ -7,15 +7,19 @@ export const GET_PREVIOUS_CAR_LIST_FAILURE = 'get-previous-car-list-failure';
 
 export const GET_CAR_BY_VIN_SUCCESS = 'get-car-by-vin-success';
 export const GET_CAR_BY_VIN_FAILURE = 'get-car-by-vin-failure';
+export const GET_CAR_BY_VIN_REQUEST = 'get-car-by-vin-request';
 
-export const ADD_HOST_HUB_INFO_SUCCESS = 'add-host-hub-info-success';
+export const CHECK_CAR_MODEL_SUCCESS = 'check-car-model-success';
+export const CHECK_CAR_MODEL_FAILURE = 'check-car-model-failure';
+export const CHECK_CAR_MODEL_REQUEST = 'check-car-model-request';
 
+export const ADD_LEASE_REQUEST = 'add-lease-request';
 export const ADD_LEASE_SUCCESS = 'add-lease-success';
 export const ADD_LEASE_FAILURE = 'add-lease-failure';
 
 export const SCAN_VIN_CODE_SUCCESS = 'scan-vin-code-success';
 
-export const SET_VALUE_SUCCESS = 'set-value-success';
+export const SET_LEASE_INFO = 'set-lease-info';
 
 export const GET_LEASE_ITEM_REQUEST = 'get-lease-item-request';
 export const GET_LEASE_ITEM_FAILURE = 'get-lease-item-failure';

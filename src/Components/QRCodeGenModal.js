@@ -30,7 +30,7 @@ const QRCodeGenModal = ({
       </View>
       <Button
         label="Generate new code"
-        onPress={() => setGenerateNewQR(true)}
+        onPress={setGenerateNewQR}
         style={{ marginTop: scaleVer(24) }}
       />
     </View>

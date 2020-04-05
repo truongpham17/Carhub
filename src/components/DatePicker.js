@@ -18,6 +18,7 @@ type PropTypes = {
   startDate: Date,
   endDate: Date,
   onChangeDate: string => void,
+  date: Date,
 };
 const Item = ({ date, type, onItemPress }: ItemTypes) => {
   const a = 12;
@@ -67,7 +68,7 @@ const DatePicker = ({ startDate, endDate, onChangeDate }: PropTypes) => {
         isVisible={pickerVisible}
         mode="date"
         onConfirm={handleConfirmDatePicker}
-        date={new Date()}
+        date={type === 'start' ? startDate : endDate}
         onCancel={onClosePicker}
       />
     </View>

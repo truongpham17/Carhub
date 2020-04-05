@@ -6,7 +6,7 @@ import { createNotificationChannel } from './src/services/notification';
 import Navigation from './src/screens/Navigation';
 import store, { persistor } from './src/@redux/store';
 
-export default class App extends React.Component {
+class App extends React.Component {
   async componentDidMount() {
     this.removeNotificationListener = firebase
       .notifications()
@@ -46,3 +46,5 @@ export default class App extends React.Component {
     );
   }
 }
+
+export default App;

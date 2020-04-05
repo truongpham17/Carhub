@@ -96,7 +96,7 @@ export default ListItem;
 const styles = StyleSheet.create({
   container: {
     // minHeight: scaleHor(60),
-    paddingVertical: scaleHor(12),
+    paddingVertical: scaleHor(16),
     paddingHorizontal: scaleHor(8),
     alignItems: 'center',
     flexDirection: 'row',

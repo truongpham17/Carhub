@@ -1,46 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
 // import { ViewContainer } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { getLeaseList, setLeaseDetailId } from '@redux/actions/lease';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // import HistoryItem from 'Components/HistoryItem';
 import LeaseHistoryItem from './LeaseHistoryItem';
 
 type PropsType = {
-  leaseList: [LeaseDetailType],
   navigation: NavigationType,
-  getLeaseList: () => void,
-  setLeaseDetailId: () => void,
 };
 
-const LeaseHistoryScreen = ({
-  leaseList,
-  navigation,
-  getLeaseList,
-  setLeaseDetailId,
-}: PropsType) => {
+const LeaseHistoryScreen = ({ navigation }: PropsType) => {
   const [refreshing, setRefreshing] = useState(false);
-  useEffect(() => {
-    if (refreshing) {
-      getLeaseList();
-      setRefreshing(false);
-    }
-  }, [refreshing]);
-  //   getLeaseList();
-  // }, []);
+  const leaseList = useSelector(state => state.lease.data.leases);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (refreshing) {
-  //     getLeaseList();
-  //     setRefreshing(false);
-  //     // console.log(leaseList);
-  //   }
-  // }, [refreshing]);
+  useEffect(() => {
+    getLeaseList(dispatch)();
+  }, []);
 
   const onGetDetail = id => {
-    setLeaseDetailId(id);
-    navigation.navigate('LeaseHistoryItemDetailScreen');
+    // setLeaseDetailId(dispatch)(id);
+    navigation.navigate('LeaseHistoryItemDetailScreen', { selectedId: id });
     // setRefreshing(true);
   };
   // eslint-disable-next-line react/prop-types
@@ -53,7 +35,7 @@ const LeaseHistoryScreen = ({
     <FlatList
       refreshing={refreshing}
       onRefresh={() =>
-        getLeaseList({
+        getLeaseList(dispatch)({
           onSuccess() {
             setRefreshing(false);
           },
@@ -70,9 +52,4 @@ const LeaseHistoryScreen = ({
   );
 };
 
-export default connect(
-  state => ({
-    leaseList: state.lease.data.leases,
-  }),
-  { getLeaseList, setLeaseDetailId }
-)(LeaseHistoryScreen);
+export default LeaseHistoryScreen;

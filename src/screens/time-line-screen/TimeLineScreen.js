@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { ViewContainer } from 'Components';
+import { ViewContainer, Button } from 'Components';
 
 import { getLogs } from '@redux/actions/log';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { NavigationType } from 'types';
 import moment from 'moment';
+import { scaleVer } from 'Constants/dimensions';
 import TimeLineItem from './TimeLineItem';
 
 type PropTypes = {
@@ -19,7 +20,6 @@ const TimelineScreen = ({ navigation }: PropTypes) => {
   const [refreshing, setRefresh] = useState(false);
   const loading = useSelector(state => state.log.loading);
   const data = useSelector(state => state.log.data);
-  console.log(data);
 
   const timelineData = data.map(item => ({
     date: moment(item.createdAt).format('MMM DD YYYY'),
@@ -56,6 +56,12 @@ const TimelineScreen = ({ navigation }: PropTypes) => {
         data={timelineData}
         renderItem={({ item }) => <TimeLineItem {...item} />}
         keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+      />
+      <Button
+        label="Back"
+        onPress={() => navigation.pop()}
+        style={{ marginBottom: scaleVer(12) }}
       />
     </ViewContainer>
   );

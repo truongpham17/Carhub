@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ViewContainer } from 'Components';
 
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 
 import { NavigationType, UserType } from 'types';
 import firebase from 'react-native-firebase';
+import { getLeaseList } from '@redux/actions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -14,11 +15,13 @@ type PropTypes = {
     notification: {
       action: String,
       screenName: String,
+      selectedId: String,
     },
   },
 };
 
-const AuthScreen = ({ navigation, user, screenProps }: PropTypes) => {
+const AuthScreen = ({ navigation, user }: PropTypes) => {
+  const dispatch = useDispatch();
   useEffect(() => {
     firebase
       .messaging()
@@ -31,17 +34,33 @@ const AuthScreen = ({ navigation, user, screenProps }: PropTypes) => {
   }, []);
 
   const initialNotification = async () => {
-    const data = await checkNotification();
-    console.log('notification data: ', data);
-
-    if (data) {
-      if (data.action === 'NAVIGATE') {
-        return navigation.navigate(data.screenName, { ...data.screenProps });
-      }
-    }
-
     if (user && user.token) {
-      navigation.navigate('MainApp');
+      const data = await checkNotification();
+      console.log('notification data', data);
+      if (data) {
+        if (data.action === 'NAVIGATE') {
+          switch (data.screenName) {
+            case 'LeaseHistoryItemDetailScreen': {
+              getLeaseList(dispatch)({
+                onSuccess() {
+                  navigation.navigate('LeaseHistoryItemDetailScreen', {
+                    selectedId: data.selectedId,
+                    showStatusPopup: true,
+                  });
+                },
+                onFailure() {
+                  navigation.navigate('MainApp');
+                },
+              });
+              break;
+            }
+            default:
+              navigation.navigate('MainApp');
+          }
+        }
+      } else {
+        navigation.navigate('MainApp');
+      }
     } else {
       navigation.navigate('SignInStack');
     }
@@ -63,7 +82,7 @@ async function checkNotification() {
           return {
             action,
             screenName: notification.data.screenName,
-            screenProps: notification.data.screenProps,
+            selectedId: notification.data.selectedId,
           };
         }
       }

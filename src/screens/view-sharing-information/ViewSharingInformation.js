@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image } from 'react-native';
-import { ViewContainer, ListItem, Button, ThankYouPopup } from 'Components';
+import { ViewContainer, ListItem, Button, SuccessDialog } from 'Components';
 import { NavigationType, SharingType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
 import { useSelector, useDispatch } from 'react-redux';
@@ -124,7 +124,7 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
           navigation.pop();
         }}
       />
-      <ThankYouPopup
+      <SuccessDialog
         msg="Success"
         detail="Your request has been sent successfully. Please wait for response!"
         onClose={() => setSuccessDialog(false)}
