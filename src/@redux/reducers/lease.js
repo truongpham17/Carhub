@@ -23,6 +23,11 @@ import {
   UPDATE_LEASE_ITEM_SUCCESS,
   ADD_LEASE_REQUEST,
 } from '@redux/constants/lease';
+import {
+  CONFIRM_TRANSACTION_REQUEST,
+  CONFIRM_TRANSACTION_SUCCESS,
+  CONFIRM_TRANSACTION_FAILURE,
+} from '@redux/constants/transaction';
 
 const INITIAL_STATE = {
   // vin: "",
@@ -111,6 +116,13 @@ export default (state = INITIAL_STATE, action) => {
       };
     case UPDATE_LEASE_ITEM_FAILURE:
       return { ...state, loading: false, error: action.payload };
+
+    case CONFIRM_TRANSACTION_REQUEST:
+      return { ...state, loading: true };
+    case CONFIRM_TRANSACTION_SUCCESS:
+      return { ...state, loading: false };
+    case CONFIRM_TRANSACTION_FAILURE:
+      return { ...state, loading: false };
     default:
       return { ...state };
   }

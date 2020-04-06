@@ -14,15 +14,21 @@ export const confirmTransaction = dispatch => async (
     dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
     const result = await query({
       endpoint: `${type}/transaction/${id}`,
-      method: METHODS.post,
+      method: METHODS.patch,
       data: { toStatus, car },
     });
     if (result.status === STATUS.OK) {
       dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
-      callback.onSuccess();
+      if (callback.onSuccess) {
+        callback.onSuccess();
+      }
+    } else if (callback.onFailure) {
+      callback.onFailure();
     }
   } catch (error) {
     dispatch({ type: CONFIRM_TRANSACTION_FAILURE, payload: error });
-    callback.onFailure();
+    if (callback.onFailure) {
+      callback.onFailure();
+    }
   }
 };

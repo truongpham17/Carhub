@@ -5,12 +5,16 @@ import {
   createStackNavigator,
   // createDrawerNavigator,
 } from 'react-navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import { Tabbar, Popup } from 'Components';
-import { connect, useSelector, useDispatch } from 'react-redux';
-import { defaultFunction } from 'Utils/common';
+import { useSelector, useDispatch } from 'react-redux';
 import { cancelPopup } from '@redux/actions/app';
+import {
+  processNotificationInfo,
+  createNotificationChannel,
+} from 'services/notification';
+import firebase from 'react-native-firebase';
 import { TestScreen } from './test';
 import SearchCarScreen from './search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
@@ -30,7 +34,6 @@ import SignInScreen from './sign-in-screen/SignInScreen';
 import RentBookingReview from './rent-booking-review/RentBookingReview';
 import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
 import LicenseScreen from './license-screen/LicenseScreen';
-import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
 import HistoryScreen from './history-screen/HistoryScreen';
 import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
 import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
@@ -41,6 +44,7 @@ import SharingDetailScreen from './sharing-detail-screen/SharingDetailScreen';
 import ViewSharingInformation from './view-sharing-information/ViewSharingInformation';
 import RentSharingRequestScreen from './rent-sharing-car-request/RentSharingRequestScreen';
 import ScanScreen from './scan-screen/ScanScreen';
+import NavigationService from './NavigationService';
 
 const RentalStack = createStackNavigator(
   {
@@ -137,21 +141,42 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-// const scanScreen = createStackNavigator(
-//   {
-//     SelectSharingCarScreen,
-//   },
-//   {
-//     headerMode: 'none',
-//   }
-// );
-
 const App = createAppContainer(AppNavigation);
 
-const AppWithPopUp = () => {
-  const { popup } = useSelector(state => state.app);
-
+const AppContainer = () => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    const removeNotificationListener = firebase
+      .notifications()
+      .onNotification((notification: Notification) => {
+        createNotificationChannel();
+        firebase
+          .notifications()
+          .displayNotification(
+            notification.android
+              .setPriority(firebase.notifications.Android.Priority.Max)
+              .android.setChannelId('notification')
+          );
+      });
+
+    const removeNotificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(notificationOpen => {
+        const { notification } = notificationOpen;
+
+        processNotificationInfo({
+          notification,
+          dispatch,
+          navigate: NavigationService.navigate,
+        });
+      });
+    return () => {
+      removeNotificationListener();
+      removeNotificationOpenedListener();
+    };
+  }, []);
+
+  const { popup } = useSelector(state => state.app);
 
   const onClosePopup = () => {
     cancelPopup(dispatch);
@@ -175,7 +200,11 @@ const AppWithPopUp = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <App />
+      <App
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
       <Popup
         {...popup}
         onClose={onClosePopup}
@@ -186,4 +215,4 @@ const AppWithPopUp = () => {
   );
 };
 
-export default AppWithPopUp;
+export default AppContainer;

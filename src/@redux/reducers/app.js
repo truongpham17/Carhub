@@ -2,6 +2,7 @@ import { defaultFunction } from 'Utils/common';
 import { SET_POPUP_DATA, CANCEL_POPUP } from '@redux/constants/app';
 import { ADD_LEASE_FAILURE } from '@redux/constants/lease';
 import { CAR_CURRENTLY_LEASING } from 'Constants/errorCode';
+import { CONFIRM_TRANSACTION_FAILURE } from '@redux/constants/transaction';
 
 const INITIAL_STATE = {
   popup: {
@@ -30,6 +31,14 @@ const TEST = {
       console.log(data);
     },
   },
+};
+
+const ERROR = {
+  title: 'Something went wrong!',
+  description: 'Something went wrong, please try again!',
+  modalVisible: true,
+  popupType: 'error',
+  grandResponder: true,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -61,14 +70,11 @@ export default (state = INITIAL_STATE, action) => {
       }
       return {
         ...state,
-        popup: {
-          title: 'Something went wrong!',
-          description: 'Something went wrong, please try again!',
-          modalVisible: true,
-          popupType: 'error',
-          grandResponder: false,
-        },
+        popup: ERROR,
       };
+
+    case CONFIRM_TRANSACTION_FAILURE:
+      return { ...state, popup: ERROR };
 
     default:
       return { ...state };
