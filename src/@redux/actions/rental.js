@@ -122,7 +122,10 @@ export const updateSpecificRental = (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE, payload: error });
+    dispatch({
+      type: UPDATE_RENTAL_ITEM_FAILURE,
+      payload: error.response.data,
+    });
     callback.onFailure();
   }
 };

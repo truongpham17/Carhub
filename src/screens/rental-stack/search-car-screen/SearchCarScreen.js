@@ -82,7 +82,7 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
     navigation.navigate('SelectCarScreen');
   };
   return (
-    <ViewContainer haveBackHeader title="Search Car" backAction={onBackPress}>
+    <ViewContainer title="Search Car" backAction={onBackPress} haveBackHeader>
       <View style={{ flex: 1 }}>
         <InputForm
           label="Pick up location"

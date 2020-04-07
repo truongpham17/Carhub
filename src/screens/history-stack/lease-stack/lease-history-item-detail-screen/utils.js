@@ -1,14 +1,9 @@
 import { LeaseDetailType } from 'types';
-import { formatDate } from 'Utils/date';
-import { subtractDate } from 'Utils/common';
+import { formatDate, substractDate } from 'Utils/date';
+
 import moment from 'moment';
 import colors from 'Constants/colors';
-import {
-  setPopUpData,
-  cancelPopup,
-  confirmTransaction,
-  getLeaseList,
-} from '@redux/actions';
+import { setPopUpData, confirmTransaction, getLeaseList } from '@redux/actions';
 import firebase from 'react-native-firebase';
 import {
   WAITING_FOR_CONFIRM,
@@ -30,7 +25,7 @@ function getStatus(status) {
 
 export function getData(lease: LeaseDetailType) {
   const { status } = lease;
-  const duration = subtractDate(lease.startDate, lease.endDate);
+  const duration = substractDate(lease.startDate, lease.endDate);
   const attrs = [
     { value: lease.car.carModel.name, label: 'Car Name' },
     { value: formatDate(lease.startDate), label: 'From date' },
@@ -58,8 +53,8 @@ export function getData(lease: LeaseDetailType) {
 
   if (['AVAILABLE', 'HIRING', 'WAIT_TO_RETURN'].includes(status)) {
     attrs.splice(3, 1, {
-      value: 'Days left',
-      label: subtractDate(new Date(), lease.endDate),
+      label: 'Days left',
+      value: substractDate(new Date(), lease.endDate),
     });
   }
   return attrs;
@@ -162,20 +157,6 @@ export function listenFirebaseStatus({
           });
           break;
         // employee press confirm to receive car
-        case COMPLETED: {
-          setPopUpData(dispatch)({
-            popupType: 'success',
-            title: 'Success',
-            description:
-              'You has been placing your car at the hub successfully! Thank you for using service',
-            onConfirm() {
-              getLeaseList(dispatch)();
-              navigation.pop();
-            },
-          });
-
-          break;
-        }
 
         // don't know :))
         case WAITING_FOR_USER_CONFIRM: {
@@ -223,6 +204,20 @@ export function listenFirebaseStatus({
             popupType: 'error',
             title: 'Transaction denied!',
             description,
+          });
+
+          break;
+        }
+        case COMPLETED: {
+          setPopUpData(dispatch)({
+            popupType: 'success',
+            title: 'Success',
+            description:
+              'You has been placing your car at the hub successfully! Thank you for using service',
+            onConfirm() {
+              getLeaseList(dispatch)();
+              navigation.pop();
+            },
           });
 
           break;

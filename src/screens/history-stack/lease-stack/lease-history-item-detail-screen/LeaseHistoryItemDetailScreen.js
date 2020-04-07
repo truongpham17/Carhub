@@ -136,11 +136,6 @@ const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
       scrollable
       loading={isLoading}
     >
-      <Image
-        source={{ uri: leaseDetail.car.images[0] }}
-        style={styles.imageContainer}
-        resizeMode="stretch"
-      />
       {showAttr.map((item, index) => (
         <ListItem
           key={index.toString()}

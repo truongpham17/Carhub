@@ -11,7 +11,6 @@ import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
 import { LeaseDetailType } from 'types';
-import { subtractDate } from 'Utils/common';
 import moment from 'moment';
 
 type PropTypes = {

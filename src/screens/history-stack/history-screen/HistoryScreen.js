@@ -5,8 +5,8 @@ import ViewPager from '@react-native-community/viewpager';
 import { connect, useSelector } from 'react-redux';
 import { NavigationType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
-import RentHistoryScreen from '../rent-history-screen/RentHistoryScreen';
-import LeaseHistoryScreen from '../lease-history-screen/LeaseHistoryScreen';
+import RentHistoryScreen from '../rental-stack/rent-history-screen/RentHistoryScreen';
+import LeaseHistoryScreen from '../lease-stack/lease-history-screen/LeaseHistoryScreen';
 
 type PropTypes = {
   navigation: NavigationType,

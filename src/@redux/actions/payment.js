@@ -28,7 +28,7 @@ export function addPayment(data, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: ADD_PAYMENT_FAILURE, payload: error });
+      dispatch({ type: ADD_PAYMENT_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };

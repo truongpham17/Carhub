@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
 import {
   ViewContainer,
   ListItem,
   Button,
-  ConfirmPopup,
   QRCodeGenModal,
   alert,
   PolicyPopup,
@@ -12,8 +11,6 @@ import {
 import { NavigationType, RentDetailType, CarType } from 'types';
 import { connect, useDispatch } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
-import moment from 'moment';
-import { subtractDate } from 'Utils/common';
 import firebase from 'react-native-firebase';
 import { updateSpecificRental, getRentalList } from '@redux/actions/rental';
 import policy from 'Constants/policy';
@@ -24,19 +21,19 @@ import {
   getLastestSharingByRental,
   confirmSharing,
 } from '@redux/actions/sharing';
-import {
-  COMPLETED,
-  WAITING_FOR_CONFIRM,
-  WAITING_FOR_SCAN,
-  WAITING_FOR_USER_CONFIRM,
-  CANCEL,
-} from 'Constants/status';
-import { changeTransactionStatus, changeSharingStatus } from 'Utils/database';
+import { changeSharingStatus } from 'Utils/database';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
-import { setPopUpData } from '@redux/actions/app';
+import { substractDate } from 'Utils/date';
+import { setPopUpData, cancelPopup } from '@redux/actions';
 import PriceSelectModal from './PriceSelectModal';
-import { getActionLabel, getShowingData, getUpdateRentalData } from './utils';
+import {
+  getActionLabel,
+  getShowingData,
+  getUpdateRentalData,
+  generateQRCodeValue,
+  listenFirebaseStatus,
+} from './utils';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -52,7 +49,6 @@ const RentHistoryItemDetailScreen = ({
   rentDetail,
   isLoading,
   updateSpecificRental,
-  confirmTransaction,
   getSharingByRentalId,
 }: PropTypes) => {
   const dispatch = useDispatch();
@@ -60,60 +56,8 @@ const RentHistoryItemDetailScreen = ({
   const [generateNewQR, setGenerateNewQR] = useState(true);
   const [priceModalVisible, setPriceModalVisible] = useState(false);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
-  const [selectedCar, setSelectedCar]: [CarType] = useState({ carModel: {} });
   const [policyPopupVisible, setPolicyVisible] = useState(false);
   const showAttr = getShowingData(rentDetail);
-
-  const openListenner = () => {
-    changeTransactionStatus(rentDetail._id, WAITING_FOR_SCAN);
-    firebase
-      .database()
-      .ref(`scanQRCode/${rentDetail._id}`)
-      .on('value', snapShot => {
-        const val = snapShot.val();
-
-        switch (val.status) {
-          case COMPLETED: {
-            setQrCodeModalVisible(false);
-            getRentalList(dispatch)({
-              onSuccess() {},
-              onFailure() {
-                navigation.pop();
-              },
-            });
-
-            break;
-          }
-          case WAITING_FOR_CONFIRM: {
-            setQrCodeModalVisible(false);
-            setTimeout(() => {
-              Alert.alert('Waiting for hub confirm');
-            }, 500);
-            break;
-          }
-          case WAITING_FOR_USER_CONFIRM: {
-            setQrCodeModalVisible(false);
-            setSelectedCar(val.car);
-
-            showConfirmTakeCar();
-
-            // setConfirmPopupVisible(true);
-            break;
-          }
-          case CANCEL: {
-            setQrCodeModalVisible(false);
-            setTimeout(() => {
-              Alert.alert('Transaction declined!');
-            }, 500);
-            break;
-          }
-
-          default: {
-            console.log('error');
-          }
-        }
-      });
-  };
 
   const listenerSharing = () => {
     firebase
@@ -152,15 +96,6 @@ const RentHistoryItemDetailScreen = ({
             console.log('error');
         }
       });
-  };
-
-  const generateValue = type => {
-    const value = {
-      id: rentDetail._id,
-      type,
-      expired: new Date().getTime() + 1 * 60000,
-    };
-    setValueForQR(JSON.stringify(value));
   };
 
   // const { data } = rentDetail;
@@ -217,10 +152,35 @@ const RentHistoryItemDetailScreen = ({
   };
 
   const onRequestTransaction = () => {
-    generateValue('rental');
-    openListenner();
-    setQrCodeModalVisible(true);
-    // showConfirmTakeCar();
+    if (rentDetail.status === 'CURRENT' || rentDetail.status === 'OVERDUE') {
+      setPopUpData(dispatch)({
+        popupType: 'confirm',
+        title: 'Return car to hub',
+        description: 'Are you sure to return car to hub?',
+        onConfirm() {
+          cancelPopup(dispatch);
+          setValueForQR(JSON.stringify(generateQRCodeValue(rentDetail._id)));
+          setQrCodeModalVisible(true);
+          listenFirebaseStatus({
+            dispatch,
+            rental: rentDetail,
+            onCloseModal() {
+              setQrCodeModalVisible(false);
+            },
+          });
+        },
+      });
+    } else {
+      setValueForQR(JSON.stringify(generateQRCodeValue(rentDetail._id)));
+      setQrCodeModalVisible(true);
+      listenFirebaseStatus({
+        dispatch,
+        rental: rentDetail,
+        onCloseModal() {
+          setQrCodeModalVisible(false);
+        },
+      });
+    }
   };
 
   const handleSubmitSharing = value => {
@@ -244,28 +204,7 @@ const RentHistoryItemDetailScreen = ({
     });
   };
 
-  const daysdiff = Math.abs(subtractDate(new Date(), rentDetail.endDate));
-
-  const onConfirmReceiveCar = () => {
-    changeTransactionStatus(rentDetail._id, COMPLETED);
-    // setConfirmPopupVisible(false);
-
-    confirmTransaction(
-      { id: rentDetail._id, type: 'rental', car: selectedCar._id },
-      {
-        onSuccess() {
-          getRentalList(dispatch)();
-          // navigation.pop();
-          // popToHistoryScreen();
-        },
-      }
-    );
-  };
-
-  const onCancelTransaction = () => {
-    changeTransactionStatus(rentDetail._id, CANCEL);
-    // setConfirmPopupVisible(false);
-  };
+  const daysdiff = Math.abs(substractDate(new Date(), rentDetail.endDate));
 
   const handleViewRequestList = () => {
     getLastestSharingByRental(dispatch)(rentDetail._id, {
@@ -278,16 +217,6 @@ const RentHistoryItemDetailScreen = ({
     });
   };
 
-  const showConfirmTakeCar = () => {
-    setPopUpData(dispatch)({
-      title: 'Confirm take car?',
-      description: `Are you sure to take the ${selectedCar.carModel.name} with license plates: ${selectedCar.licensePlates}?`,
-      modalVisible: true,
-      onDecline: onCancelTransaction,
-      onConfirm: onConfirmReceiveCar,
-    });
-  };
-
   return (
     <ViewContainer
       haveBackHeader
@@ -297,13 +226,6 @@ const RentHistoryItemDetailScreen = ({
       style={{ paddingBottom: scaleVer(16) }}
       loading={isLoading}
     >
-      <Image
-        source={{
-          uri: rentDetail.carModel.images[0],
-        }}
-        style={styles.imageContainer}
-        resizeMode="stretch"
-      />
       {showAttr.map((item, index) => (
         <ListItem
           key={index.toString()}
@@ -348,6 +270,7 @@ const RentHistoryItemDetailScreen = ({
           style={styles.button}
         />
       )}
+
       <PriceSelectModal
         visible={priceModalVisible}
         onClose={() => setPriceModalVisible(false)}
@@ -356,12 +279,14 @@ const RentHistoryItemDetailScreen = ({
         maximumCost={rentDetail.price}
         minimumCost={rentDetail.price * 0.3}
       />
+
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
         onClose={() => setQrCodeModalVisible(false)}
         setGenerateNewQR={setGenerateNewQR}
       />
+
       <PolicyPopup
         visible={policyPopupVisible}
         onClose={() => setPolicyVisible(false)}

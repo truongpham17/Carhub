@@ -40,7 +40,7 @@ const SharingDetailScreen = ({
     'D MMMM, YYYY'
   );
   const endDateFormat = moment(sharing.rental.endDate).format('D MMMM, YYYY');
-  // const duration = subtractDate(rentDetail.startDate, rentDetail.endDate);
+  // const duration = substractDate(rentDetail.startDate, rentDetail.endDate);
 
   const data = {
     rental: [
@@ -60,24 +60,6 @@ const SharingDetailScreen = ({
       { label: 'Phone', value: sharing.customer.phone },
     ],
   };
-  // const data = {
-  //   rental: [
-  //     { label: 'Car name', value: 'Car name' },
-  //     { label: 'Car type', value: 'Car type' },
-  //     { label: 'Seats', value: 'Seats' },
-  //     { label: 'Start Date', value: 'startDate' },
-  //     { label: 'End Date', value: 'endDate' },
-  //     { label: 'Price per day', value: '$100' },
-  //     { label: 'Total', value: '$100' },
-  //     { label: 'Location', value: 'endDate' },
-  //     { label: 'Car return address', value: 'endDate' },
-  //   ],
-  //   customer: [
-  //     { label: 'Name', value: 'Name' },
-  //     { label: 'Email', value: 'email' },
-  //     { label: 'Phone', value: 'sharing.customer.phone' },
-  //   ],
-  // };
 
   return (
     <ViewContainer

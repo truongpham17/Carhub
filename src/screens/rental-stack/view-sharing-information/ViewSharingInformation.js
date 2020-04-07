@@ -4,9 +4,9 @@ import { ViewContainer, ListItem, Button, SuccessDialog } from 'Components';
 import { NavigationType, SharingType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
 import { useSelector, useDispatch } from 'react-redux';
-import { subtractDate } from 'Utils/common';
+import { substractDate, formatDate } from 'Utils/date';
 import { sendSharingRequest } from '@redux/actions/sharing';
-import { formatDate } from 'Utils/date';
+
 import SharingExplainModel from './ShareExplainModal';
 
 type PropsType = {
@@ -46,7 +46,7 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
     );
   };
 
-  const daysdiff = Math.abs(subtractDate(startDate, endDate));
+  const daysdiff = Math.abs(substractDate(startDate, endDate));
 
   const data = {
     rental: [

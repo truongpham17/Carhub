@@ -12,7 +12,7 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { dimension } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
-import { subtractDate } from 'Utils/common';
+import { substractDate } from 'Utils/date';
 import moment from 'moment';
 
 type PropsType = {
@@ -69,7 +69,7 @@ const CarSlider = ({
             </Text>
             <Text style={textStyle.labelRegular}>{item.price} $</Text>
             <Text style={textStyle.labelRegular}>
-              {Math.abs(subtractDate(new Date(), item.rental.endDate))} days
+              {Math.abs(substractDate(new Date(), item.rental.endDate))} days
             </Text>
             <Text style={textStyle.labelRegular}>{item.location || ''}</Text>
           </View>

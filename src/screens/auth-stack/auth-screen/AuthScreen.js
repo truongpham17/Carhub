@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { ViewContainer } from 'Components';
-
+import { View, ActivityIndicator } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
 
 import { NavigationType, UserType } from 'types';
@@ -35,17 +34,25 @@ const AuthScreen = ({ navigation, user }: PropTypes) => {
   const initialNotification = async () => {
     if (user && user.token) {
       const notification = await checkNotification();
-      processNotificationInfo({
-        navigate: navigation.navigate,
-        notification,
-        dispatch,
-      });
+      if (notification) {
+        processNotificationInfo({
+          navigate: navigation.navigate,
+          notification,
+          dispatch,
+        });
+      } else {
+        navigation.navigate('MainApp');
+      }
     } else {
       navigation.navigate('SignInStack');
     }
   };
 
-  return <ViewContainer />;
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <ActivityIndicator animating />
+    </View>
+  );
 };
 
 async function checkNotification() {

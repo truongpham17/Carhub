@@ -40,7 +40,7 @@ export const getSharing = dispatch => async (
       dispatch({ type: GET_SHARING_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: GET_SHARING_FAILURE, payload: error });
+    dispatch({ type: GET_SHARING_FAILURE, payload: error.response.data });
   }
 };
 
@@ -61,7 +61,7 @@ export const getSharingByRentalId = (
       dispatch({ type: GET_SHARING_ITEM_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: GET_SHARING_ITEM_FAILURE, payload: error });
+    dispatch({ type: GET_SHARING_ITEM_FAILURE, payload: error.response.data });
   }
 };
 
@@ -89,7 +89,7 @@ export const sendSharingRequest = dispatch => async (
       dispatch({ type: SEND_SHARING_REQ_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: SEND_SHARING_REQ_FAILURE, payload: error });
+    dispatch({ type: SEND_SHARING_REQ_FAILURE, payload: error.response.data });
   }
 };
 
@@ -117,7 +117,7 @@ export const getRentalRequestBySharing = dispatch => async (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_RENT_SHARING_FAILURE, payload: error });
+    dispatch({ type: GET_RENT_SHARING_FAILURE, payload: error.response.data });
   }
 };
 
@@ -140,7 +140,10 @@ export const getLastestSharingByRental = dispatch => async (
       callback.onSuccess();
     }
   } catch (error) {
-    dispatch({ type: GET_LATEST_SHARING_FAILURE, payload: error });
+    dispatch({
+      type: GET_LATEST_SHARING_FAILURE,
+      payload: error.response.data,
+    });
     callback.onFailure();
   }
 };
@@ -185,7 +188,7 @@ export const confirmSharing = dispatch => async (
       callback.onSuccess();
     }
   } catch (error) {
-    dispatch({ type: CONFIRM_SHARING_FAILURE, payload: error });
+    dispatch({ type: CONFIRM_SHARING_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };

@@ -11,7 +11,7 @@ import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
 import { textStyle } from 'Constants/textStyles';
 import { RentDetailType } from 'types';
-import { subtractDate } from 'Utils/common';
+import { substractDate } from 'Utils/date';
 import moment from 'moment';
 
 type PropTypes = {
@@ -83,7 +83,7 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
           rentDetail.status === 'OVERDUE' ? (
             <View style={styles.dayCount}>
               <Text style={[textStyle.bodyText, { color: colors.white }]}>
-                {Math.abs(subtractDate(new Date(), rentDetail.endDate))}{' '}
+                {Math.abs(substractDate(new Date(), rentDetail.endDate))}{' '}
                 {typeofDate}
               </Text>
             </View>
