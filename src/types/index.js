@@ -44,6 +44,7 @@ export type LeaseDetailType = {
     | 'HIRING'
     | 'WAIT_TO_RETURN'
     | 'PAST',
+  message: String,
 };
 
 export type RentailCarDetailType = {

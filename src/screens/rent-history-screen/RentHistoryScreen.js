@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
-// import { ViewContainer } from 'Components';
 import { NavigationType, RentDetailType } from 'types';
 import { getRentalList, setRentDetailId } from '@redux/actions/rental';
 import { connect, useDispatch } from 'react-redux';
 
-// import HistoryItem from 'Components/HistoryItem';
 import RentHistoryItem from './RentHistoryItem';
 
 type PropsType = {
@@ -20,13 +18,10 @@ const RentHistoryScreen = ({
   setRentDetailId,
 }: PropsType) => {
   const dispatch = useDispatch();
-  const [refreshing, setRefreshing] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    if (refreshing) {
-      getRentalList(dispatch)();
-      setRefreshing(false);
-    }
-  }, [refreshing]);
+    getRentalList(dispatch)();
+  }, []);
 
   const onGetDetail = id => {
     setRentDetailId(id);
@@ -36,9 +31,6 @@ const RentHistoryScreen = ({
   const handleRenderItem = ({ item }) => (
     <RentHistoryItem rentDetail={item} onGetDetail={onGetDetail} />
   );
-  // const data = ['1', '2', '3', '4'];
-
-  // const handleRenderItem = () => <HistoryItem />;
 
   const handleKeyExtractor = (item, index) => index.toString();
   return (
@@ -48,7 +40,17 @@ const RentHistoryScreen = ({
       keyExtractor={handleKeyExtractor}
       showsVerticalScrollIndicator={false}
       refreshing={refreshing}
-      onRefresh={() => setRefreshing(true)}
+      onRefresh={() => {
+        setRefreshing(true);
+        getRentalList(dispatch)({
+          onSuccess() {
+            setRefreshing(false);
+          },
+          onFailure() {
+            setRefreshing(false);
+          },
+        });
+      }}
     />
   );
 };

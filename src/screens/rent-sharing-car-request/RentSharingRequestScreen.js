@@ -34,10 +34,17 @@ const RentSharingRequestScreen = ({
     state => state.sharing.lastestSharing._id
   );
 
+  // for notification
+  const { selectedId } = navigation.state.params;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    getRentalRequestBySharing(dispatch)(lastedSharingId);
+    if (selectedId) {
+      getRentalRequestBySharing(dispatch)(selectedId);
+    } else {
+      getRentalRequestBySharing(dispatch)(lastedSharingId);
+    }
   }, []);
 
   // console.log(rentalRequestList);

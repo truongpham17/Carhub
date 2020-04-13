@@ -16,7 +16,24 @@ import {
 const INITIAL_STATE = {
   data: [],
   total: 0,
-  rentalSearch: {},
+  rentalSearch: {
+    startLocation: {
+      geometry: {
+        lat: 10.848269,
+        lng: 106.7750287,
+      },
+      address:
+        '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
+    },
+    endLocation: {
+      geometry: {
+        lat: 10.848269,
+        lng: 106.7750287,
+      },
+      address:
+        '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
+    },
+  },
   selectedCar: null,
   loading: false,
   pickOffHub: {},
@@ -38,7 +55,10 @@ export default (state = INITIAL_STATE, action) => {
     case GET_CAR_FAILURE:
       return { ...state, loading: false };
     case SET_RENTAL_SEARCH:
-      return { ...state, rentalSearch: action.payload };
+      return {
+        ...state,
+        rentalSearch: { ...state.rentalSearch, ...action.payload },
+      };
     case SET_SELECTED_CAR:
       return {
         ...state,

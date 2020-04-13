@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   TouchableOpacity,
   Text,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { ViewContainer, InputForm, Button, ImageSelector } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import { NavigationType, UserType } from 'types';
@@ -16,11 +16,12 @@ import colors from 'Constants/colors';
 import {
   checkCarByVin,
   getCustomerPreviousCarList,
-  setValue,
+  setLeaseInfo,
 } from '@redux/actions/lease';
 import { selectImage } from 'Utils/images';
 import Clarifai from 'clarifai';
 import { CLARIFY_KEY } from 'Constants/key';
+import { setPopUpData } from '@redux/actions';
 import Seperator from './Seperator';
 
 const clarifai = new Clarifai.App({
@@ -30,31 +31,26 @@ const clarifai = new Clarifai.App({
 process.nextTick = setImmediate;
 
 type PropTypes = {
-  checkCarByVin: () => void,
-  getCustomerPreviousCarList: () => void,
-  setValue: () => void,
   navigation: NavigationType,
   loading: Boolean,
   user: UserType,
   vin: String,
   usingYears: String,
-  odometers: String,
+  odometer: String,
   images: [],
 };
 
 const HostScreen = ({
-  checkCarByVin,
   navigation,
   loading,
   user,
   vin,
   usingYears,
-  odometers,
-  getCustomerPreviousCarList,
-  setValue,
+  odometer,
   images,
 }: PropTypes) => {
   const [loadingRecognize, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const base64Refs = useRef([]);
 
   const predict = async image => {
@@ -65,17 +61,19 @@ const HostScreen = ({
   };
 
   const handleChangeVin = vin => {
-    setValue({ vin });
+    setLeaseInfo(dispatch)({ vin });
   };
   const handleChangeUsingYears = usingYears => {
-    setValue({ usingYears });
+    setLeaseInfo(dispatch)({ usingYears });
   };
-  const handleChangeOdometers = odometers => {
-    setValue({ odometers });
+  const handleChangeOdometers = odometer => {
+    setLeaseInfo(dispatch)({ odometer });
   };
   const handleAddImage = () => {
     selectImage(async image => {
-      setValue({ images: [...images, { uri: image.uri, key: image.key }] });
+      setLeaseInfo(dispatch)({
+        images: [...images, { uri: image.uri, key: image.key }],
+      });
       // setImages(images => [...images, { uri: image.uri, key: image.key }]);
       base64Refs.current.push({ data: image.data, key: image.key });
       // console.log('start analyze data');
@@ -85,7 +83,9 @@ const HostScreen = ({
   };
 
   const handleRemoveImage = key => {
-    setValue({ images: images.filter(image => image.key !== key) });
+    setLeaseInfo(dispatch)({
+      images: images.filter(image => image.key !== key),
+    });
     // setImages(images => images.filter(image => image.key !== key));
     base64Refs.current = base64Refs.current.filter(image => image.key !== key);
   };
@@ -94,61 +94,67 @@ const HostScreen = ({
     navigation.pop();
   };
 
-  const handleTestImage = async () => {
+  const validateData = () => {
     if (images.length === 1) {
       Alert.alert('Please add your car images');
     } else if (!vin) {
       Alert.alert('Please input VIN');
     } else if (isNaN(usingYears) || !usingYears) {
       Alert.alert('Please input using year', 'Using years must be a number');
-    } else if (isNaN(odometers) || !odometers) {
-      Alert.alert('Please input odometers', 'Odometers must be a number');
+    } else if (isNaN(odometer) || !odometer) {
+      Alert.alert('Please input odometer', 'Odometers must be a number');
     } else {
-      setLoading(true);
-      const errors = [];
-      const predictions = await Promise.all(
-        base64Refs.current.map(base64 => predict(base64.data))
-      );
+      return true;
+    }
+  };
 
-      predictions.forEach((prediction, index) => {
-        const { concepts } = prediction.outputs[0].data;
-        let isValidate = false;
-        for (let i = 0; i < concepts.length; i++) {
-          console.log('name: ', concepts[i].name);
-          if (
-            concepts[i].name.includes('car') ||
-            concepts[i].name.includes('vehicle')
-          ) {
-            isValidate = true;
-            break;
-          }
+  const handleTestImage = async () => {
+    if (!validateData()) return;
+
+    setLoading(true);
+    const errors = [];
+    const predictions = await Promise.all(
+      base64Refs.current.map(base64 => predict(base64.data))
+    );
+
+    predictions.forEach((prediction, index) => {
+      const { concepts } = prediction.outputs[0].data;
+      let isValidate = false;
+      for (let i = 0; i < concepts.length; i++) {
+        if (
+          concepts[i].name.includes('car') ||
+          concepts[i].name.includes('vehicle')
+        ) {
+          isValidate = true;
+          break;
         }
-        if (!isValidate) {
-          errors.push(index);
-        }
-      });
-
-      setLoading(false);
-
-      if (errors.length > 0) {
-        setTimeout(() => {
-          Alert.alert(
-            'Cannot recognize your car',
-            'It seem like you choose the wrong images of your car, we can not recognize them, please try again!'
-          );
-        }, 300);
-      } else {
-        handleNextStep();
       }
+      if (!isValidate) {
+        errors.push(index);
+      }
+    });
+
+    setLoading(false);
+
+    if (errors.length > 0) {
+      setPopUpData(dispatch)({
+        popupType: 'error',
+        title: 'Cannot recognize your car',
+        description:
+          'It seem like you choose the wrong images of your car, we can not recognize them, please try again!',
+        modalVisible: true,
+      });
+    } else {
+      handleNextStep();
     }
   };
 
   const handleNextStep = () => {
-    checkCarByVin(
+    checkCarByVin(dispatch)(
       {
         vin,
         usingYears,
-        odometers,
+        odometer,
         images,
       },
       {
@@ -167,7 +173,7 @@ const HostScreen = ({
   };
 
   const handlePreviousCar = () => {
-    getCustomerPreviousCarList(
+    getCustomerPreviousCarList(dispatch)(
       { id: user._id },
       {
         onSuccess: () => navigation.navigate('HostListCarScreen'),
@@ -209,9 +215,9 @@ const HostScreen = ({
       />
       <InputForm
         label="Odometers"
-        value={odometers}
+        value={odometer}
         onChangeText={handleChangeOdometers}
-        placeholder="Type odometers..."
+        placeholder="Type odometer..."
         containerStyle={{ marginVertical: scaleVer(16) }}
         keyboardType="numeric"
       />
@@ -235,7 +241,7 @@ const HostScreen = ({
       <Button
         style={{ marginVertical: scaleVer(32) }}
         label="Next step"
-        onPress={handleTestImage}
+        onPress={handleNextStep}
       />
     </ViewContainer>
   );
@@ -253,14 +259,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(
-  state => ({
-    loading: state.lease.loading,
-    user: state.user,
-    vin: state.lease.vin,
-    usingYears: state.lease.usingYears,
-    odometers: state.lease.odometers,
-    images: state.lease.images,
-  }),
-  { checkCarByVin, getCustomerPreviousCarList, setValue }
-)(HostScreen);
+export default connect(state => ({
+  loading: state.lease.loading,
+  user: state.user,
+  vin: state.lease.vin,
+  usingYears: state.lease.usingYears,
+  odometer: state.lease.odometer,
+  images: state.lease.images,
+}))(HostScreen);

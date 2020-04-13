@@ -29,7 +29,7 @@ const CarItem = ({ data, choosePreviousCar }: PropTypes) => {
       {
         vin: data.VIN,
         usingYears: data.usingYears,
-        odometers: data.odometer,
+        odometer: data.odometer,
       },
       {
         onSuccess: () => data.navigation.navigate('HostScreen'),

@@ -1,36 +1,28 @@
 import React, { useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  FlatList,
-  Alert,
-} from 'react-native';
-import { connect } from 'react-redux';
+import { Text, Alert } from 'react-native';
+import { connect, useDispatch } from 'react-redux';
 import { ViewContainer, InputForm, Button, DatePicker } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType, CarType } from 'types';
-import { scaleHor, scaleVer } from 'Constants/dimensions';
-import { shadowStyle } from 'Constants';
-import colors from 'Constants/colors';
-import { checkHostHubInfo } from '@redux/actions/lease';
+import { NavigationType } from 'types';
+import { scaleVer } from 'Constants/dimensions';
+import { checkCarModelAvailable } from '@redux/actions/lease';
+import moment from 'moment';
 
 type PropTypes = () => {
   navigation: NavigationType,
-  checkHostHubInfo: () => void,
   loading: Boolean,
-  InfoFromVin: [],
+  infoFromVin: [],
 };
 
-const HostHubScreen = ({
-  checkHostHubInfo,
-  loading,
-  navigation,
-  InfoFromVin,
-}: PropTypes) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
+  const dispatch = useDispatch();
+  const today = new Date();
+  const [startDate, setStartDate] = useState(today);
+  const [endDate, setEndDate] = useState(
+    moment(today)
+      .add(30, 'day')
+      .toDate()
+  );
   const [cardNumber, setCardNumber] = useState('');
   const [selectedHub, setSelectedHub] = useState('');
 
@@ -45,8 +37,8 @@ const HostHubScreen = ({
     } else if (startDate >= endDate) {
       Alert.alert('The selected date is wrong');
     } else {
-      const name = `${InfoFromVin[1].value} ${InfoFromVin[3].value} ${InfoFromVin[4].value}`;
-      checkHostHubInfo(
+      const name = `${infoFromVin[1].value} ${infoFromVin[3].value} ${infoFromVin[4].value}`;
+      checkCarModelAvailable(dispatch)(
         { startDate, endDate, cardNumber, selectedHub, name },
         {
           onSuccess: () => navigation.navigate('HostReviewScreen'),
@@ -118,10 +110,7 @@ const HostHubScreen = ({
   );
 };
 
-export default connect(
-  state => ({
-    loading: state.lease.loading,
-    InfoFromVin: state.lease.InfoFromVin,
-  }),
-  { checkHostHubInfo }
-)(HostHubScreen);
+export default connect(state => ({
+  loading: state.lease.loading,
+  infoFromVin: state.lease.infoFromVin,
+}))(HostHubScreen);

@@ -3,7 +3,12 @@
  */
 
 // cuong
+<<<<<<< HEAD
 export const API_URL = 'http://192.168.1.33:5068/';
+=======
+export const API_URL = 'http://192.168.1.106:5068/';
+// export const API_URL = 'https://car-hub-production.herokuapp.com/';
+>>>>>>> f35454197f9a1f4b2bf30a01e9fb9e3ba972d88c
 
 // truong
 // export const API_URL = 'http://192.168.1.33:5068/';
