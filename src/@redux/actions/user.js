@@ -10,6 +10,7 @@ import {
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILURE,
+  SIGN_OUT,
 } from '@redux/constants/user';
 
 export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
@@ -30,7 +31,7 @@ export function signIn({ username, password }, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: SIGN_IN_FAILURE, payload: error });
+      dispatch({ type: SIGN_IN_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };
@@ -78,8 +79,14 @@ export function addLicense(data, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: ADD_LICENSE_FAILURE, payload: error });
+      dispatch({ type: ADD_LICENSE_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };
+}
+
+export function signOut(dispatch) {
+  dispatch({
+    type: SIGN_OUT,
+  });
 }

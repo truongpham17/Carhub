@@ -27,7 +27,7 @@ export function getHubList(_, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: GET_HUB_FAILURE, payload: error });
+      dispatch({ type: GET_HUB_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };

@@ -1,10 +1,15 @@
-import moment from 'moment';
+import { Linking, Platform } from 'react-native';
 
 const defaultFunction = () => {};
-const subtractDate = (fromDate, toDate) => {
-  const momentFromDate = moment(fromDate);
-  const momentToDate = moment(toDate);
-  const duration = momentToDate.diff(momentFromDate, 'days');
-  return duration;
-};
-export { defaultFunction, subtractDate };
+
+function openUrl(url: string): Promise<any> {
+  return Linking.openURL(url);
+}
+export function openSmsUrl(phone: string, body: string): Promise<any> {
+  return openUrl(`sms:${phone}${getSMSDivider()}`);
+}
+function getSMSDivider(): string {
+  return Platform.OS === 'ios' ? '&' : '?';
+}
+
+export { defaultFunction };

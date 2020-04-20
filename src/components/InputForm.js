@@ -135,10 +135,10 @@ const InputForm = ({
               isVisible={datePickerVisible}
               mode="date"
               onConfirm={date => {
-                onChangeText(date);
                 setDatePickerVisible(false);
+                onChangeText(date);
               }}
-              date={new Date()}
+              date={new Date(value)}
               onCancel={() => setDatePickerVisible(false)}
             />
           </View>

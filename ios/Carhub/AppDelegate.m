@@ -13,6 +13,7 @@
 #import <RNFirebaseNotifications.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import "RNFirebaseMessaging.h"
+#import "RNPaypal.h"
 
 
 @implementation AppDelegate
@@ -22,6 +23,7 @@
   [FIRApp configure];
   [RNFirebaseNotifications configure];
   [GMSServices provideAPIKey:@"AIzaSyAUkXe8bNKtkVADuufFsYQZGrTpxWQCW4Y"];
+  [[RNPaypal sharedInstance] configure];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"Carhub"
@@ -36,6 +38,13 @@
   [self.window makeKeyAndVisible];
   return YES;
 }
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
+  options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [[RNPaypal sharedInstance] application:application openURL:url options:options];
+}
+ 
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
   [[RNFirebaseNotifications instance] didReceiveLocalNotification:notification];

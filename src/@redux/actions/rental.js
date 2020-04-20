@@ -58,10 +58,11 @@ export const getRentalList = dispatch => async (
   }
 };
 
-export const setRentDetailId = _id => ({
-  type: SET_RENT_DETAIL_ID,
-  payload: _id,
-});
+export const setRentDetailId = dispatch => _id =>
+  dispatch({
+    type: SET_RENT_DETAIL_ID,
+    payload: _id,
+  });
 
 export const updateSpecificRental = (
   data,
@@ -122,7 +123,10 @@ export const updateSpecificRental = (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: UPDATE_RENTAL_ITEM_FAILURE, payload: error });
+    dispatch({
+      type: UPDATE_RENTAL_ITEM_FAILURE,
+      payload: error.response.data,
+    });
     callback.onFailure();
   }
 };

@@ -6,18 +6,18 @@ import {
 
 const INITIAL_STATE = {
   data: {},
-  isLoading: false,
+  loading: false,
   error: '',
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_RENTAL_ITEM_REQUEST:
-      return { ...state, isLoading: true };
+      return { ...state, loading: true };
     case GET_RENTAL_ITEM_SUCCESS:
-      return { ...state, isLoading: false, data: action.payload };
+      return { ...state, loading: false, data: action.payload };
     case GET_RENTAL_ITEM_FAILURE:
-      return { ...state, isLoading: false, error: action.payload };
+      return { ...state, loading: false, error: action.payload };
     default:
       return { ...state };
   }

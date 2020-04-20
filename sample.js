@@ -2,7 +2,7 @@
 // import { View, StyleSheet } from 'react-native';
 // import { ViewContainer } from 'Components';
 
-// import { connect } from 'react-redux';
+// import {  useDispatch } from 'react-redux';
 
 // import { NavigationType } from 'types';
 
@@ -11,6 +11,7 @@
 // };
 
 // const Test = ({ navigation }: PropTypes) => {
+// const dispatch = useDispatch();
 //   const onBackPress = () => {
 //     navigation.pop();
 //   };
@@ -24,5 +25,5 @@
 //   );
 // };
 
-// export default connect(state => ({}), {})(Test);
+// export default (Test);
 // const styles = StyleSheet.create({});

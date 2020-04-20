@@ -15,6 +15,7 @@ const colors = {
   successLight: '#34B586',
   error: '#FF3F34',
   errorLight: '#FF655D',
+  tintColor: '#77C73B',
 };
 
 export default colors;
