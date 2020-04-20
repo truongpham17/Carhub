@@ -21,7 +21,7 @@ import CarSlider from './CarSlider';
 
 type PropsType = {
   navigation: NavigationType,
-  isLoading: Boolean,
+  loading: Boolean,
   sharing: [SharingType],
   getSharing: () => void,
   setSelectSharing: () => void,
@@ -32,7 +32,7 @@ const INIT_LNG_DELTA = 0.0421;
 
 const SelectSharingCarScreen = ({
   navigation,
-  isLoading,
+  loading,
   sharing,
   getSharing,
   setSelectSharing,
@@ -111,7 +111,7 @@ const SelectSharingCarScreen = ({
     );
   };
 
-  if (isLoading)
+  if (loading)
     return (
       <View
         style={[
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
 export default connect(
   state => ({
     sharing: state.sharing.data,
-    isLoading: state.sharing.isLoading,
+    loading: state.sharing.loading,
   }),
   { getSharing, setSelectSharing }
 )(SelectSharingCarScreen);

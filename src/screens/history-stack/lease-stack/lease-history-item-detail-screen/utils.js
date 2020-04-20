@@ -216,7 +216,6 @@ export function listenFirebaseStatus({
               'You has been placing your car at the hub successfully! Thank you for using service',
             onConfirm() {
               getLeaseList(dispatch)();
-              navigation.pop();
             },
           });
 

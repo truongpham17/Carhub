@@ -15,6 +15,7 @@ import {
   createNotificationChannel,
 } from 'services/notification';
 import firebase from 'react-native-firebase';
+import { fromRight } from 'react-navigation-transitions';
 
 import SearchCarScreen from './rental-stack/search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
@@ -41,8 +42,13 @@ import RentHistoryItemDetailScreen from './history-stack/rental-stack/rent-histo
 import LeaseHistoryItemDetailScreen from './history-stack/lease-stack/lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
 import TimeLineScreen from './history-stack/time-line-screen/TimeLineScreen';
 import SharingDetailScreen from './history-stack/rental-stack/sharing-detail-screen/SharingDetailScreen';
-import RentSharingRequestScreen from './history-stack/rental-stack/rent-sharing-car-request/RentSharingRequestScreen';
 import ScanScreen from './history-stack/rental-stack/scan-screen/ScanScreen';
+
+import SelectPriceScreen from './history-stack/sharing-stack/select-price-screen/SelectPriceScreen';
+import SelectShareAddressScreen from './history-stack/sharing-stack/select-address-screen/SelectShareAddressScreen';
+import SharingConfirmationScreen from './history-stack/sharing-stack/sharing-confirmation-screen/SharingConfirmationScreen';
+import SelectTimeScreen from './history-stack/sharing-stack/select-time-screen/SelectTimeScreen';
+import SharingInformationScreen from './history-stack/sharing-stack/sharing-information-screen/SharingInformationScreen';
 
 import ProfileScreen from './profile-stack/profile-screen/ProfileScreen';
 
@@ -81,6 +87,29 @@ const LeaseStack = createStackNavigator(
     // initialRouteName: 'HostScreen',
   }
 );
+
+const SharingStack = createStackNavigator(
+  {
+    SelectTimeScreen,
+    SelectPriceScreen,
+    SelectShareAddressScreen,
+    SharingConfirmationScreen,
+  },
+  {
+    initialRouteName: 'SelectTimeScreen',
+    headerMode: 'none',
+    transitionConfig: () => fromRight(),
+  }
+);
+const ProfileStack = createStackNavigator(
+  {
+    ProfileScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
 const HistoryStack = createStackNavigator(
   {
     HistoryScreen,
@@ -90,16 +119,9 @@ const HistoryStack = createStackNavigator(
     SelectMapScreen,
     SelectLocationScreen,
     TimeLineScreen,
-    RentSharingRequestScreen,
     ScanScreen,
-  },
-  {
-    headerMode: 'none',
-  }
-);
-const ProfileStack = createStackNavigator(
-  {
-    ProfileScreen,
+    SharingStack,
+    SharingInformationScreen,
   },
   {
     headerMode: 'none',

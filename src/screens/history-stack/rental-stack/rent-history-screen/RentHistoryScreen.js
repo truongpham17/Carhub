@@ -9,14 +9,9 @@ import RentHistoryItem from './RentHistoryItem';
 type PropsType = {
   rentList: [RentDetailType],
   navigation: NavigationType,
-  setRentDetailId: () => void,
 };
 
-const RentHistoryScreen = ({
-  rentList,
-  navigation,
-  setRentDetailId,
-}: PropsType) => {
+const RentHistoryScreen = ({ rentList, navigation }: PropsType) => {
   const dispatch = useDispatch();
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -24,7 +19,7 @@ const RentHistoryScreen = ({
   }, []);
 
   const onGetDetail = id => {
-    setRentDetailId(id);
+    setRentDetailId(dispatch)(id);
     navigation.navigate('RentHistoryItemDetailScreen');
   };
   // eslint-disable-next-line react/prop-types
@@ -55,9 +50,6 @@ const RentHistoryScreen = ({
   );
 };
 
-export default connect(
-  state => ({
-    rentList: state.rental.data.rentals,
-  }),
-  { setRentDetailId }
-)(RentHistoryScreen);
+export default connect(state => ({
+  rentList: state.rental.data.rentals,
+}))(RentHistoryScreen);

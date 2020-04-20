@@ -8,6 +8,7 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import { NavigationType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
+import { formatDate } from 'Utils/date';
 import TimeLineItem from './TimeLineItem';
 
 type PropTypes = {
@@ -22,8 +23,8 @@ const TimelineScreen = ({ navigation }: PropTypes) => {
   const data = useSelector(state => state.log.data);
 
   const timelineData = data.map(item => ({
-    date: moment(item.createdAt).format('MMM DD YYYY'),
     detail: item.title,
+    date: formatDate(item.createdAt, true),
   }));
   useEffect(() => {
     getLogs(dispatch)(id);

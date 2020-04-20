@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import { Rating, Icon } from 'react-native-elements';
-import { getSvg } from 'Assets/svgs';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
@@ -25,6 +24,7 @@ type PropTypes = {
   distance: Number,
   rentalType: 'SHARING' | 'HUB',
   onPressInfo: () => void,
+  discount?: number,
 };
 
 const ConfigItem = ({ icon, value, special }) => (
@@ -49,12 +49,12 @@ const SelectCarItem = ({
   distance,
   rentalType,
   onPressInfo,
+  discount,
 }: PropTypes) => (
   <View style={styles.container}>
     <View style={{ overflow: 'hidden' }}>
       {rentalType === 'SHARING' && (
         <>
-          {/* <TouchableOpacity style={styles.exclamation}> */}
           <Icon
             type="simple-line-icon"
             name="exclamation"
@@ -63,7 +63,7 @@ const SelectCarItem = ({
             containerStyle={styles.exclamation}
             onPress={() => onPressInfo(_id)}
           />
-          <DiscountFlag discount={0.5} />
+          <DiscountFlag discount={discount} />
         </>
       )}
 
@@ -153,9 +153,11 @@ const styles = StyleSheet.create({
   },
   exclamation: {
     position: 'absolute',
-    right: 8,
-    top: 8,
+    right: 0,
+    top: 0,
     zIndex: 2,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
   },
 });
 

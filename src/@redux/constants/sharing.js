@@ -27,3 +27,21 @@ export const GET_LATEST_SHARING_FAILURE = 'get-latest-sharing-failure';
 export const CONFIRM_SHARING_REQUEST = 'confirm-sharing-request';
 export const CONFIRM_SHARING_SUCCESS = 'confirm-sharing-success';
 export const CONFIRM_SHARING_FAILURE = 'confirm-sharing-failure';
+
+export const CREATE_SHARING_REQUEST = 'create-sharing-request';
+export const CREATE_SHARING_SUCCESS = 'create-sharing-success';
+export const CREATE_SHARING_FAILURE = 'create-sharing-failure';
+
+export const CANCEL_SHARING_REQUEST = 'cancel-sharing-request';
+export const CANCEL_SHARING_SUCCESS = 'cancel-sharing-success';
+export const CANCEL_SHARING_FAILURE = 'cancel-sharing-failure';
+
+export const ACCEPT_SHARING_RENTAL_REQUEST = 'accept-sharing-rental-request';
+export const ACCEPT_SHARING_RENTAL_SUCCESS = 'accept-sharing-rental-success';
+export const ACCEPT_SHARING_RENTAL_FAILURE = 'accept-sharing-rental-failure';
+
+export const CANCEL_SHARING_RENTAL_REQUEST = 'cancel-sharing-rental-request';
+export const CANCEL_SHARING_RENTAL_SUCCESS = 'cancel-sharing-rental-success';
+export const CANCEL_SHARING_RENTAL_FAILURE = 'cancel-sharing-rental-failure';
+
+export const SET_SHARING_DATA = 'set-sharing-data';

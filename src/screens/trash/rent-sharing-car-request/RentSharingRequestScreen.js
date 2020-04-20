@@ -17,7 +17,7 @@ import SharingRequestItem from './SharingRequestItem';
 
 type PropsType = {
   navigation: NavigationType,
-  isLoading: Boolean,
+  loading: Boolean,
   rentalRequestList: [RentalRequestType],
   updateRentalRequest: () => void,
 };
@@ -27,7 +27,7 @@ const RentSharingRequestScreen = ({
   updateRentalRequest,
 }: PropsType) => {
   const [refresh, setRefresh] = useState(false);
-  const isLoading = useSelector(state => state.sharing.isLoading);
+  const loading = useSelector(state => state.sharing.loading);
   const requestList = useSelector(state => state.sharing.rentalRequestList);
 
   const lastedSharingId = useSelector(
@@ -109,7 +109,7 @@ const RentSharingRequestScreen = ({
       title="Rental Request"
       haveBackHeader
       onBackPress={() => navigation.pop()}
-      isLoading={isLoading}
+      loading={loading}
     >
       <FlatList
         refreshing={refresh}

@@ -32,6 +32,7 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
             description: 'You has been created lease request successfully',
             onConfirm() {
               navigation.navigate('HostScreen');
+              navigation.navigate('HistoryScreen');
             },
             modalVisible: true,
             grandResponder: false,
@@ -66,7 +67,7 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
       />
 
       <Button
-        style={{ marginVertical: scaleVer(32) }}
+        style={{ marginBottom: scaleVer(12) }}
         label="Submit"
         onPress={handleNextStep}
       />

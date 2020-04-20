@@ -33,6 +33,8 @@ const INITIAL_STATE = {
       address:
         '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
     },
+    // startLocation: {},
+    // endLocation: {},
   },
   selectedCar: null,
   loading: false,

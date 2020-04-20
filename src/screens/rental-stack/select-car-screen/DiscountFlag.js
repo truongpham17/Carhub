@@ -9,24 +9,28 @@ const dimension = scaleHor(72);
 type PropTypes = {
   discount: number,
 };
-const DiscountFlag = ({ discount }: PropTypes) => (
-  <View style={styles.off}>
-    <Animated.View
-      style={{
-        width: 2 * dimension,
-        height: 2 * dimension,
-        backgroundColor: '#DFF5FD',
-        transform: [{ rotate: '45deg' }],
-        position: 'absolute',
-        left: -dimension,
-        top: -dimension,
-      }}
-    ></Animated.View>
-    <Animated.Text style={styles.text}>
-      -{Math.round(discount * 100)}% OFF
-    </Animated.Text>
-  </View>
-);
+const DiscountFlag = ({ discount }: PropTypes) => {
+  console.log('discount:', discount);
+  return (
+    <View style={styles.off}>
+      <Animated.View
+        style={{
+          width: 2 * dimension,
+          height: 2 * dimension,
+          backgroundColor: '#DFF5FD',
+          transform: [{ rotate: '45deg' }],
+          position: 'absolute',
+          left: -dimension,
+          top: -dimension,
+          zIndex: 2,
+        }}
+      ></Animated.View>
+      <Animated.Text style={styles.text}>
+        -{Math.round(discount * 100)}% OFF
+      </Animated.Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   off: {
@@ -40,10 +44,11 @@ const styles = StyleSheet.create({
   text: {
     ...textStyle.bodyTextBold,
     color: colors.error,
-    marginTop: scaleHor(36),
+    marginTop: scaleHor(32),
     marginStart: scaleHor(8),
 
     transform: [{ rotate: '-45deg' }],
+    zIndex: 3,
   },
 });
 

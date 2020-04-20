@@ -1,7 +1,7 @@
 import firebase from 'react-native-firebase';
 // Optional flow type
 import type { RemoteMessage } from 'react-native-firebase';
-import { getLeaseList } from '@redux/actions';
+import { getLeaseList, getRentalList, setRentDetailId } from '@redux/actions';
 
 export default async (message: RemoteMessage) =>
   // handle your message
@@ -48,6 +48,17 @@ export function processNotificationInfo({ notification, navigate, dispatch }) {
             },
             onFailure() {
               navigate('MainApp');
+            },
+          });
+          break;
+        }
+        case 'SharingInformationScreen': {
+          getRentalList(dispatch)({
+            onSuccess() {
+              setRentDetailId(dispatch)(data.selectedId);
+              navigate('SharingInformationScreen', {
+                newId: data.newId,
+              });
             },
           });
           break;

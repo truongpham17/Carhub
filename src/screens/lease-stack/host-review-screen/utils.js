@@ -1,8 +1,24 @@
 import moment from 'moment';
-import { formatDate } from 'Utils/date';
+import {
+  formatDate,
+  substractDate,
+  formatDayLabel,
+  formatPrice,
+} from 'Utils/date';
 
 export function getData(lease, user) {
+  const daydiff = substractDate(lease.startDate, lease.endDate);
   return [
+    {
+      id: 'customer',
+      label: 'Customer',
+      content: user.username,
+    },
+    {
+      id: 'phone',
+      label: 'Phone',
+      content: user.phone,
+    },
     {
       id: 'name',
       label: 'Car name',
@@ -26,18 +42,9 @@ export function getData(lease, user) {
     {
       id: 'duration',
       label: 'Duration',
-      content: `${moment(lease.endDate).diff(lease.startDate, 'days')} days`,
+      content: formatDayLabel(daydiff),
     },
-    {
-      id: 'customer',
-      label: 'Customer name',
-      content: user.username,
-    },
-    {
-      id: 'phone',
-      label: 'Phone',
-      content: user.phone,
-    },
+
     {
       id: 'location',
       label: 'Hub location',
@@ -51,9 +58,7 @@ export function getData(lease, user) {
     {
       id: 'revenue',
       label: `You can earn up to`,
-      content:
-        Number(lease.carModel.price) *
-        moment(lease.endDate).diff(lease.startDate, 'days'),
+      content: formatPrice(Number(lease.carModel.price) * daydiff),
     },
   ];
 }

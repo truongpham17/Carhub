@@ -55,7 +55,9 @@ const ListItem = ({
             <Text
               style={[
                 styles.detail,
-                nextIcon ? { marginEnd: scaleHor(8) } : {},
+                nextIcon
+                  ? { marginEnd: scaleHor(8), ...textStyle.bodyTextBold }
+                  : {},
               ]}
             >
               {detail}

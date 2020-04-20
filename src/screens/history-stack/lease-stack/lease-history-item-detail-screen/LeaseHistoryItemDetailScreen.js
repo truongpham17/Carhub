@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ViewContainer, ListItem, Button, QRCodeGenModal } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { useSelector, useDispatch } from 'react-redux';
@@ -31,7 +31,7 @@ const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
     state => state.lease.data.leases
   );
 
-  const isLoading = useSelector(state => state.lease.loading);
+  const loading = useSelector(state => state.lease.loading);
   const [valueForQR, setValueForQR] = useState('');
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
   const { selectedId, showStatusPopup } = navigation.state.params;
@@ -134,28 +134,33 @@ const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
       title="Detail"
       onBackPress={onBackPress}
       scrollable
-      loading={isLoading}
+      loading={loading}
     >
-      {showAttr.map((item, index) => (
-        <ListItem
-          key={index.toString()}
-          label={item.label}
-          detail={item.value}
-          type="detail"
-          pressable={false}
-          showSeparator={index !== showAttr.length - 1}
-        />
-      ))}
-      <TouchableOpacity
-        style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
-        onPress={() =>
-          navigation.navigate('TimeLineScreen', { id: leaseDetail._id })
-        }
-      >
-        <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
-          Time line
-        </Text>
-      </TouchableOpacity>
+      <View style={{ flex: 1 }}>
+        {showAttr.map((item, index) => (
+          <ListItem
+            key={index.toString()}
+            label={item.label}
+            detail={item.value}
+            type="detail"
+            pressable={false}
+            showSeparator={index !== showAttr.length - 1}
+          />
+        ))}
+        <TouchableOpacity
+          style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
+          onPress={() =>
+            navigation.navigate('TimeLineScreen', { id: leaseDetail._id })
+          }
+        >
+          <Text
+            style={[textStyle.bodyTextBold, { color: colors.successLight }]}
+          >
+            Time line
+          </Text>
+        </TouchableOpacity>
+      </View>
+
       {renderButton()}
 
       <QRCodeGenModal

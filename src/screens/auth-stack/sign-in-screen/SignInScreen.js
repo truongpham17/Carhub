@@ -45,7 +45,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   };
 
   return (
-    <ViewContainer loading={loading} requestError={error}>
+    <ViewContainer requestError={error}>
       {/* <View style={{ flex: 1 }}> */}
       <Text
         style={[

@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { substractDate } from 'Utils/date';
-import { changeTransactionStatus } from 'Utils/database';
+import { changeTransactionStatus, changeSharingStatus } from 'Utils/database';
 import {
   WAITING_FOR_SCAN,
   COMPLETED,
@@ -9,7 +9,9 @@ import {
   CANCEL,
   TRANSACTION_ERROR,
   USER_CANCEL,
+  WAITING_FOR_USER_CONFIRM_NEXT,
 } from 'Constants/status';
+import { RentDetailType } from 'types';
 import firebase from 'react-native-firebase';
 import {
   getRentalList,
@@ -17,6 +19,7 @@ import {
   cancelPopup,
   confirmTransaction,
   getCar,
+  confirmSharing,
 } from '@redux/actions';
 
 export function getActionLabel(status) {
@@ -29,7 +32,7 @@ export function getActionLabel(status) {
     case 'PAST':
       return 'HIRE THIS CAR';
     case 'SHARING':
-      return 'CANCEL SHARING';
+      return 'SHARING DETAIL';
     case 'SHARED':
       return 'VIEW SHARING';
     case 'SHARE_REQUEST/ACCEPTED':
@@ -91,13 +94,23 @@ export function generateQRCodeValue(id) {
   };
 }
 
-export function listenFirebaseStatus({ rental, onCloseModal, dispatch }) {
+export function listenFirebaseStatus({
+  rental,
+  onCloseModal,
+  dispatch,
+}: {
+  rental: RentDetailType,
+}) {
   changeTransactionStatus(rental._id, WAITING_FOR_SCAN);
-  firebase
+  return firebase
     .database()
     .ref(`scanQRCode/${rental._id}`)
     .on('value', async snapShot => {
+      console.log(snapShot);
+      if (!snapShot) return;
       const val = snapShot.val();
+      console.log('value from firebaase', val);
+      if (!val) return;
 
       switch (val.status) {
         case WAITING_FOR_CONFIRM: {
@@ -109,23 +122,55 @@ export function listenFirebaseStatus({ rental, onCloseModal, dispatch }) {
           });
           break;
         }
+        case WAITING_FOR_USER_CONFIRM_NEXT:
         case WAITING_FOR_USER_CONFIRM: {
           onCloseModal();
           const { car } = val;
+          console.log(car);
+          if (!car || car === 'undefined') return;
           const carDetail = await getCar(car);
           if (carDetail) {
             setPopUpData(dispatch)({
               title: 'Confirm take car?',
               description: `Are you sure to take the ${carDetail.carModel.name} with license plates: ${carDetail.licensePlates}?`,
-              modalVisible: true,
               onDecline() {
-                cancelPopup(dispatch);
-                changeTransactionStatus(rental._id, USER_CANCEL);
+                setPopUpData(dispatch)({
+                  title: 'Are you sure to decline?',
+                  description: `For preventing disruptive, we just allow customer to decline 3 times per booking. Otherwise, your booking will be cancelled and not be refunded. You already declined ${rental.numberDeclined} time. Continue to decline this car?`,
+                  onConfirm() {
+                    cancelPopup(dispatch);
+                    changeTransactionStatus(rental._id, USER_CANCEL);
+                    confirmTransaction(dispatch)(
+                      {
+                        id: rental._id,
+                        type: 'rental',
+                        toStatus: 'USER_DECLINED',
+                      },
+                      {
+                        onSuccess() {
+                          getRentalList(dispatch)();
+                        },
+                      }
+                    );
+                  },
+                  onDecline() {
+                    changeTransactionStatus(
+                      rental._id,
+                      WAITING_FOR_USER_CONFIRM_NEXT,
+                      car
+                    );
+                  },
+                });
               },
               onConfirm() {
                 cancelPopup(dispatch);
                 confirmTransaction(dispatch)(
-                  { id: rental._id, type: 'rental', car: carDetail._id },
+                  {
+                    id: rental._id,
+                    type: 'rental',
+                    car: carDetail._id,
+                    toStatus: 'CURRENT',
+                  },
                   {
                     onSuccess() {
                       changeTransactionStatus(rental._id, COMPLETED);
@@ -139,7 +184,7 @@ export function listenFirebaseStatus({ rental, onCloseModal, dispatch }) {
               },
             });
           } else {
-            changeTransactionStatus(rental._id, CANCEL);
+            changeTransactionStatus(rental._id, TRANSACTION_ERROR);
             setPopUpData(dispatch)({
               popupType: 'error',
               title: 'Error',
@@ -180,6 +225,77 @@ export function listenFirebaseStatus({ rental, onCloseModal, dispatch }) {
         default: {
           console.log('error');
         }
+      }
+    });
+}
+
+export function listenSharingStatus({ rentDetail, onCloseModal, dispatch }) {
+  return firebase
+    .database()
+    .ref(`sharing/${rentDetail.shareRequest}`)
+    .on('value', snapShot => {
+      const val = snapShot.val();
+      switch (val.status) {
+        case WAITING_FOR_CONFIRM:
+          onCloseModal();
+          setPopUpData(dispatch)({
+            title: 'Wait for user confirm',
+            acceptOnly: true,
+          });
+          break;
+        case WAITING_FOR_USER_CONFIRM:
+          setPopUpData(dispatch)({
+            title: 'Confirm receiving car',
+            description: `Confirm receive the ${rentDetail.carModel.name} with license plates: ${rentDetail.car.licensePlates}?`,
+            onConfirm() {
+              cancelPopup(dispatch);
+              confirmSharing(dispatch)(
+                {
+                  id: rentDetail._id,
+                  sharingRequestId: rentDetail.shareRequest,
+                },
+                {
+                  onSuccess() {
+                    changeSharingStatus(rentDetail.shareRequest, COMPLETED);
+                    getRentalList(dispatch)();
+                    setPopUpData(dispatch)({
+                      popupType: 'success',
+                      title: 'Success',
+                      description:
+                        'Transfer car successfully. Thank you for using our service',
+                    });
+                  },
+                  onFailure() {
+                    changeSharingStatus(
+                      rentDetail.shareRequest,
+                      TRANSACTION_ERROR
+                    );
+                    setPopUpData(dispatch)({
+                      popupType: 'error',
+                      title: 'Error',
+                      description:
+                        'There was an error while sharing car. Please try again!',
+                    });
+                  },
+                }
+              );
+            },
+            onDecline() {
+              cancelPopup(dispatch);
+              changeSharingStatus(rentDetail.shareRequest, USER_CANCEL);
+            },
+          });
+
+          break;
+        case CANCEL:
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Transaction denined',
+            description: 'User cancelled transaction. Please try again!',
+          });
+          break;
+        default:
+          console.log('error');
       }
     });
 }

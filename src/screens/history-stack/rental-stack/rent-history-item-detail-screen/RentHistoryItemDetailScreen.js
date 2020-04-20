@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
 import {
   ViewContainer,
@@ -6,39 +6,34 @@ import {
   Button,
   QRCodeGenModal,
   alert,
-  PolicyPopup,
 } from 'Components';
 import { NavigationType, RentDetailType, CarType } from 'types';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import firebase from 'react-native-firebase';
 import { updateSpecificRental, getRentalList } from '@redux/actions/rental';
 import policy from 'Constants/policy';
 
 import { confirmTransaction } from '@redux/actions/transaction';
-import {
-  getSharingByRentalId,
-  getLastestSharingByRental,
-  confirmSharing,
-} from '@redux/actions/sharing';
+import { getSharingByRentalId, confirmSharing } from '@redux/actions/sharing';
 import { changeSharingStatus } from 'Utils/database';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import { substractDate } from 'Utils/date';
 import { setPopUpData, cancelPopup } from '@redux/actions';
-import PriceSelectModal from './PriceSelectModal';
+import { WAITING_FOR_CONFIRM, WAITING_FOR_SCAN } from 'Constants/status';
 import {
   getActionLabel,
   getShowingData,
-  getUpdateRentalData,
   generateQRCodeValue,
   listenFirebaseStatus,
+  listenSharingStatus,
 } from './utils';
 
 type PropTypes = {
   navigation: NavigationType,
   rentDetail: RentDetailType,
-  isLoading: Boolean,
+  loading: Boolean,
   updateSpecificRental: () => void,
   confirmTransaction: () => void,
   getSharingByRentalId: () => void,
@@ -47,56 +42,16 @@ type PropTypes = {
 const RentHistoryItemDetailScreen = ({
   navigation,
   rentDetail,
-  isLoading,
-  updateSpecificRental,
+  loading,
   getSharingByRentalId,
 }: PropTypes) => {
   const dispatch = useDispatch();
   const [valueForQR, setValueForQR] = useState('');
+  const [alreadyOpenListener, setOpenListener] = useState(false);
   const [generateNewQR, setGenerateNewQR] = useState(true);
-  const [priceModalVisible, setPriceModalVisible] = useState(false);
   const [qrCodeModalVisible, setQrCodeModalVisible] = useState(false);
-  const [policyPopupVisible, setPolicyVisible] = useState(false);
   const showAttr = getShowingData(rentDetail);
-
-  const listenerSharing = () => {
-    firebase
-      .database()
-      .ref(`sharing/${rentDetail.shareRequest}`)
-      .on('value', snapShot => {
-        const val = snapShot.val();
-        console.log('come here!!!');
-        switch (val.status) {
-          case 'CONFIRM_BY_HOST':
-            setQrCodeModalVisible(false);
-            setTimeout(() => {
-              alert({
-                title: 'Confirm receiving car',
-                detail: 'Are you sure to confirm receiving car',
-                onConfirm() {
-                  changeSharingStatus(rentDetail._id, 'COMPLETE');
-                  confirmSharing(dispatch)(
-                    { id: rentDetail._id, requestId: rentDetail.shareRequest },
-                    {
-                      onSuccess() {
-                        getRentalList(dispatch)();
-                        console.log('success');
-                      },
-                      onFailure() {
-                        console.log('failure');
-                      },
-                    }
-                  );
-                },
-              });
-            }, 300);
-
-            break;
-          default:
-            console.log('error');
-        }
-      });
-  };
+  const sharingLoading = useSelector(state => state.sharing.loading);
 
   // const { data } = rentDetail;
   const onBackPress = () => {
@@ -110,6 +65,9 @@ const RentHistoryItemDetailScreen = ({
       case 'UPCOMING':
         onRequestTransaction();
         break;
+      case 'SHARING':
+        return navigation.navigate('SharingInformationScreen');
+
       case 'SHARED':
         getSharingByRentalId(
           { rentalId: rentDetail._id },
@@ -120,29 +78,19 @@ const RentHistoryItemDetailScreen = ({
           }
         );
         break;
-      case 'SHARING':
-        updateSpecificRental(
-          {
-            id: rentDetail._id,
-            status: 'CURRENT',
-            log: {
-              type: 'CANCEL_SHARING',
-              title: 'Cancel sharing car',
-            },
-          },
-          {
-            onSuccess() {
-              alert('Cancel sharing successfully');
-            },
-            onFailure() {
-              alert('Something went wrong');
-            },
-          }
-        );
-        break;
       case 'SHARE_REQUEST/ACCEPTED':
-        listenerSharing();
-        changeSharingStatus(rentDetail.shareRequest, 'WAITING_FOR_CONFIRM');
+        changeSharingStatus(rentDetail.shareRequest, WAITING_FOR_SCAN);
+        if (!alreadyOpenListener) {
+          listenSharingStatus({
+            rentDetail,
+            dispatch,
+            onCloseModal() {
+              setQrCodeModalVisible(false);
+            },
+          });
+          setOpenListener(true);
+        }
+
         setValueForQR(JSON.stringify({ id: rentDetail.shareRequest }));
         setQrCodeModalVisible(true);
         break;
@@ -161,13 +109,16 @@ const RentHistoryItemDetailScreen = ({
           cancelPopup(dispatch);
           setValueForQR(JSON.stringify(generateQRCodeValue(rentDetail._id)));
           setQrCodeModalVisible(true);
-          listenFirebaseStatus({
-            dispatch,
-            rental: rentDetail,
-            onCloseModal() {
-              setQrCodeModalVisible(false);
-            },
-          });
+          if (!alreadyOpenListener) {
+            setOpenListener(true);
+            listenFirebaseStatus({
+              dispatch,
+              rental: rentDetail,
+              onCloseModal() {
+                setQrCodeModalVisible(false);
+              },
+            });
+          }
         },
       });
     } else {
@@ -183,36 +134,16 @@ const RentHistoryItemDetailScreen = ({
     }
   };
 
-  const handleSubmitSharing = value => {
-    // Agree sharing
-    setPriceModalVisible(false);
-    navigation.navigate('SelectLocationScreen', {
-      callback(location) {
-        updateSpecificRental(getUpdateRentalData(rentDetail, location, value), {
-          onSuccess() {
-            Alert.alert('Success!');
-          },
-          onFailure() {
-            Alert.alert('Error!');
-            updateSpecificRental({
-              id: rentDetail._id,
-              status: rentDetail.status,
-            });
-          },
-        });
-      },
-    });
-  };
-
   const daysdiff = Math.abs(substractDate(new Date(), rentDetail.endDate));
 
-  const handleViewRequestList = () => {
-    getLastestSharingByRental(dispatch)(rentDetail._id, {
-      onSuccess() {
-        navigation.navigate('RentSharingRequestScreen');
-      },
-      onFailure() {
-        alert('Something wrong here!');
+  const showPolicyPopup = () => {
+    setPopUpData(dispatch)({
+      popupType: 'policy',
+      title: 'Share your rental car',
+      description: policy.SHARE_A_CAR,
+      onConfirm() {
+        cancelPopup(dispatch);
+        navigation.navigate('SharingStack');
       },
     });
   };
@@ -224,7 +155,7 @@ const RentHistoryItemDetailScreen = ({
       onBackPress={onBackPress}
       scrollable
       style={{ paddingBottom: scaleVer(16) }}
-      loading={isLoading}
+      loading={loading || sharingLoading}
     >
       {showAttr.map((item, index) => (
         <ListItem
@@ -257,46 +188,17 @@ const RentHistoryItemDetailScreen = ({
 
       {daysdiff >= 3 && rentDetail.status === 'CURRENT' && (
         <Button
-          label="SHARE TO OTHER"
-          onPress={() => setPolicyVisible(true)}
+          label="SHARE YOUR CAR"
+          onPress={showPolicyPopup}
           style={styles.button}
         />
       )}
-
-      {rentDetail.status === 'SHARING' && (
-        <Button
-          label="List request"
-          onPress={handleViewRequestList}
-          style={styles.button}
-        />
-      )}
-
-      <PriceSelectModal
-        visible={priceModalVisible}
-        onClose={() => setPriceModalVisible(false)}
-        onSubmit={handleSubmitSharing}
-        suggestCost={rentDetail.price * 0.6}
-        maximumCost={rentDetail.price}
-        minimumCost={rentDetail.price * 0.3}
-      />
 
       <QRCodeGenModal
         valueForQR={valueForQR}
         visible={qrCodeModalVisible}
         onClose={() => setQrCodeModalVisible(false)}
         setGenerateNewQR={setGenerateNewQR}
-      />
-
-      <PolicyPopup
-        visible={policyPopupVisible}
-        onClose={() => setPolicyVisible(false)}
-        onConfirm={() => {
-          setPolicyVisible(false);
-          setPriceModalVisible(true);
-        }}
-        onDecline={() => setPolicyVisible(false)}
-        title="Share your rental car"
-        content={policy.SHARE_A_CAR}
       />
     </ViewContainer>
   );
@@ -317,7 +219,7 @@ export default connect(
     rentDetail: state.rental.data.rentals.find(
       item => item._id === state.rental.selectedId
     ),
-    isLoading: state.rental.isLoading,
+    loading: state.rental.loading,
   }),
   {
     updateSpecificRental,

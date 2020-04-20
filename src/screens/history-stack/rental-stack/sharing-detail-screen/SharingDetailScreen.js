@@ -2,39 +2,28 @@ import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { ViewContainer, ListItem } from 'Components';
 import { NavigationType, SharingType } from 'types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Avatar } from 'react-native-elements';
 import { scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
+import { setPopUpData } from '@redux/actions';
 import ItemContainer from './ItemContainer';
 
 type PropsType = {
   navigation: NavigationType,
   // getSharingByRentalId: () => void,
-  isLoading: Boolean,
+  loading: Boolean,
   error: String,
   sharing: SharingType,
 };
 
 const SharingDetailScreen = ({
   navigation,
-  isLoading,
+  loading,
   error,
   sharing,
 }: PropsType) => {
-  // useEffect(() => {
-  //   const rentalId = navigation.getParam(
-  //     'rentalId',
-  //     '5e79bb948dd18a215c0062e0'
-  //   );
-  //   getSharingByRentalId({ rentalId });
-  // }, []);
-
-  // if (isLoading) {
-  //   return <ActivityIndicator />;
-  // }
-
-  // console.log(sharing);
+  const dispatch = useDispatch();
 
   const startDateFormat = moment(sharing.rental.startDate).format(
     'D MMMM, YYYY'
@@ -44,20 +33,30 @@ const SharingDetailScreen = ({
 
   const data = {
     rental: [
-      { label: 'Car name', value: sharing.rental.carModel.name },
-      { label: 'Car type', value: sharing.rental.carModel.type },
-      { label: 'Seats', value: sharing.rental.carModel.numberOfSeat },
-      { label: 'Start Date', value: startDateFormat },
-      { label: 'End Date', value: endDateFormat },
-      { label: 'Price per day', value: sharing.price },
-      { label: 'Total', value: sharing.totalCost },
-      { label: 'Location', value: sharing.address },
-      { label: 'Car return address', value: sharing.rental.pickoffHub.address },
-    ],
-    customer: [
-      { label: 'Name', value: sharing.customer.fullName },
-      { label: 'Email', value: sharing.customer.email },
-      { label: 'Phone', value: sharing.customer.phone },
+      {
+        label: 'Share to',
+        detail: sharing.customer.fullName,
+        pressable: true,
+        onItemPress() {
+          setPopUpData(dispatch)({
+            popupType: 'profile',
+            description: sharing.customer,
+          });
+        },
+        nextIcon: 'next',
+      },
+      { label: 'Car name', detail: sharing.rental.carModel.name },
+      { label: 'Car type', detail: sharing.rental.carModel.type },
+      { label: 'Seats', detail: sharing.rental.carModel.numberOfSeat },
+      { label: 'Start Date', detail: startDateFormat },
+      { label: 'End Date', detail: endDateFormat },
+      { label: 'Price per day', detail: sharing.price },
+      { label: 'Total', detail: sharing.totalCost },
+      { label: 'Location', detail: sharing.address },
+      {
+        label: 'Car return address',
+        detail: sharing.rental.pickoffHub.address,
+      },
     ],
   };
 
@@ -66,43 +65,20 @@ const SharingDetailScreen = ({
       haveBackHeader
       onBackPress={() => navigation.pop()}
       title="Sharing Detail"
-      isLoading={isLoading}
+      loading={loading}
       scrollable
     >
       <View>
-        <ItemContainer title="Renter">
-          <View style={{ alignSelf: 'center', paddingTop: scaleVer(8) }}>
-            <Avatar
-              size="xlarge"
-              rounded
-              source={{
-                uri: sharing.customer.avatar,
-              }}
-            />
-          </View>
-          {data.customer.map((item, index) => (
-            <ListItem
-              key={index.toString()}
-              label={item.label}
-              detail={item.value}
-              type="detail"
-              pressable={false}
-              showSeparator={index !== data.customer.length - 1}
-            />
-          ))}
-        </ItemContainer>
-        <ItemContainer title="Rental Information">
-          {data.rental.map((item, index) => (
-            <ListItem
-              key={index.toString()}
-              label={item.label}
-              detail={item.value}
-              type="detail"
-              pressable={false}
-              showSeparator={index !== data.rental.length - 1}
-            />
-          ))}
-        </ItemContainer>
+        {/* <Text>Rental Information</Text> */}
+        {data.rental.map((item, index) => (
+          <ListItem
+            key={index.toString()}
+            type="detail"
+            pressable={false}
+            showSeparator={index !== data.rental.length - 1}
+            {...item}
+          />
+        ))}
       </View>
     </ViewContainer>
   );

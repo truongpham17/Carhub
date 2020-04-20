@@ -59,7 +59,9 @@ const ConfirmPopup = ({
   };
   return (
     <>
-      <Text style={textStyle.widgetItem}>{title}</Text>
+      <Text style={[textStyle.widgetItem, { textAlign: 'center' }]}>
+        {title}
+      </Text>
       <Text style={[textStyle.bodyText, { marginTop: scaleVer(12) }]}>
         {description}
       </Text>

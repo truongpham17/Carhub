@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
-import { ViewContainer, ListItem, Button, SuccessDialog } from 'Components';
+import { ViewContainer, ListItem, Button } from 'Components';
 import { NavigationType, SharingType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
 import { useSelector, useDispatch } from 'react-redux';
-import { substractDate, formatDate } from 'Utils/date';
+import {
+  substractDate,
+  formatDate,
+  formatPrice,
+  formatDayLabel,
+} from 'Utils/date';
 import { sendSharingRequest } from '@redux/actions/sharing';
 
-import SharingExplainModel from './ShareExplainModal';
+import { setPopUpData, cancelPopup } from '@redux/actions';
+import policy from 'Constants/policy';
 
 type PropsType = {
   navigation: NavigationType,
@@ -17,10 +23,8 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
   const dispatch = useDispatch();
 
   const sharingList: [SharingType] = useSelector(state => state.sharing.data);
-  const [successDialog, setSuccessDialog] = useState(false);
   const { startDate, endDate } = useSelector(state => state.car.rentalSearch);
-  const loading = useSelector(state => state.sharing.isLoading);
-  const [modalVisible, setModalVisible] = useState(true);
+  const loading = useSelector(state => state.sharing.loading);
 
   const user = useSelector(state => state.user);
 
@@ -28,47 +32,102 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
 
   const sharing = sharingList.find(item => item._id === selectedId) || {};
 
+  useEffect(() => {
+    setPopUpData(dispatch)({
+      popupType: 'policy',
+      title: 'Hire a sharing car',
+      description: {
+        ...policy.HIRE_SHARING_CAR,
+        content: [
+          ...policy.HIRE_SHARING_CAR.content,
+          `When you successfully hire this car, to need to return the car to the hub at ${
+            sharing.rental.pickoffHub.address
+          } before ${formatDate(
+            endDate
+          )}. Otherwise you will pay some extra money for returning late.`,
+        ],
+      },
+      onDecline() {
+        cancelPopup(dispatch);
+        navigation.pop();
+      },
+    });
+  }, []);
+
   // const changesharing = sharing => setsharing(sharing);
 
   const handleSendRequest = () => {
-    sendSharingRequest(dispatch)(
-      {
-        sharing: sharing._id,
-        customer: user._id,
-        fromDate: startDate.toISOString(),
-        toDate: endDate.toISOString(),
+    setPopUpData(dispatch)({
+      title: 'Send request',
+      description: 'Send request to take this sharing car?',
+      onConfirm() {
+        cancelPopup(dispatch);
+        sendSharingRequest(dispatch)(
+          {
+            sharing: sharing._id,
+            customer: user._id,
+            fromDate: startDate.toISOString(),
+            toDate: endDate.toISOString(),
+          },
+          {
+            onSuccess() {
+              setPopUpData(dispatch)({
+                popupType: 'success',
+                title: 'Success',
+                description:
+                  'Success sent request to hire this sharing car. We will notify you when the request be accepted',
+                onConfirm() {
+                  cancelPopup(dispatch);
+                  navigation.pop(2);
+                  navigation.navigate('HistoryScreen');
+                },
+              });
+            },
+            onFailure(msg) {
+              setPopUpData(dispatch)({
+                popupType: 'error',
+                title: 'Error',
+                description: `There was some error while senting your request. Please try again!\nMessage: ${msg}`,
+              });
+            },
+          }
+        );
       },
-      {
-        onSuccess() {
-          setSuccessDialog(true);
-        },
-      }
-    );
+    });
   };
 
-  const daysdiff = Math.abs(substractDate(startDate, endDate));
+  const daysdiff = substractDate(startDate, endDate);
 
   const data = {
     rental: [
-      { label: 'Car name', value: sharing.rental.carModel.name },
-      { label: 'Car type', value: sharing.rental.carModel.type },
-      { label: 'Seats', value: sharing.rental.carModel.numberOfSeat },
-      { label: 'Start Date', value: formatDate(startDate) },
-      { label: 'End Date', value: formatDate(endDate) },
-      { label: 'Price per day', value: sharing.price },
-      { label: 'Total', value: daysdiff * Number(sharing.price) },
-      { label: 'Location', value: sharing.address },
-      {
-        label: 'Car return address',
-        value: sharing.rental.pickoffHub.address,
-      },
       {
         label: 'Sharing owner',
-        value: sharing.rental.customer.fullName,
+        detail: sharing.rental.customer.fullName,
         pressable: true,
         onItemPress: () => {
-          console.log('move to user profile screen');
+          setPopUpData(dispatch)({
+            popupType: 'profile',
+            description: sharing.rental.customer,
+          });
         },
+        nextIcon: 'next',
+      },
+      { label: 'Car name', detail: sharing.rental.carModel.name },
+      { label: 'Car type', detail: sharing.rental.carModel.type },
+      { label: 'Seats', detail: sharing.rental.carModel.numberOfSeat },
+      { label: 'Price per day', detail: formatPrice(sharing.price) },
+
+      { label: 'Start Date', detail: formatDate(startDate) },
+      { label: 'End Date', detail: formatDate(endDate) },
+      {
+        label: 'Duration',
+        detail: formatDayLabel(daysdiff),
+      },
+      { label: 'Total', detail: formatPrice(daysdiff * Number(sharing.price)) },
+      { label: 'Location', detail: sharing.address },
+      {
+        label: 'Car return address',
+        detail: sharing.rental.pickoffHub.address,
       },
     ],
   };
@@ -85,54 +144,16 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
         {data.rental.map((item, index) => (
           <ListItem
             key={index.toString()}
-            label={item.label}
-            detail={item.value}
             type="detail"
-            pressable={item.pressable}
-            onItemPress={item.onItemPress}
             showSeparator
+            {...item}
           />
         ))}
-
-        <ListItem
-          key="dayDiff"
-          label="Duration"
-          detail={daysdiff}
-          type="detail"
-          showSeparator
-        />
-        <ListItem
-          key="total"
-          label="Total"
-          detail={daysdiff * sharing.price}
-          type="detail"
-        />
       </View>
       <Button
         label="Send request"
         onPress={handleSendRequest}
         style={{ marginBottom: scaleVer(12) }}
-      />
-      <SharingExplainModel
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSeeDetail={() => setModalVisible(false)}
-        hubAddress={sharing.rental.pickoffHub.address}
-        returnTime={formatDate(sharing.rental.endDate)}
-        onPressBack={() => {
-          setModalVisible(false);
-          navigation.pop();
-        }}
-      />
-      <SuccessDialog
-        msg="Success"
-        detail="Your request has been sent successfully. Please wait for response!"
-        onClose={() => setSuccessDialog(false)}
-        onConfirm={() => {
-          setSuccessDialog(false);
-          navigation.pop();
-        }}
-        visible={successDialog}
       />
     </ViewContainer>
   );

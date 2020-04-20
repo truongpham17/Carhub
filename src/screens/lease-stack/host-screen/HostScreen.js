@@ -189,6 +189,7 @@ const HostScreen = ({
   return (
     <ViewContainer
       scrollable
+      haveBack={false}
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}

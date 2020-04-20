@@ -22,6 +22,7 @@ import { alert } from './Alert';
 import StatusDialog from './StatusDialog';
 import PolicyPopup from './PolicyPopup';
 import Popup from './Popup';
+import TabScreen from './TabScreen';
 
 export {
   QRCodeGenModal,
@@ -48,4 +49,5 @@ export {
   StatusDialog,
   PolicyPopup,
   Popup,
+  TabScreen,
 };
