@@ -1,12 +1,13 @@
 import firebase from 'react-native-firebase';
 
-export function changeTransactionStatus(id, status) {
+export function changeTransactionStatus(id, status, car) {
   firebase
     .database()
     .ref(`scanQRCode/${id}`)
     .set({
       _id: id,
       status,
+      car,
     });
 }
 

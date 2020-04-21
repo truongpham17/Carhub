@@ -111,11 +111,9 @@ const ViewContainer = ({
   }, [requestError]);
 
   const renderLoading = () => (
-    <Modal visible={loading} transparent>
-      <View style={{ backgroundColor: 'rgba(0,0,0,0.3)', flex: 1 }}>
-        <LottieView autoPlay source={loadingAnimated} />
-      </View>
-    </Modal>
+    <FadedContainer visible={loading}>
+      <LottieView autoPlay source={loadingAnimated} />
+    </FadedContainer>
   );
 
   const renderBackTitle = () =>

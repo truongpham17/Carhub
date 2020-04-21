@@ -8,7 +8,9 @@ import {
   GET_PREVIOUS_CAR_LIST_FAILURE,
   GET_CAR_BY_VIN_SUCCESS,
   GET_CAR_BY_VIN_FAILURE,
-  ADD_HOST_HUB_INFO_SUCCESS,
+  CHECK_CAR_MODEL_SUCCESS,
+  CHECK_CAR_MODEL_FAILURE,
+  CHECK_CAR_MODEL_REQUEST,
   ADD_LEASE_SUCCESS,
   ADD_LEASE_FAILURE,
   UPDATE_LEASE_ITEM_FAILURE,
@@ -19,33 +21,51 @@ import {
   // GET_LEASE_ITEM_SUCCESS,
   SET_LEASE_DETAIL_ID,
   SCAN_VIN_CODE_SUCCESS,
-  SET_VALUE_SUCCESS,
+  SET_LEASE_INFO,
+  GET_CAR_BY_VIN_REQUEST,
+  ADD_LEASE_REQUEST,
 } from '@redux/constants/lease';
 import axios from 'axios';
+import firebase from 'react-native-firebase';
 
-export const checkCarByVin = (data, callback) => async dispatch => {
+export const checkCarByVin = dispatch => async (data, callback) => {
   try {
-    dispatch({ type: GET_LEASE_REQUEST });
-    console.log(
-      `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`
-    );
-    const result = await axios({
-      url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`,
-    });
-    const InfoFromVin = [];
-    const codes = [24, 26, 27, 28, 29, 39, 75];
-    codes.forEach(code => {
-      const item = result.data.Results.find(data => data.VariableId === code);
-      if (item) {
-        InfoFromVin.push({ key: item.Variable, value: item.Value });
-      }
-    });
+    dispatch({ type: GET_CAR_BY_VIN_REQUEST });
 
-    console.log(InfoFromVin);
-    if (InfoFromVin[1].value !== null && InfoFromVin[3].value !== null) {
+    // console.log('start fetching', Date.now());
+
+    // const result = await axios({
+    //   url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`,
+    //   method: 'GET',
+    // });
+
+    // console.log('endFetching', Date.now());
+    // const infoFromVin = [];
+    // const codes = [24, 26, 27, 28, 29, 39, 75];
+    // codes.forEach(code => {
+    //   const item = result.data.Results.find(data => data.VariableId === code);
+    //   if (item) {
+    //     infoFromVin.push({ key: item.Variable, value: item.Value });
+    //   }
+    // });
+
+    // console.log(infoFromVin);
+
+    const infoFromVin = [
+      { key: 'Fuel Type - Primary', value: 'Flexible Fuel Vehicle (FFV)' },
+
+      { key: 'Make', value: 'CHRYSLER' },
+      { key: 'Manufacturer Name', value: 'FCA CANADA INC.' },
+      { key: 'Model', value: '300' },
+      { key: 'Model Year', value: '2012' },
+      { key: 'Vehicle Type', value: 'PASSENGER CAR' },
+      { key: 'Plant Country', value: null },
+    ];
+
+    if (infoFromVin[1].value && infoFromVin[3].value) {
       dispatch({
         type: GET_CAR_BY_VIN_SUCCESS,
-        payload: { ...data, InfoFromVin },
+        payload: { ...data, infoFromVin },
       });
       callback.onSuccess();
     } else {
@@ -53,7 +73,7 @@ export const checkCarByVin = (data, callback) => async dispatch => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -63,13 +83,13 @@ export const scanVinCodeByCamera = (data, callback) => async dispatch => {
     dispatch({ type: SCAN_VIN_CODE_SUCCESS, payload: { ...data } });
     callback.onSuccess();
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
 
-export const setValue = data => async dispatch => {
-  dispatch({ type: SET_VALUE_SUCCESS, payload: { ...data } });
+export const setLeaseInfo = dispatch => data => {
+  dispatch({ type: SET_LEASE_INFO, payload: data });
 };
 
 export const choosePreviousCar = (data, callback) => async dispatch => {
@@ -78,12 +98,12 @@ export const choosePreviousCar = (data, callback) => async dispatch => {
     callback.onSuccess();
   } catch (error) {
     console.log({ error });
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
 
-export const getCustomerPreviousCarList = (id, callback) => async dispatch => {
+export const getCustomerPreviousCarList = dispatch => async (id, callback) => {
   try {
     dispatch({ type: GET_LEASE_REQUEST });
     const data = await query({
@@ -100,100 +120,94 @@ export const getCustomerPreviousCarList = (id, callback) => async dispatch => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
 
-export const checkHostHubInfo = (data, callback) => async dispatch => {
+export const checkCarModelAvailable = dispatch => async (data, callback) => {
   try {
-    dispatch({ type: GET_LEASE_REQUEST });
+    dispatch({ type: CHECK_CAR_MODEL_REQUEST });
     const response = await query({
-      endpoint: 'carModel/findByName',
-      method: METHODS.post,
-      data: { data },
+      endpoint: `carModel/findByName/${data.name}`,
+      method: METHODS.get,
     });
     if (response.status === 200) {
-      if (response.data) {
-        const carModel = response.data;
-        dispatch({
-          type: ADD_HOST_HUB_INFO_SUCCESS,
-          payload: { ...data, carModel },
-        });
-        callback.onSuccess();
-      } else {
-        dispatch({
-          type: ADD_HOST_HUB_INFO_SUCCESS,
-          payload: { ...data },
-        });
-        callback.onSuccess();
-      }
+      const carModel = response.data;
+      dispatch({
+        type: CHECK_CAR_MODEL_SUCCESS,
+        payload: { ...data, carModel },
+      });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: CHECK_CAR_MODEL_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: CHECK_CAR_MODEL_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
 
-export const addLease = (
+export const addLease = dispatch => async (
   {
     odometer,
     images,
     startDate,
     endDate,
     usingYears,
-    name,
     VIN,
     customer,
     hub,
     cardNumber,
+    carModel,
   },
   callback
-) => async dispatch => {
+) => {
   try {
-    dispatch({ type: GET_LEASE_REQUEST });
-    const carModel = await query({
-      endpoint: 'carModel/createCarModel',
-      method: METHODS.post,
-      data: { name },
-    });
+    dispatch({ type: ADD_LEASE_REQUEST });
 
-    if (carModel.status === 201) {
-      const car = await query({
-        endpoint: 'car/createCarAfterChecking',
+    const imagesURL = [];
+
+    await Promise.all(
+      images
+        .filter((_, i) => i > 0)
+        .map(async element => {
+          const snapshot = await firebase
+            .storage()
+            .ref(`lease-car/${customer}/${Date.now()}`)
+            .putFile(element.uri);
+          imagesURL.push(await snapshot.downloadURL);
+        })
+    );
+
+    const result = await query({
+      endpoint: 'car/createLeasingCar',
+      method: METHODS.post,
+      data: {
+        customer,
+        odometer,
+        VIN,
+        carModel: carModel._id,
+        usingYears,
+        images: imagesURL,
+      },
+    });
+    if (result.status === 201 || result.status === 200) {
+      const lease = await query({
+        endpoint: 'lease',
         method: METHODS.post,
         data: {
           customer,
           hub,
-          odometer,
-          images,
-          VIN,
-          carModel: carModel.data._id,
-          usingYears,
-          currentHub: hub,
+          startDate,
+          endDate,
+          car: result.data._id,
+          cardNumber,
         },
       });
-      if (car.status === 201) {
-        const lease = await query({
-          endpoint: 'lease',
-          method: METHODS.post,
-          data: {
-            customer,
-            hub,
-            startDate,
-            endDate,
-            car: car.data._id,
-            cardNumber,
-          },
-        });
-        if (lease.status === 201) {
-          dispatch({ type: ADD_LEASE_SUCCESS });
-          callback.onSuccess();
-        } else {
-          dispatch({
-            type: ADD_LEASE_FAILURE,
-          });
-        }
+      if (lease.status === 201) {
+        dispatch({ type: ADD_LEASE_SUCCESS });
+        callback.onSuccess();
       } else {
         dispatch({
           type: ADD_LEASE_FAILURE,
@@ -205,12 +219,12 @@ export const addLease = (
       });
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: ADD_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
 
-export const getLeaseList = (callback = INITIAL_CALLBACK) => async dispatch => {
+export const getLeaseList = dispatch => async (callback = INITIAL_CALLBACK) => {
   try {
     dispatch({
       type: GET_LEASE_REQUEST,
@@ -218,6 +232,7 @@ export const getLeaseList = (callback = INITIAL_CALLBACK) => async dispatch => {
     const result = await query({ endpoint: ENDPOINTS.lease });
     // console.warn(result.data);
     if (result.status === STATUS.OK) {
+      console.log(result.data);
       dispatch({ type: GET_LEASE_SUCCESS, payload: result.data });
       callback.onSuccess();
     } else {
@@ -257,10 +272,10 @@ export const getLeaseList = (callback = INITIAL_CALLBACK) => async dispatch => {
 //   }
 // };
 
-export const updateLeaseStatus = (
+export const updateLeaseStatus = dispatch => async (
   { id, status },
   callback = INITIAL_CALLBACK
-) => async dispatch => {
+) => {
   try {
     dispatch({
       type: UPDATE_LEASE_ITEM_REQUEST,
@@ -283,7 +298,8 @@ export const updateLeaseStatus = (
   }
 };
 
-export const setLeaseDetailId = _id => ({
-  type: SET_LEASE_DETAIL_ID,
-  payload: _id,
-});
+export const setLeaseDetailId = dispatch => _id =>
+  dispatch({
+    type: SET_LEASE_DETAIL_ID,
+    payload: _id,
+  });

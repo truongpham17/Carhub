@@ -5,37 +5,58 @@ import {
   createStackNavigator,
   // createDrawerNavigator,
 } from 'react-navigation';
-import { Tabbar } from 'Components';
-import { TestScreen } from './test';
-import SearchCarScreen from './search-car-screen/SearchCarScreen';
+import React, { useEffect } from 'react';
+import { View } from 'react-native';
+import { Tabbar, Popup } from 'Components';
+import { useSelector, useDispatch } from 'react-redux';
+import { cancelPopup } from '@redux/actions/app';
+import {
+  processNotificationInfo,
+  createNotificationChannel,
+} from 'services/notification';
+import firebase from 'react-native-firebase';
+import { fromRight } from 'react-navigation-transitions';
+
+import SearchCarScreen from './rental-stack/search-car-screen/SearchCarScreen';
 import SelectLocationScreen from './select-location-screen/SelectLocationScreen';
 import SelectMapScreen from './select-map-screen/SelectMapScreen';
-import SelectCarScreen from './select-car-screen/SelectCarScreen';
-// import RequestListScreen from './request-list-screen/RequestListScreen';
-// import RequestDetailScreen from './request-detail-screen/RequestDetailScreen';
-import HostScreen from './host-screen/HostScreen';
-import HostReviewScreen from './host-review-screen/HostReviewScreen';
-import HostHubScreen from './host-hub-screen/HostHubScreen';
-import HostListCarScreen from './host-list-car-screen/HostListCarScreen';
-import CarItem from './host-list-car-screen/CarItem';
-import HostScanCameraScreen from './host-scan-camera-screen/HostScanCameraScreen';
-import RentalCarDetailScreen from './rental-car-detail-screen/RentalCarDetailScreen';
-import AuthScreen from './auth-screen/AuthScreen';
-import SignInScreen from './sign-in-screen/SignInScreen';
-import RentBookingReview from './rent-booking-review/RentBookingReview';
-import InfoExplainScreen from './info-explain-screen/InfoExplainScreen';
-import LicenseScreen from './license-screen/LicenseScreen';
-import ScanQrCodeScreen from './scan-qr-code-screen/ScanQrCodeScreen';
-import HistoryScreen from './history-screen/HistoryScreen';
-import SuccessBookingRental from './success-booking-rental/SuccessBookingRental';
-import RentHistoryItemDetailScreen from './rent-history-item-detail-screen/RentHistoryItemDetailScreen';
-import LeaseHistoryItemDetailScreen from './lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
-import SelectSharingCarScreen from './select-sharing-car-screen/SelectSharingCarScreen';
-import TimeLineScreen from './time-line-screen/TimeLineScreen';
-import SharingDetailScreen from './sharing-detail-screen/SharingDetailScreen';
-import ViewSharingInfomation from './view-sharing-information/ViewSharingInfomation';
-import RentSharingRequestScreen from './rent-sharing-car-request/RentSharingRequestScreen';
-import ScanScreen from './scan-screen/ScanScreen';
+import SelectCarScreen from './rental-stack/select-car-screen/SelectCarScreen';
+import RentalCarDetailScreen from './rental-stack/rental-car-detail-screen/RentalCarDetailScreen';
+import RentBookingReview from './rental-stack/rent-booking-review/RentBookingReview';
+import InfoExplainScreen from './rental-stack/info-explain-screen/InfoExplainScreen';
+import LicenseScreen from './rental-stack/license-screen/LicenseScreen';
+import SuccessBookingRental from './rental-stack/success-booking-rental/SuccessBookingRental';
+import ViewSharingInformation from './rental-stack/view-sharing-information/ViewSharingInformation';
+
+import HostScreen from './lease-stack/host-screen/HostScreen';
+import HostReviewScreen from './lease-stack/host-review-screen/HostReviewScreen';
+import HostHubScreen from './lease-stack/host-hub-screen/HostHubScreen';
+import HostListCarScreen from './lease-stack/host-list-car-screen/HostListCarScreen';
+import HostScanCameraScreen from './lease-stack/host-scan-camera-screen/HostScanCameraScreen';
+
+import AuthScreen from './auth-stack/auth-screen/AuthScreen';
+import SignInScreen from './auth-stack/sign-in-screen/SignInScreen';
+
+import HistoryScreen from './history-stack/history-screen/HistoryScreen';
+import RentHistoryItemDetailScreen from './history-stack/rental-stack/rent-history-item-detail-screen/RentHistoryItemDetailScreen';
+import LeaseHistoryItemDetailScreen from './history-stack/lease-stack/lease-history-item-detail-screen/LeaseHistoryItemDetailScreen';
+import TimeLineScreen from './history-stack/time-line-screen/TimeLineScreen';
+import SharingDetailScreen from './history-stack/rental-stack/sharing-detail-screen/SharingDetailScreen';
+import ScanScreen from './history-stack/rental-stack/scan-screen/ScanScreen';
+
+import SelectPriceScreen from './history-stack/sharing-stack/select-price-screen/SelectPriceScreen';
+import SelectShareAddressScreen from './history-stack/sharing-stack/select-address-screen/SelectShareAddressScreen';
+import SharingConfirmationScreen from './history-stack/sharing-stack/sharing-confirmation-screen/SharingConfirmationScreen';
+import SelectTimeScreen from './history-stack/sharing-stack/select-time-screen/SelectTimeScreen';
+import SharingInformationScreen from './history-stack/sharing-stack/sharing-information-screen/SharingInformationScreen';
+
+import ProfileScreen from './profile-stack/profile-screen/ProfileScreen';
+
+import NotificationScreen from './notification-screen/NotificationScreen';
+
+import LandingPage from './landing-page/LandingPage';
+
+import NavigationService from './NavigationService';
 
 const RentalStack = createStackNavigator(
   {
@@ -48,8 +69,7 @@ const RentalStack = createStackNavigator(
     InfoExplainScreen,
     LicenseScreen,
     SuccessBookingRental,
-    SelectSharingCarScreen,
-    ViewSharingInfomation,
+    ViewSharingInformation,
   },
   {
     headerMode: 'none',
@@ -65,13 +85,45 @@ const LeaseStack = createStackNavigator(
     HostListCarScreen,
     SelectMapScreen,
     HostScanCameraScreen,
-    CarItem,
   },
   {
     headerMode: 'none',
     // initialRouteName: 'HostScreen',
   }
 );
+
+const SharingStack = createStackNavigator(
+  {
+    SelectTimeScreen,
+    SelectPriceScreen,
+    SelectShareAddressScreen,
+    SharingConfirmationScreen,
+  },
+  {
+    initialRouteName: 'SelectTimeScreen',
+    headerMode: 'none',
+    transitionConfig: () => fromRight(),
+  }
+);
+
+const NotificationStack = createStackNavigator(
+  {
+    NotificationScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+const ProfileStack = createStackNavigator(
+  {
+    ProfileScreen,
+    // NotificationScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
 const HistoryStack = createStackNavigator(
   {
     HistoryScreen,
@@ -81,16 +133,22 @@ const HistoryStack = createStackNavigator(
     SelectMapScreen,
     SelectLocationScreen,
     TimeLineScreen,
-    RentSharingRequestScreen,
     ScanScreen,
+    SharingStack,
+    SharingInformationScreen,
   },
   {
     headerMode: 'none',
   }
 );
-const ProfileStack = createStackNavigator(
+
+const AppStack = createStackNavigator(
   {
-    TestScreen,
+    LandingPage,
+    RentalStack,
+    LeaseStack,
+    ProfileScreen,
+    NotificationScreen,
   },
   {
     headerMode: 'none',
@@ -99,10 +157,8 @@ const ProfileStack = createStackNavigator(
 
 const MainApp = createBottomTabNavigator(
   {
-    RentalStack,
-    LeaseStack,
+    AppStack,
     HistoryStack,
-    ProfileStack,
     // RequestDetailScreen,
     // RequestListScreen,
   },
@@ -132,14 +188,78 @@ const AppNavigation = createSwitchNavigator(
   }
 );
 
-// const scanScreen = createStackNavigator(
-//   {
-//     SelectSharingCarScreen,
-//   },
-//   {
-//     headerMode: 'none',
-//   }
-// );
-
 const App = createAppContainer(AppNavigation);
-export default App;
+
+const AppContainer = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const removeNotificationListener = firebase
+      .notifications()
+      .onNotification((notification: Notification) => {
+        createNotificationChannel();
+        firebase
+          .notifications()
+          .displayNotification(
+            notification.android
+              .setPriority(firebase.notifications.Android.Priority.Max)
+              .android.setChannelId('notification')
+          );
+      });
+
+    const removeNotificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(notificationOpen => {
+        const { notification } = notificationOpen;
+        console.log(notification);
+        processNotificationInfo({
+          notification,
+          dispatch,
+          navigate: NavigationService.navigate,
+        });
+      });
+    return () => {
+      removeNotificationListener();
+      removeNotificationOpenedListener();
+    };
+  }, []);
+
+  const { popup } = useSelector(state => state.app);
+
+  const onClosePopup = () => {
+    cancelPopup(dispatch);
+    if (typeof popup.onClose === 'function') {
+      popup.onClose();
+    }
+  };
+
+  const onConfirmPopup = data => {
+    cancelPopup(dispatch);
+    if (typeof popup.onConfirm === 'function') {
+      popup.onConfirm(data);
+    }
+  };
+  const onDeclinePopup = data => {
+    cancelPopup(dispatch);
+    if (typeof popup.onDecline === 'function') {
+      popup.onDecline(data);
+    }
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
+      <App
+        ref={navigatorRef => {
+          NavigationService.setTopLevelNavigator(navigatorRef);
+        }}
+      />
+      <Popup
+        {...popup}
+        onClose={onClosePopup}
+        onConfirm={onConfirmPopup}
+        onDecline={onDeclinePopup}
+      />
+    </View>
+  );
+};
+
+export default AppContainer;

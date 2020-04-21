@@ -9,3 +9,5 @@ export const ADD_LICENSE_FAILURE = 'add-license-failure';
 export const UPDATE_USER_REQUEST = 'update-user-request';
 export const UPDATE_USER_FAILURE = 'update-user-failure';
 export const UPDATE_USER_SUCCESS = 'update-user-success';
+
+export const SIGN_OUT = 'sign-out';

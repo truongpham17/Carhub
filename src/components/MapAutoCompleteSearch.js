@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import colors from 'Constants/colors';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { getCurrentPosition } from 'services/maps';
 import { GOOGLE_KEY } from 'Constants/key';
+import { NavigationType } from 'types';
 
 const SELECT_ON_MAPS = 'Select on Maps';
 
@@ -14,18 +15,21 @@ type PropTypes = {
   openMapOption?: boolean,
   listViewDisplayed: Boolean,
   styles: {},
+  placeholder: String,
+  navigation?: NavigationType,
 };
 
 const MapAutoCompleteSearch = ({
   onRequestMap,
   onSelectLocation,
   openMapOption = true,
-  listViewDisplayed = true,
-  styles,
+  placeholder,
+  navigation,
 }: PropTypes) => {
   const [currentPosition, setCurretPosition] = useState({
     description: CURRENT_LOCATION,
   });
+  const mapRef = useRef();
 
   useEffect(() => {
     getCurrentPosition(
@@ -39,7 +43,16 @@ const MapAutoCompleteSearch = ({
   const onSelect = (data, details) => {
     // console.log(data);
     if (data.description === SELECT_ON_MAPS) {
-      return onRequestMap();
+      if (typeof onRequestMap === 'function') {
+        return onRequestMap();
+      }
+      return navigation.navigate('SelectMapScreen', {
+        callback(address) {
+          navigation.pop();
+          onSelectLocation(address);
+          mapRef.current._handleChangeText(address.address);
+        },
+      });
     }
 
     if (data.description === CURRENT_LOCATION) {
@@ -54,7 +67,7 @@ const MapAutoCompleteSearch = ({
 
   return (
     <GooglePlacesAutocomplete
-      placeholder="Search"
+      placeholder={placeholder || 'Search'}
       minLength={2} // minimum length of text to search
       autoFocus={false}
       returnKeyType="search" // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -73,6 +86,8 @@ const MapAutoCompleteSearch = ({
         language: 'en', // language of the results
         types: 'geocode', // default: 'geocode'
       }}
+      ref={ref => (mapRef.current = ref)}
+      onChangeText={text => console.log(text)}
       styles={{
         textInputContainer: {
           width: '100%',

@@ -6,25 +6,32 @@ import {
 import { INITIAL_CALLBACK, STATUS, METHODS } from 'Constants/api';
 import { query } from 'services/api';
 
-export function confirmTransaction(
+export const confirmTransaction = dispatch => async (
   { id, type, toStatus, car },
   callback = INITIAL_CALLBACK
-) {
-  return async dispatch => {
-    try {
-      dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
-      const result = await query({
-        endpoint: `${type}/transaction/${id}`,
-        method: METHODS.post,
-        data: { toStatus, car },
-      });
-      if (result.status === STATUS.OK) {
-        dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
+) => {
+  try {
+    dispatch({ type: CONFIRM_TRANSACTION_REQUEST });
+    const result = await query({
+      endpoint: `${type}/transaction/${id}`,
+      method: METHODS.patch,
+      data: { toStatus, car },
+    });
+    if (result.status === STATUS.OK) {
+      dispatch({ type: CONFIRM_TRANSACTION_SUCCESS, payload: result.data });
+      if (callback.onSuccess) {
         callback.onSuccess();
       }
-    } catch (error) {
-      dispatch({ type: CONFIRM_TRANSACTION_FAILURE, payload: error });
+    } else if (callback.onFailure) {
       callback.onFailure();
     }
-  };
-}
+  } catch (error) {
+    dispatch({
+      type: CONFIRM_TRANSACTION_FAILURE,
+      payload: error.response.data,
+    });
+    if (callback.onFailure) {
+      callback.onFailure();
+    }
+  }
+};

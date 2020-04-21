@@ -10,9 +10,8 @@ export const query = async ({
   data = null,
   headers = {},
   params = {},
-}) => {
-  console.log(API_URL + endpoint);
-   return axios({
+}) =>
+  axios({
     method,
     url: API_URL + endpoint,
     data,
@@ -26,4 +25,3 @@ export const query = async ({
         }
       : headers,
   });
-};

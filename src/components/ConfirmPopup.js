@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { dimension } from 'Constants';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
-import ModalContainer from './ModalContainer';
+import colors from 'Constants/colors';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
+import Button from './Button';
 
 type PropTypes = {
   modalVisible: boolean,
@@ -13,48 +14,77 @@ type PropTypes = {
   cancelLabel?: string,
   confirmLabel?: string,
   onDecline: () => void,
+  acceptOnly?: boolean,
 };
 
 const ConfirmPopup = ({
-  modalVisible,
-  onClose,
   onConfirm,
   title,
   description,
   cancelLabel = 'Cancel',
   confirmLabel = 'Ok',
   onDecline,
-}: PropTypes) => (
-  <ModalContainer modalVisible={modalVisible} onClose={onClose}>
-    <View style={styles.containerStyle}>
-      <Text style={textStyle.widgetItem}>{title}</Text>
-      <Text style={textStyle.bodyText}>{description}</Text>
+  acceptOnly,
+}: PropTypes) => {
+  const renderAction = () => {
+    if (acceptOnly) {
+      return (
+        <Button
+          label={confirmLabel}
+          style={{ borderRadius: 4, height: 36, marginTop: scaleVer(16) }}
+          colorStart={colors.successLight}
+          colorEnd={colors.success}
+          onPress={onConfirm}
+        />
+      );
+    }
+    return (
       <View style={styles.action}>
-        <TouchableOpacity style={styles.item} onPress={onDecline}>
-          <Text style={textStyle.bodyText}>{cancelLabel}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.item} onPress={onConfirm}>
-          <Text style={textStyle.bodyText}>{confirmLabel}</Text>
-        </TouchableOpacity>
+        <Button
+          label={cancelLabel}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+          colorStart={colors.errorLight}
+          colorEnd={colors.error}
+          onPress={onDecline}
+        />
+        <Button
+          onPress={onConfirm}
+          label={confirmLabel}
+          colorStart={colors.successLight}
+          colorEnd={colors.success}
+          style={{ minWidth: 100, borderRadius: 4, height: 36 }}
+        />
       </View>
-    </View>
-  </ModalContainer>
-);
+    );
+  };
+  return (
+    <>
+      <Text style={[textStyle.widgetItem, { textAlign: 'center' }]}>
+        {title}
+      </Text>
+      <Text style={[textStyle.bodyText, { marginTop: scaleVer(12) }]}>
+        {description}
+      </Text>
+      {renderAction()}
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   containerStyle: {
     width: '80%',
-    height: 160,
     // alignItems: 'center',
     // justifyContent: 'center'
-    padding: dimension.DISTANCE_3,
+    padding: scaleHor(16),
     backgroundColor: 'white',
     borderRadius: 12,
     justifyContent: 'space-between',
   },
   action: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
+    marginTop: scaleVer(16),
+    alignSelf: 'stretch',
   },
   item: {
     padding: 4,

@@ -11,6 +11,8 @@ import rentItemDetail from './rentItemDetail';
 import lease from './lease';
 import log from './log';
 import sharing from './sharing';
+import app from './app';
+import notification from './notification';
 
 export default combineReducers({
   lease,
@@ -25,4 +27,6 @@ export default combineReducers({
   rentItemDetail,
   sharing,
   log,
+  app,
+  notification,
 });

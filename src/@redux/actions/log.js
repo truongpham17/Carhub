@@ -23,7 +23,7 @@ export const getLogs = dispatch => async (id, callback = INITIAL_CALLBACK) => {
     }
   } catch (error) {
     console.log(error);
-    dispatch({ type: GET_LOG_FAILURE, payload: error });
+    dispatch({ type: GET_LOG_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };

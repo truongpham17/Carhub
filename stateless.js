@@ -1,7 +1,11 @@
 // import React from 'react';
 // import {View, StyleSheet} from 'react-native';
 
-// const Liberty  = () => {
+// type PropTypes = {
+
+// }
+
+// const Liberty  = ({}: PropTypes) => {
 //   return (
 //     <View>
 
