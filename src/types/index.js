@@ -170,3 +170,20 @@ export type RentalRequestType = {
   createdAt: Date,
   updatedAt: Date,
 };
+
+export type NotificationType = {
+  customer: UserType,
+  actor: UserType,
+  detail: [
+    {
+      detailType: 'normal' | 'bold',
+      value: String,
+    }
+  ],
+  navigationData: {
+    screenName: String,
+    selectedId: String,
+  },
+  _id: String,
+  createdDate: Date,
+};

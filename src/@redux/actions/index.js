@@ -8,3 +8,4 @@ export * from './rental';
 export * from './sharing';
 export * from './transaction';
 export * from './user';
+export * from './notification';

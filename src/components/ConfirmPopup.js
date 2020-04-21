@@ -65,7 +65,6 @@ const ConfirmPopup = ({
       <Text style={[textStyle.bodyText, { marginTop: scaleVer(12) }]}>
         {description}
       </Text>
-
       {renderAction()}
     </>
   );

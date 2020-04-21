@@ -13,31 +13,32 @@ import colors from 'Constants/colors';
 import { scaleVer } from 'Constants/dimensions';
 
 // navigation.state.routeName
-const TAB_NAME = ['RentalStack', 'LeaseStack', 'HistoryStack', 'ProfileStack'];
+const TAB_NAME = [
+  'AppStack',
+  'HistoryStack',
+  // 'NotificationStack',
+];
 const routeConfig = [
   {
-    icon: 'paper-plane',
-    title: 'Rental',
+    icon: 'magnifying-glass',
+    title: 'Search',
   },
+
   {
-    icon: 'archive',
-    title: 'Lease',
-  },
-  {
-    icon: 'shopping-cart',
+    icon: 'menu',
     title: 'History',
   },
-  {
-    icon: 'user',
-    title: 'Profile',
-  },
+  // {
+  //   icon: 'shopping-cart',
+  //   title: 'Notification',
+  // },
 ];
 
 class TabBar extends React.PureComponent {
-  renderTabIcon = ({ icon, title, onPress, color }) => (
+  renderTabIcon = ({ icon, title, onPress, color, type = 'entypo' }) => (
     <TouchableWithoutFeedback onPress={onPress} key={title}>
       <View>
-        <Icon name={icon} type="entypo" size={20} color={color} />
+        <Icon name={icon} type={type} size={20} color={color} />
         <Text style={[textStyle.bodyText, { color }]}>{title}</Text>
       </View>
     </TouchableWithoutFeedback>
@@ -62,8 +63,7 @@ class TabBar extends React.PureComponent {
         <View style={styles.containerStyle}>
           {routeConfig.map((item, idx) =>
             this.renderTabIcon({
-              icon: item.icon,
-              title: item.title,
+              ...item,
               onPress: () => navigation.navigate(TAB_NAME[idx]),
               color: colorArr[idx],
             })
