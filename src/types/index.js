@@ -20,6 +20,7 @@ export type RentDetailType = {
   __v: 0,
   car: CarType,
   shareRequest: string,
+  numberDeclined: number,
 };
 
 export type CustomNotification = {
@@ -94,6 +95,8 @@ export type SharingType = {
   rental: RentDetailType,
   sharingRequest: RentalRequestType,
   price: Number,
+  fromDate: Date,
+  toDate: Date,
 };
 
 export type GeoLocationType = {
@@ -166,4 +169,21 @@ export type RentalRequestType = {
   customer: UserType,
   createdAt: Date,
   updatedAt: Date,
+};
+
+export type NotificationType = {
+  customer: UserType,
+  actor: UserType,
+  detail: [
+    {
+      detailType: 'normal' | 'bold',
+      value: String,
+    }
+  ],
+  navigationData: {
+    screenName: String,
+    selectedId: String,
+  },
+  _id: String,
+  createdDate: Date,
 };

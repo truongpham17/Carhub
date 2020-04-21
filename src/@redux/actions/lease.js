@@ -73,7 +73,7 @@ export const checkCarByVin = dispatch => async (data, callback) => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -83,7 +83,7 @@ export const scanVinCodeByCamera = (data, callback) => async dispatch => {
     dispatch({ type: SCAN_VIN_CODE_SUCCESS, payload: { ...data } });
     callback.onSuccess();
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -98,7 +98,7 @@ export const choosePreviousCar = (data, callback) => async dispatch => {
     callback.onSuccess();
   } catch (error) {
     console.log({ error });
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -120,7 +120,7 @@ export const getCustomerPreviousCarList = dispatch => async (id, callback) => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error });
+    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -143,7 +143,7 @@ export const checkCarModelAvailable = dispatch => async (data, callback) => {
       dispatch({ type: CHECK_CAR_MODEL_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: CHECK_CAR_MODEL_FAILURE, payload: error });
+    dispatch({ type: CHECK_CAR_MODEL_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };

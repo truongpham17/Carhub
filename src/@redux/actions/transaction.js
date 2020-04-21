@@ -26,7 +26,10 @@ export const confirmTransaction = dispatch => async (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: CONFIRM_TRANSACTION_FAILURE, payload: error });
+    dispatch({
+      type: CONFIRM_TRANSACTION_FAILURE,
+      payload: error.response.data,
+    });
     if (callback.onFailure) {
       callback.onFailure();
     }

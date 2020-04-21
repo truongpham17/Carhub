@@ -20,6 +20,19 @@ import {
   CONFIRM_SHARING_FAILURE,
   CONFIRM_SHARING_REQUEST,
   CONFIRM_SHARING_SUCCESS,
+  SET_SHARING_DATA,
+  CREATE_SHARING_FAILURE,
+  CREATE_SHARING_REQUEST,
+  CREATE_SHARING_SUCCESS,
+  CANCEL_SHARING_FAILURE,
+  CANCEL_SHARING_REQUEST,
+  CANCEL_SHARING_SUCCESS,
+  ACCEPT_SHARING_RENTAL_FAILURE,
+  ACCEPT_SHARING_RENTAL_REQUEST,
+  ACCEPT_SHARING_RENTAL_SUCCESS,
+  CANCEL_SHARING_RENTAL_FAILURE,
+  CANCEL_SHARING_RENTAL_REQUEST,
+  CANCEL_SHARING_RENTAL_SUCCESS,
 } from '@redux/constants/sharing';
 
 export const getSharing = dispatch => async (
@@ -40,7 +53,7 @@ export const getSharing = dispatch => async (
       dispatch({ type: GET_SHARING_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: GET_SHARING_FAILURE, payload: error });
+    dispatch({ type: GET_SHARING_FAILURE, payload: error.response.data });
   }
 };
 
@@ -61,7 +74,7 @@ export const getSharingByRentalId = (
       dispatch({ type: GET_SHARING_ITEM_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: GET_SHARING_ITEM_FAILURE, payload: error });
+    dispatch({ type: GET_SHARING_ITEM_FAILURE, payload: error.response.data });
   }
 };
 
@@ -74,7 +87,6 @@ export const sendSharingRequest = dispatch => async (
   data,
   callback = INITIAL_CALLBACK
 ) => {
-  console.log('data at sharing request', data);
   try {
     dispatch({ type: SEND_SHARING_REQ_REQUEST });
     const result = await query({
@@ -86,10 +98,12 @@ export const sendSharingRequest = dispatch => async (
       dispatch({ type: SEND_SHARING_REQ_SUCCESS, payload: result.data });
       callback.onSuccess();
     } else {
+      callback.onFailure();
       dispatch({ type: SEND_SHARING_REQ_FAILURE });
     }
   } catch (error) {
-    dispatch({ type: SEND_SHARING_REQ_FAILURE, payload: error });
+    callback.onFailure(error.response.data);
+    dispatch({ type: SEND_SHARING_REQ_FAILURE, payload: error.response.data });
   }
 };
 
@@ -104,8 +118,6 @@ export const getRentalRequestBySharing = dispatch => async (
       endpoint: `rentalSharingRequest/sharing/${id}`,
     });
 
-    console.log('come hree!!');
-    console.log(rentalRequests.data);
     if (rentalRequests.status === STATUS.OK) {
       dispatch({
         type: GET_RENT_SHARING_SUCCESS,
@@ -117,7 +129,7 @@ export const getRentalRequestBySharing = dispatch => async (
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_RENT_SHARING_FAILURE, payload: error });
+    dispatch({ type: GET_RENT_SHARING_FAILURE, payload: error.response.data });
   }
 };
 
@@ -138,9 +150,16 @@ export const getLastestSharingByRental = dispatch => async (
         payload: lastestSharing.data,
       });
       callback.onSuccess();
+    } else {
+      dispatch({
+        type: GET_LATEST_SHARING_FAILURE,
+      });
     }
   } catch (error) {
-    dispatch({ type: GET_LATEST_SHARING_FAILURE, payload: error });
+    dispatch({
+      type: GET_LATEST_SHARING_FAILURE,
+      payload: error.response.data,
+    });
     callback.onFailure();
   }
 };
@@ -166,26 +185,149 @@ export const updateRentalRequest = (
 };
 
 export const confirmSharing = dispatch => async (
-  { id, requestId },
+  { id, sharingRequestId },
   callback = INITIAL_CALLBACK
 ) => {
   try {
     dispatch({ type: CONFIRM_SHARING_REQUEST });
-    const lastestSharing = await query({
+    const result = await query({
       method: METHODS.post,
-      endpoint: `${ENDPOINTS.sharing}/confirm/${id}`,
-      data: { requestId },
+      endpoint: `${ENDPOINTS.sharing}/confirm/rental/${id}`,
+      data: { sharingRequestId },
     });
 
-    if (lastestSharing.status === STATUS.OK) {
+    if (result.status === STATUS.OK) {
       dispatch({
         type: CONFIRM_SHARING_SUCCESS,
-        payload: lastestSharing.data,
+        payload: result.data,
       });
       callback.onSuccess();
     }
   } catch (error) {
-    dispatch({ type: CONFIRM_SHARING_FAILURE, payload: error });
+    dispatch({ type: CONFIRM_SHARING_FAILURE, payload: error.response.data });
+    callback.onFailure();
+  }
+};
+
+export const createSharing = dispatch => async (
+  data: {
+    address: string,
+    geometry: {
+      lat: number,
+      lng: number,
+    },
+    price: number,
+    fromDate: Date,
+    toDate: Date,
+    rental: string,
+  },
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: CREATE_SHARING_REQUEST });
+    const result = await query({
+      method: METHODS.post,
+      endpoint: `${ENDPOINTS.sharing}/createSharingFromRental`,
+      data,
+    });
+
+    if (result.status === STATUS.CREATED) {
+      dispatch({
+        type: CREATE_SHARING_SUCCESS,
+        payload: result.data,
+      });
+      callback.onSuccess();
+    }
+  } catch (error) {
+    dispatch({ type: CREATE_SHARING_FAILURE, payload: error.response.data });
+    callback.onFailure();
+  }
+};
+
+export const cancelSharing = dispatch => async (
+  id,
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: CANCEL_SHARING_REQUEST });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.rental}/cancelSharing/${id}`,
+    });
+
+    if (result.status === STATUS.OK) {
+      dispatch({
+        type: CANCEL_SHARING_SUCCESS,
+        payload: result.data,
+      });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: CANCEL_SHARING_FAILURE });
+    }
+  } catch (error) {
+    dispatch({ type: CANCEL_SHARING_FAILURE, payload: error.response.data });
+    callback.onFailure();
+  }
+};
+
+export const setSharingData = dispatch => data => {
+  dispatch({ type: SET_SHARING_DATA, payload: data });
+};
+
+export const acceptSharingRentalRequest = dispatch => async (
+  id,
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: ACCEPT_SHARING_RENTAL_REQUEST });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.rentalRequest}/accept/${id}`,
+    });
+
+    if (result.status === STATUS.OK) {
+      dispatch({
+        type: ACCEPT_SHARING_RENTAL_SUCCESS,
+        payload: result.data,
+      });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: ACCEPT_SHARING_RENTAL_FAILURE });
+    }
+  } catch (error) {
+    dispatch({
+      type: ACCEPT_SHARING_RENTAL_FAILURE,
+      payload: error.response.data,
+    });
+    callback.onFailure();
+  }
+};
+
+export const cancelSharingRentalRequest = dispatch => async (
+  id,
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({ type: CANCEL_SHARING_RENTAL_REQUEST });
+    const result = await query({
+      method: METHODS.patch,
+      endpoint: `${ENDPOINTS.rentalRequest}/decline/${id}`,
+    });
+
+    if (result.status === STATUS.OK) {
+      dispatch({
+        type: CANCEL_SHARING_RENTAL_SUCCESS,
+        payload: result.data,
+      });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: CANCEL_SHARING_RENTAL_FAILURE });
+    }
+  } catch (error) {
+    dispatch({
+      type: CANCEL_SHARING_RENTAL_FAILURE,
+      payload: error.response.data,
+    });
     callback.onFailure();
   }
 };

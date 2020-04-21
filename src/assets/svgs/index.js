@@ -1,3 +1,4 @@
+import React from 'react';
 import RemoveIcon from './RemoveIcon';
 import Edit from './Edit';
 import ArrowReturn from './ArrowReturn';
@@ -17,6 +18,7 @@ import CarIconSelected from './CarIconSelected';
 import Discount from './Discount';
 import SuccessStick from './SuccessStick';
 import ErrorCheck from './ErrorCheck';
+import NextIcon from './NextIcon';
 
 export {
   RemoveIcon,
@@ -40,8 +42,10 @@ export {
   ErrorCheck,
 };
 
-export function getSvg(svg) {
+export function getSvg(svg, props) {
   switch (svg) {
+    case 'next':
+      return <NextIcon {...props} />;
     default:
       return null;
   }

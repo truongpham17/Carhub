@@ -8,6 +8,7 @@ import {
   UPDATE_USER_FAILURE,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
+  SIGN_OUT,
 } from '../constants/user';
 
 const INITIAL_STATE = {
@@ -36,6 +37,10 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loadingLicense: false };
     case UPDATE_USER_SUCCESS:
       return { ...state, ...action.payload };
+    case SIGN_OUT:
+      return {
+        ...INITIAL_STATE,
+      };
     default:
       return state;
   }

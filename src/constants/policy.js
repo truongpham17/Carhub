@@ -9,4 +9,14 @@ export default {
       'Please make sure your car has no damage before sharing this car. Otherwise, your sharing will be denied.',
     ],
   },
+  HIRE_SHARING_CAR: {
+    title:
+      'Please carefully read these policies before you decide to hire this car.',
+    content: [
+      'You will take all the responsibilities belong to this car. All the damages, problems when you return this car to the hub will be counted  as your responsibilities. So remember to check this car carefully  before you confirm receiving this car.',
+      'You have to pay in advance to request hiring this car. If you cancel request, your money will be refund, but you will lost some money because of Paypal transaction fee.',
+    ],
+  },
 };
+
+export const RECOMMEND_PRICE_FOR_SHARING = 0.6;

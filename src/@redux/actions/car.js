@@ -1,9 +1,9 @@
 import { query } from 'services/api';
 import { METHODS, STATUS, INITIAL_CALLBACK } from 'Constants/api';
 import {
-  GET_CAR_FAILURE,
-  GET_CAR_REQUEST,
-  GET_CAR_SUCCESS,
+  GET_CAR_LIST_FAILURE,
+  GET_CAR_LIST_REQUEST,
+  GET_CAR_LIST_SUCCESS,
   SET_RENTAL_SEARCH,
   SET_SELECTED_CAR,
   SET_PICK_OFF_HUB,
@@ -13,12 +13,15 @@ import {
   SEARCH_CAR_MODEL_FAILURE,
   SEARCH_CAR_MODEL_REQUEST,
   SEARCH_CAR_MODEL_SUCCESS,
+  GET_CAR_FAILURE,
+  GET_CAR_REQUEST,
+  GET_CAR_SUCCESS,
 } from '../constants/car';
 
 export function getCarList(_, callback = INITIAL_CALLBACK) {
   return async dispatch => {
     try {
-      dispatch({ type: GET_CAR_REQUEST });
+      dispatch({ type: GET_CAR_LIST_REQUEST });
       const result = await query({
         endpoint: 'car',
         method: METHODS.get,
@@ -27,20 +30,34 @@ export function getCarList(_, callback = INITIAL_CALLBACK) {
       if (result.status === STATUS.OK) {
         // console.log(result.data);
         dispatch({
-          type: GET_CAR_SUCCESS,
+          type: GET_CAR_LIST_SUCCESS,
           payload: result.data,
         });
         callback.onSuccess();
       } else {
-        dispatch({ type: GET_CAR_FAILURE });
+        dispatch({ type: GET_CAR_LIST_FAILURE });
         callback.onFailure();
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: GET_CAR_FAILURE, payload: error });
+      dispatch({ type: GET_CAR_LIST_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };
+}
+
+export async function getCar(id) {
+  try {
+    const result = await query({
+      endpoint: `car/${id}`,
+      method: METHODS.get,
+    });
+    if (result.status === STATUS.OK) {
+      return result.data;
+    }
+  } catch (error) {
+    return null;
+  }
 }
 
 export function addRentRequest(data, callback = INITIAL_CALLBACK) {
@@ -65,7 +82,7 @@ export function addRentRequest(data, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: ADD_RENTAL_FAILURE, payload: error });
+      dispatch({ type: ADD_RENTAL_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };
@@ -119,7 +136,7 @@ export const searchCarList = dispatch => async (
     }
   } catch (error) {
     console.log(error);
-    dispatch({ type: SEARCH_CAR_MODEL_FAILURE, payload: error });
+    dispatch({ type: SEARCH_CAR_MODEL_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };

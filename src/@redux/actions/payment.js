@@ -4,6 +4,9 @@ import {
   ADD_PAYMENT_SUCCESS,
   ADD_PAYMENT_REQUEST,
   ADD_PAYMENT_FAILURE,
+  GET_PAYMENT_TOKEN_FAILURE,
+  GET_PAYMENT_TOKEN_REQUEST,
+  GET_PAYMENT_TOKEN_SUCCESS,
 } from '../constants/payment';
 
 export function addPayment(data, callback = INITIAL_CALLBACK) {
@@ -28,8 +31,35 @@ export function addPayment(data, callback = INITIAL_CALLBACK) {
       }
     } catch (error) {
       console.log(error);
-      dispatch({ type: ADD_PAYMENT_FAILURE, payload: error });
+      dispatch({ type: ADD_PAYMENT_FAILURE, payload: error.response.data });
       callback.onFailure();
     }
   };
 }
+
+export const getPaymentToken = dispatch => async (
+  callback = INITIAL_CALLBACK
+) => {
+  try {
+    dispatch({
+      type: GET_PAYMENT_TOKEN_REQUEST,
+    });
+    const result = await query({
+      endpoint: 'transaction/paymentToken',
+    });
+
+    if (result.status === 200) {
+      dispatch({
+        type: GET_PAYMENT_TOKEN_SUCCESS,
+        payload: result.data.paymentToken,
+      });
+      callback.onSuccess();
+    } else {
+      dispatch({ type: GET_PAYMENT_TOKEN_FAILURE });
+      callback.onFailure();
+    }
+  } catch (error) {
+    dispatch({ type: GET_PAYMENT_TOKEN_FAILURE });
+    callback.onFailure();
+  }
+};

@@ -30,8 +30,8 @@ import {
 } from '@redux/constants/transaction';
 
 const INITIAL_STATE = {
-  // vin: "",
-  vin: '2C3CCACG5CH278240',
+  vin: '',
+  // vin: '2C3CCACG5CH278240',
   usingYears: null,
   odometer: null,
   images: [''],

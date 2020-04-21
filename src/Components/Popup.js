@@ -4,6 +4,8 @@ import { scaleHor } from 'Constants/dimensions';
 import ModalContainer from './ModalContainer';
 import ConfirmPopup from './ConfirmPopup';
 import StatusDialog from './StatusDialog';
+import PolicyPopup from './PolicyPopup';
+import ProfilePopup from './ProfilePopup';
 
 type PropTypes = {
   popupType: String,
@@ -27,6 +29,10 @@ const PopUp = (props: PropTypes) => {
       case 'success':
       case 'error':
         return <StatusDialog {...props} />;
+      case 'policy':
+        return <PolicyPopup {...props} />;
+      case 'profile':
+        return <ProfilePopup {...props} />;
 
       default:
         return null;
@@ -38,7 +44,14 @@ const PopUp = (props: PropTypes) => {
       onClose={onClose}
       grantResponder={grandResponder}
     >
-      <View style={styles.containerStyle}>{renderContent()}</View>
+      <View
+        style={[
+          styles.containerStyle,
+          popupType === 'policy' ? { width: '90%' } : {},
+        ]}
+      >
+        {renderContent()}
+      </View>
     </ModalContainer>
   );
 };

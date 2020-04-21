@@ -1,7 +1,7 @@
 import {
-  GET_CAR_FAILURE,
-  GET_CAR_REQUEST,
-  GET_CAR_SUCCESS,
+  GET_CAR_LIST_FAILURE,
+  GET_CAR_LIST_REQUEST,
+  GET_CAR_LIST_SUCCESS,
   SET_RENTAL_SEARCH,
   SET_SELECTED_CAR,
   SET_PICK_OFF_HUB,
@@ -33,6 +33,8 @@ const INITIAL_STATE = {
       address:
         '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
     },
+    // startLocation: {},
+    // endLocation: {},
   },
   selectedCar: null,
   loading: false,
@@ -43,16 +45,16 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case GET_CAR_REQUEST:
+    case GET_CAR_LIST_REQUEST:
       return { ...state, loading: true };
-    case GET_CAR_SUCCESS:
+    case GET_CAR_LIST_SUCCESS:
       return {
         ...state,
         data: [...state.data, ...action.payload.cars],
         total: action.payload.total,
         loading: false,
       };
-    case GET_CAR_FAILURE:
+    case GET_CAR_LIST_FAILURE:
       return { ...state, loading: false };
     case SET_RENTAL_SEARCH:
       return {
