@@ -87,6 +87,8 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
       startDate,
       endDate,
     });
+    setStartLocation(null);
+    setEndLocation(null);
     navigation.navigate('SelectCarScreen');
   };
   return (

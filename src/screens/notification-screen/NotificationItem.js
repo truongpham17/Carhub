@@ -18,10 +18,11 @@ type PropTypes = {
 
 const NotificationItem = ({ data, navigation }: PropTypes) => {
   const dispatch = useDispatch();
-  const { actor, detail, createdDate, navigationData } = data;
+  const { actor, detail, createdDate, navigatorData } = data;
+  console.log(navigatorData);
   const onPress = () => {
-    if (!navigationData) return;
-    const { screenName, selectedId } = navigationData;
+    if (!navigatorData) return;
+    const { screenName, selectedId } = navigatorData;
     if (screenName) {
       // navigation.navigate(screenName, { selectedId });
       processNotificationInfo({
