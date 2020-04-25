@@ -2,12 +2,13 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { addPayment } from '@redux/actions/payment';
 import { addRentRequest } from '@redux/actions/car';
 import { NavigationType, CarModel, HubType, UserType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
+import { paypalService } from 'services/paypal';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -39,6 +40,8 @@ const RentBookingReview = ({
   const momentFromDate = moment(fromDate);
   const momentToDate = moment(toDate);
   const duration = momentToDate.diff(momentFromDate, 'days');
+  const paymentToken = useSelector(state => state.payment.paymentToken);
+
   const data = [
     { label: 'Car name', value: car.carModel.name },
     { label: 'From date', value: momentFromDate.format('DD MMM YYYY') },
@@ -57,46 +60,58 @@ const RentBookingReview = ({
     navigation.pop();
   };
 
-  const handleNextStep = () => {
-    if (!user.license) {
-      navigation.navigate('InfoExplainScreen');
-    } else {
-      addPayment(
-        {
-          type: 'Rental',
-          amount: duration * car.carModel.price,
-          note: 'Rental transaction',
+  const handlePayment = () => {
+    paypalService(
+      {
+        token: paymentToken,
+        amount: duration * Number(car.carModel.price),
+      },
+      {
+        onSuccess(data) {
+          const { nonce } = data;
+
+          onSubmit();
         },
-        {
-          onSuccess() {
-            // console.log('come here!!!!');
-            // navigation.navigate(' ');
-            addRentRequest(
-              {
-                carModel: car.carModel._id,
-                customer: user._id,
-                type: 'hub',
-                startDate: fromDate.toISOString(),
-                endDate: toDate.toISOString(),
-                pickupHub: car.hub._id,
-                pickoffHub: pickOffHub._id,
-                price: car.carModel.price,
-                totalCost: duration * car.carModel.price,
-                description: 'Rental booking',
-                payment: payment._id,
+      }
+    );
+  };
+
+  const onSubmit = () => {
+    addPayment(
+      {
+        type: 'Rental',
+        amount: duration * car.carModel.price,
+        note: 'Rental transaction',
+      },
+      {
+        onSuccess() {
+          // console.log('come here!!!!');
+          // navigation.navigate(' ');
+          addRentRequest(
+            {
+              carModel: car.carModel._id,
+              customer: user._id,
+              type: 'hub',
+              startDate: fromDate.toISOString(),
+              endDate: toDate.toISOString(),
+              pickupHub: car.hub._id,
+              pickoffHub: pickOffHub._id,
+              price: car.carModel.price,
+              totalCost: duration * car.carModel.price,
+              description: 'Rental booking',
+              payment: payment._id,
+            },
+            {
+              onSuccess() {
+                navigation.navigate('SuccessBookingRental');
               },
-              {
-                onSuccess() {
-                  navigation.navigate('SuccessBookingRental');
-                },
-                onFailure() {},
-              }
-            );
-          },
-          onFailure() {},
-        }
-      );
-    }
+              onFailure() {},
+            }
+          );
+        },
+        onFailure() {},
+      }
+    );
   };
 
   return (
@@ -127,7 +142,7 @@ const RentBookingReview = ({
       <Button
         label="Next"
         style={{ marginVertical: scaleVer(16) }}
-        onPress={handleNextStep}
+        onPress={handlePayment}
       />
     </ViewContainer>
   );

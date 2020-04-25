@@ -52,6 +52,10 @@ import SharingInformationScreen from './history-stack/sharing-stack/sharing-info
 
 import ProfileScreen from './profile-stack/profile-screen/ProfileScreen';
 
+import NotificationScreen from './notification-screen/NotificationScreen';
+
+import LandingPage from './landing-page/LandingPage';
+
 import NavigationService from './NavigationService';
 
 const RentalStack = createStackNavigator(
@@ -101,9 +105,19 @@ const SharingStack = createStackNavigator(
     transitionConfig: () => fromRight(),
   }
 );
+
+const NotificationStack = createStackNavigator(
+  {
+    NotificationScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
 const ProfileStack = createStackNavigator(
   {
     ProfileScreen,
+    // NotificationScreen,
   },
   {
     headerMode: 'none',
@@ -128,12 +142,23 @@ const HistoryStack = createStackNavigator(
   }
 );
 
-const MainApp = createBottomTabNavigator(
+const AppStack = createStackNavigator(
   {
+    LandingPage,
     RentalStack,
     LeaseStack,
+    ProfileScreen,
+    NotificationScreen,
+  },
+  {
+    headerMode: 'none',
+  }
+);
+
+const MainApp = createBottomTabNavigator(
+  {
+    AppStack,
     HistoryStack,
-    ProfileStack,
     // RequestDetailScreen,
     // RequestListScreen,
   },

@@ -4,7 +4,7 @@ import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 
 import { connect } from 'react-redux';
 import { addPayment } from '@redux/actions/payment';
-import { addRentRequest } from '@redux/actions/car';
+import { addRentRequest, setRentalSearch } from '@redux/actions/car';
 import { NavigationType, CarType, HubType, UserType, CarModel } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
@@ -22,6 +22,7 @@ type PropTypes = {
   loadingRental: Boolean,
   payment: { _id: string },
   addRentRequest: () => void,
+  setRentalSearch: () => void,
 };
 
 const SuccessBookingRental = ({
@@ -30,12 +31,7 @@ const SuccessBookingRental = ({
   fromDate,
   toDate,
   pickOffHub,
-  user,
-  addPayment,
-  loading,
-  loadingRental,
-  payment,
-  addRentRequest,
+  setRentalSearch,
 }: PropTypes) => {
   const momentFromDate = moment(fromDate);
   const momentToDate = moment(toDate);
@@ -56,6 +52,10 @@ const SuccessBookingRental = ({
   ];
 
   const onClose = () => {
+    setRentalSearch({
+      startLocation: {},
+      endLocation: {},
+    });
     navigation.navigate('SearchCarScreen');
   };
 
@@ -112,7 +112,7 @@ export default connect(
     loadingRental: state.car.loading,
     payment: state.payment,
   }),
-  { addPayment, addRentRequest }
+  { addPayment, addRentRequest, setRentalSearch }
 )(SuccessBookingRental);
 const styles = StyleSheet.create({
   success: {

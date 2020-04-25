@@ -3,7 +3,7 @@ import { INITIAL_CALLBACK } from 'Constants/api';
 
 export function paypalService({ token, amount }, callback = INITIAL_CALLBACK) {
   requestOneTimePayment(token, {
-    amount,
+    amount: `${amount}`,
     currency: 'USD',
     localeCode: 'en_GB',
     shippingAddressRequired: false,

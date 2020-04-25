@@ -63,6 +63,14 @@ export function processNotificationInfo({ notification, navigate, dispatch }) {
           });
           break;
         }
+        case 'RentHistoryItemDetailScreen':
+          getRentalList(dispatch)({
+            onSuccess() {
+              setRentDetailId(dispatch)(data.selectedId);
+              navigate('RentHistoryItemDetailScreen');
+            },
+          });
+          break;
         default:
           navigate('MainApp');
       }

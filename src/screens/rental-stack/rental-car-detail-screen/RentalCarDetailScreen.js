@@ -13,8 +13,10 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setPickOffHub } from '@redux/actions/car';
 import { textStyle } from 'Constants/textStyles';
 import { dimension } from 'Constants';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import moment from 'moment';
+import { paypalService } from 'services/paypal';
+import { formatDate, substractDate } from 'Utils/date';
 import Header from './Header';
 import ImageSlider from './ImageSlider';
 import Item from './Item';
@@ -58,7 +60,7 @@ const RentalCarDetailScreen = ({
     navigation.goBack();
   };
 
-  const goToCheckOut = () => {
+  const onRequestPayment = () => {
     if (!returnHub) return;
 
     setPickOffHub(returnHub);
@@ -99,14 +101,12 @@ const RentalCarDetailScreen = ({
         title="Trip dates"
         data={[
           {
-            value: `Start date: ${moment(rentalSearch.startDate).format(
-              'DD MMM YYYY'
+            value: `Start date: ${formatDate(
+              rentalSearch.startDate
             )}, 10:00 AM`,
           },
           {
-            value: `End date: ${moment(rentalSearch.endDate).format(
-              'DD MMM YYYY'
-            )}, 10:00 AM`,
+            value: `End date: ${formatDate(rentalSearch.endDate)}, 10:00 AM`,
           },
         ]}
       />
@@ -155,7 +155,7 @@ const RentalCarDetailScreen = ({
       <Description description={car.carModel.description} />
 
       <View style={styles.buttonContainer}>
-        <Button label="GO TO CHECKOUT" onPress={goToCheckOut} />
+        <Button label="GO TO CHECKOUT" onPress={onRequestPayment} />
       </View>
     </ViewContainer>
   );

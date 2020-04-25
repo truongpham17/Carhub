@@ -38,6 +38,9 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
           }
         }
       });
+    if (!paymentToken) {
+      getPaymentToken(dispatch)();
+    }
   }, []);
 
   const today = new Date();
@@ -75,35 +78,17 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
     });
   };
 
-  const onRequestPayment = () => {
-    // if (!paymentToken) {
-    //   getPaymentToken(dispatch)({
-    //     onSuccess() {
-    //       paypalService(paymentToken);
-    //     },
-    //   });
-    // }
-    paypalService(
-      {
-        token:
-          'eyJ2ZXJzaW9uIjoyLCJlbnZpcm9ubWVudCI6InNhbmRib3giLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiJleUowZVhBaU9pSktWMVFpTENKaGJHY2lPaUpGVXpJMU5pSXNJbXRwWkNJNklqSXdNVGd3TkRJMk1UWXRjMkZ1WkdKdmVDSXNJbWx6Y3lJNklrRjFkR2g1SW4wLmV5SmxlSEFpT2pFMU9EY3dNamszTXpRc0ltcDBhU0k2SWpoaVpqSmtPRFZtTFROa1pHSXRORE0yTWkwNE5UQm1MV05rTkdKbU9EVTVPREZrWXlJc0luTjFZaUk2SW5kaWFETTVhek51TkRWa2VXYzVaMllpTENKcGMzTWlPaUpCZFhSb2VTSXNJbTFsY21Ob1lXNTBJanA3SW5CMVlteHBZMTlwWkNJNkluZGlhRE01YXpOdU5EVmtlV2M1WjJZaUxDSjJaWEpwWm5sZlkyRnlaRjlpZVY5a1pXWmhkV3gwSWpwbVlXeHpaWDBzSW5KcFoyaDBjeUk2V3lKdFlXNWhaMlZmZG1GMWJIUWlYU3dpYjNCMGFXOXVjeUk2ZTMxOS4yZjN3NS1lME1ESkZrNHJqbV9ob3JRTFRZN1RKTjdmM1lraDlkWDM3bTJENGNwT2ozYUxfZ2E3dnljZFg5d0w0ZG1QMFdJeDdlZmx3YXYwajJpWmtIdyIsImNvbmZpZ1VybCI6Imh0dHBzOi8vYXBpLnNhbmRib3guYnJhaW50cmVlZ2F0ZXdheS5jb206NDQzL21lcmNoYW50cy93YmgzOWszbjQ1ZHlnOWdmL2NsaWVudF9hcGkvdjEvY29uZmlndXJhdGlvbiIsImdyYXBoUUwiOnsidXJsIjoiaHR0cHM6Ly9wYXltZW50cy5zYW5kYm94LmJyYWludHJlZS1hcGkuY29tL2dyYXBocWwiLCJkYXRlIjoiMjAxOC0wNS0wOCJ9LCJjaGFsbGVuZ2VzIjpbXSwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzL3diaDM5azNuNDVkeWc5Z2YvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vb3JpZ2luLWFuYWx5dGljcy1zYW5kLnNhbmRib3guYnJhaW50cmVlLWFwaS5jb20vd2JoMzlrM240NWR5ZzlnZiJ9LCJ0aHJlZURTZWN1cmVFbmFibGVkIjp0cnVlLCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJraG9uZ2ZhcCIsImNsaWVudElkIjoiQVVXVGVEY1d5V0ZORFMtckluVnRHeUYxWEQxTWlxSGkzcTJyZUlfMHpkNWhsMW1RdGNmaWNNNC15OEt6Yl9saVg0QmxLa1lCWE95WGlscFUiLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjpmYWxzZSwiZW52aXJvbm1lbnQiOiJvZmZsaW5lIiwidW52ZXR0ZWRNZXJjaGFudCI6ZmFsc2UsImJyYWludHJlZUNsaWVudElkIjoibWFzdGVyY2xpZW50MyIsImJpbGxpbmdBZ3JlZW1lbnRzRW5hYmxlZCI6dHJ1ZSwibWVyY2hhbnRBY2NvdW50SWQiOiJraG9uZ2ZhcCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJtZXJjaGFudElkIjoid2JoMzlrM240NWR5ZzlnZiIsInZlbm1vIjoib2ZmIn0==',
-        amount: 100,
-      },
-      {
-        onSuccess(data) {
-          const { nonce } = data;
-        },
-      }
-    );
-  };
+  const onRequestPayment = () => {};
 
   const onSearchPress = () => {
     setRentalSearch({
-      // startLocation,
-      // endLocation,
+      startLocation,
+      endLocation,
       startDate,
       endDate,
     });
+    setStartLocation(null);
+    setEndLocation(null);
     navigation.navigate('SelectCarScreen');
   };
   return (
@@ -111,7 +96,7 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
       title="Search Car"
       backAction={onBackPress}
       haveBackHeader
-      haveBack={false}
+      onBackPress={() => navigation.pop()}
     >
       <View style={{ flex: 1 }}>
         <InputForm
@@ -137,9 +122,8 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
 
       <Button
         label="Search"
-        // onPress={onSearchPress}
+        onPress={onSearchPress}
         style={{ marginBottom: scaleVer(32) }}
-        onPress={onRequestPayment}
         // disable={!(startLocation && endLocation)}
       />
     </ViewContainer>
