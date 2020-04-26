@@ -48,7 +48,11 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   };
 
   return (
-    <ViewContainer style={{ backgroundColor: '#F2F2F2' }} safeArea={false}>
+    <ViewContainer
+      style={{ backgroundColor: '#F2F2F2' }}
+      safeArea={false}
+      loading={loading}
+    >
       <Image style={styles.icon} source={appIcon} resizeMode="center" />
       {/* <View style={{ flex: 1 }}> */}
       <Text style={styles.title}>Sign in</Text>

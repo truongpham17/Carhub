@@ -18,24 +18,24 @@ const INITIAL_STATE = {
   data: [],
   total: 0,
   rentalSearch: {
-    startLocation: {
-      geometry: {
-        lat: 10.848269,
-        lng: 106.7750287,
-      },
-      address:
-        '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
-    },
-    endLocation: {
-      geometry: {
-        lat: 10.848269,
-        lng: 106.7750287,
-      },
-      address:
-        '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
-    },
-    // startLocation: {},
-    // endLocation: {},
+    // startLocation: {
+    //   geometry: {
+    //     lat: 10.848269,
+    //     lng: 106.7750287,
+    //   },
+    //   address:
+    //     '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
+    // },
+    // endLocation: {
+    //   geometry: {
+    //     lat: 10.848269,
+    //     lng: 106.7750287,
+    //   },
+    //   address:
+    //     '23 Lê Văn Việt, Hiep Phu, District 9, Ho Chi Minh City, Vietnam',
+    // },
+    startLocation: {},
+    endLocation: {},
   },
   selectedCar: null,
   loading: false,
