@@ -61,19 +61,18 @@ const RentBookingReview = ({
   };
 
   const handlePayment = () => {
-    // paypalService(
-    //   {
-    //     token: paymentToken,
-    //     amount: duration * Number(car.carModel.price),
-    //   },
-    //   {
-    //     onSuccess(data) {
-    //       const { nonce } = data;
-    //       onSubmit(nonce);
-    //     },
-    //   }
-    // );
-    onSubmit('0814b3fd-3ecf-083a-606b-ed5b8cc87f60');
+    paypalService(
+      {
+        token: paymentToken,
+        amount: duration * Number(car.carModel.price),
+      },
+      {
+        onSuccess(data) {
+          const { nonce } = data;
+          onSubmit(nonce);
+        },
+      }
+    );
   };
 
   const onSubmit = nonce => {

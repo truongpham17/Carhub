@@ -133,8 +133,9 @@ const HostScreen = ({
         errors.push(index);
       }
     });
-
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
 
     if (errors.length > 0) {
       setPopUpData(dispatch)({
@@ -145,6 +146,7 @@ const HostScreen = ({
         modalVisible: true,
       });
     } else {
+      console.log('successfully recognize');
       handleNextStep();
     }
   };
@@ -186,6 +188,7 @@ const HostScreen = ({
   const handleScan = () => {
     navigation.navigate('HostScanCameraScreen');
   };
+
   return (
     <ViewContainer
       scrollable

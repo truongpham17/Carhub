@@ -28,6 +28,7 @@ export function getActionLabel(status) {
       return 'GET CAR';
     case 'CURRENT':
     case 'OVERDUE':
+    case 'SHARE_REQUEST/CURRENT':
       return 'RETURN CAR';
     case 'PAST':
       return 'HIRE THIS CAR';

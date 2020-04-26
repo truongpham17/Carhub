@@ -35,7 +35,7 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
   const handleNextStep = () => {
     if (!selectedHub) {
       Alert.alert('Please choose a hub');
-    } else if (!cardNumber) {
+    } else if (!cardNumber.email) {
       Alert.alert('Please input card number');
     } else if (startDate >= endDate) {
       Alert.alert('The selected date is wrong');

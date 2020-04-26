@@ -63,6 +63,7 @@ const RentHistoryItemDetailScreen = ({
       case 'CURRENT':
       case 'OVERDUE':
       case 'UPCOMING':
+      case 'SHARE_REQUEST/CURRENT':
         onRequestTransaction();
         break;
       case 'SHARING':

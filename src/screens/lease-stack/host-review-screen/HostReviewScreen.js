@@ -22,6 +22,7 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = async () => {
+    console.log(lease);
     addLease(dispatch)(
       { ...lease, customer: user._id, hub: lease.selectedHub._id },
       {
