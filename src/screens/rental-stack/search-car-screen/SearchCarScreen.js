@@ -82,8 +82,8 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
 
   const onSearchPress = () => {
     setRentalSearch({
-      startLocation,
-      endLocation,
+      // startLocation,
+      // endLocation,
       startDate,
       endDate,
     });

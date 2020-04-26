@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Text, Alert } from 'react-native';
-import { connect, useDispatch } from 'react-redux';
+import { Text, Alert, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { ViewContainer, InputForm, Button, DatePicker } from 'Components';
 import { textStyle } from 'Constants/textStyles';
-import { NavigationType } from 'types';
-import { scaleVer } from 'Constants/dimensions';
+import { NavigationType, UserType } from 'types';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { checkCarModelAvailable } from '@redux/actions/lease';
 import moment from 'moment';
+import { shadowStyle } from 'Constants';
+import colors from 'Constants/colors';
 
 type PropTypes = () => {
   navigation: NavigationType,
@@ -16,6 +18,7 @@ type PropTypes = () => {
 
 const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
   const dispatch = useDispatch();
+  const user: UserType = useSelector(state => state.user);
   const today = new Date();
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(
@@ -23,7 +26,7 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
       .add(30, 'day')
       .toDate()
   );
-  const [cardNumber, setCardNumber] = useState('');
+  const [cardNumber, setCardNumber] = useState({});
   const [selectedHub, setSelectedHub] = useState('');
 
   const onPressBack = () => {
@@ -39,7 +42,7 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
     } else {
       const name = `${infoFromVin[1].value} ${infoFromVin[3].value} ${infoFromVin[4].value}`;
       checkCarModelAvailable(dispatch)(
-        { startDate, endDate, cardNumber, selectedHub, name },
+        { startDate, endDate, cardNumber: cardNumber.email, selectedHub, name },
         {
           onSuccess: () => navigation.navigate('HostReviewScreen'),
           onFailure: () => {
@@ -55,9 +58,6 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
     } else {
       setEndDate(date);
     }
-  };
-  const handleChangeCardNumber = cardNumber => {
-    setCardNumber(cardNumber);
   };
   const handleChangeAddress = selectedHub => {
     setSelectedHub(selectedHub);
@@ -93,14 +93,15 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
         onChangeDate={handleChangeDate}
       />
       <Text style={[textStyle.label, { marginTop: scaleVer(32) }]}>
-        Select your card number
+        Select your Paypal account
       </Text>
-      <InputForm
-        label="CARD NUMBER"
-        value={cardNumber}
-        onChangeText={handleChangeCardNumber}
-        containerStyle={{ marginVertical: scaleVer(32) }}
-      />
+      {(user.paypalCard || []).map(item => (
+        <CardItem
+          data={item}
+          onSelectItem={value => setCardNumber(value)}
+          selectedId={cardNumber._id}
+        />
+      ))}
       <Button
         style={{ marginVertical: scaleVer(32) }}
         label="Next step"
@@ -109,6 +110,44 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
     </ViewContainer>
   );
 };
+
+type CardData = {
+  email: String,
+  _id: String,
+};
+type CardItemTypes = {
+  data: CardData,
+  onSelectItem: (_id: String) => void,
+  selectedId: String,
+};
+
+const CardItem = ({ data, onSelectItem, selectedId }: CardItemTypes) => (
+  <TouchableOpacity
+    style={[styles.cardItem, data._id === selectedId ? styles.activeItem : {}]}
+    onPress={() => onSelectItem(data)}
+  >
+    <Text style={textStyle.bodyText}>{data.email}</Text>
+  </TouchableOpacity>
+);
+
+const styles = StyleSheet.create({
+  cardItem: {
+    alignSelf: 'stretch',
+    height: 48,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    ...shadowStyle.ELEVATION_2,
+    backgroundColor: colors.white,
+    marginTop: scaleVer(8),
+    paddingHorizontal: scaleHor(8),
+    borderRadius: 4,
+  },
+  activeItem: {
+    borderWidth: 1,
+    borderColor: colors.success,
+  },
+});
 
 export default connect(state => ({
   loading: state.lease.loading,

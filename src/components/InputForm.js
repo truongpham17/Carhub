@@ -7,17 +7,18 @@ import {
   StyleProp,
   ViewStyle,
   TouchableOpacity,
-  FlatList,
 } from 'react-native';
 import { textStyleObject } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
-import { Calendar, DownArrow } from 'Assets/svgs';
+import { Calendar } from 'Assets/svgs';
 import { defaultFunction } from 'Utils/common';
-import LinearGradient from 'react-native-linear-gradient';
+
+import RNPickerSelect from 'react-native-picker-select';
 
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { pure } from 'recompose';
 import colors from 'Constants/colors';
+import { formatDate } from 'Utils/date';
 
 type PropTypes = {
   label: string,
@@ -28,10 +29,7 @@ type PropTypes = {
   textInputStyle: StyleProp<ViewStyle>,
   placeholder?: string,
   type: 'textinput' | 'calendar' | 'dropdown',
-  onAction?: () => void,
   dropDownList?: [{ value: string, key: number }],
-  showDropList?: boolean,
-  onDropItemPress: string => void,
   selectedItem: string,
   autoFocus?: boolean,
   error?: string,
@@ -49,10 +47,7 @@ const InputForm = ({
   textInputStyle,
   placeholder,
   type = 'textinput',
-  onAction = defaultFunction,
   dropDownList = [],
-  onDropItemPress,
-  selectedItem,
   autoFocus = false,
   error,
   keyboardType,
@@ -60,7 +55,6 @@ const InputForm = ({
   secureTextEntry,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
-  const [showDropList, setShowDropDownList] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const handleTextInputFocus = () => {
     setInputHover(true);
@@ -70,33 +64,6 @@ const InputForm = ({
   const handleTextInputBlur = () => {
     setInputHover(false);
   };
-  const renderDropItem = (item, index) => (
-    <TouchableOpacity
-      style={[
-        styles.dropDownItem,
-        index === dropDownList.length - 1 ? { borderBottomWidth: 0 } : {},
-      ]}
-      onPress={() => {
-        onChangeText(item);
-        setShowDropDownList(false);
-      }}
-      key={item.key}
-    >
-      {item.key === selectedItem ? (
-        <LinearGradient
-          style={styles.selectedContainer}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          colors={[colors.primaryLight, colors.primary]}
-          locations={[0, 1]}
-        >
-          <Text style={styles.selectedText}>{item.value}</Text>
-        </LinearGradient>
-      ) : (
-        <Text style={styles.text}>{item.value}</Text>
-      )}
-    </TouchableOpacity>
-  );
   const renderContent = () => {
     switch (type) {
       case 'textinput':
@@ -122,12 +89,12 @@ const InputForm = ({
         );
       case 'calendar':
         return (
-          <View>
+          <>
             <TouchableOpacity
               style={styles.contentContainer}
               onPress={() => setDatePickerVisible(visible => !visible)}
             >
-              <Text style={styles.text}>{value}</Text>
+              <Text style={styles.text}>{formatDate(value)}</Text>
               <Calendar />
             </TouchableOpacity>
 
@@ -138,45 +105,29 @@ const InputForm = ({
                 setDatePickerVisible(false);
                 onChangeText(date);
               }}
-              date={new Date(value)}
+              date={new Date(value) || new Date()}
               onCancel={() => setDatePickerVisible(false)}
             />
-          </View>
+          </>
         );
       case 'dropdown':
         return (
-          <TouchableOpacity
-            style={{ backgroundColor: 'white' }}
-            onPress={() => setShowDropDownList(showDropList => !showDropList)}
-          >
-            <View
-              style={[
-                styles.contentContainer,
-                showDropList
-                  ? { borderBottomStartRadius: 0, borderBottomEndRadius: 0 }
-                  : {},
-              ]}
-            >
-              <Text style={styles.text}>{value}</Text>
-              <DownArrow />
-            </View>
-            {showDropList && (
-              <View style={styles.dropDownList}>
-                <FlatList
-                  data={dropDownList}
-                  renderItem={({ item, index }) => renderDropItem(item, index)}
-                />
-                {/* {dropDownList.map((item, index) => renderDropItem(item, index))} */}
-              </View>
-            )}
-          </TouchableOpacity>
+          <RNPickerSelect
+            onValueChange={onChangeText}
+            items={dropDownList}
+            style={{
+              inputIOS: styles.contentContainer,
+              inputAndroid: styles.contentContainer,
+            }}
+            placeholder={{ label: placeholder }}
+          />
         );
       default:
         return null;
     }
   };
   return (
-    <View style={[containerStyle, type === 'dropdown' ? { zIndex: 2 } : {}]}>
+    <View style={[containerStyle]}>
       <Text style={styles.label}>{label}</Text>
       {renderContent()}
     </View>
@@ -194,6 +145,7 @@ const styles = StyleSheet.create({
     ...textStyleObject.bodyText,
     color: colors.dark20,
     borderColor: colors.dark60,
+    backgroundColor: colors.white,
   },
   label: {
     ...textStyleObject.label,

@@ -20,6 +20,7 @@ type PropTypes = {
   colorStart?: string,
   colorEnd?: string,
   style: StyleProp<ViewStyle>,
+  containerStyle: StyleProp<ViewStyle>,
   textColor: string,
   iconOnly?: boolean,
   icon?: string,
@@ -39,13 +40,14 @@ const Button = ({
   icon = null,
   leftIcon = null,
   disable = false,
+  containerStyle,
 }: PropTypes) => {
   const buttonLabel = label.toUpperCase();
   if (gradient) {
     return (
       <TouchableOpacity
         onPress={onPress}
-        style={{ alignSelf: 'stretch' }}
+        style={[{ alignSelf: 'stretch' }, containerStyle]}
         disabled={disable}
       >
         <LinearGradient

@@ -29,6 +29,7 @@ import {
   CANCEL_SHARING_RENTAL_REQUEST,
   CANCEL_SHARING_RENTAL_SUCCESS,
 } from '@redux/constants/sharing';
+import { SIGN_OUT } from '@redux/constants/user';
 
 const INITIAL_STATE = {
   data: [],
@@ -117,6 +118,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         sharingRequestData: { ...state.sharingRequestData, ...action.payload },
       };
+    case SIGN_OUT:
+      return { ...INITIAL_STATE };
     default:
       return { ...state };
   }

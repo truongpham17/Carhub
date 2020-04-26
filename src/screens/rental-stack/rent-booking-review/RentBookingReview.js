@@ -61,53 +61,40 @@ const RentBookingReview = ({
   };
 
   const handlePayment = () => {
-    paypalService(
-      {
-        token: paymentToken,
-        amount: duration * Number(car.carModel.price),
-      },
-      {
-        onSuccess(data) {
-          const { nonce } = data;
-
-          onSubmit();
-        },
-      }
-    );
+    // paypalService(
+    //   {
+    //     token: paymentToken,
+    //     amount: duration * Number(car.carModel.price),
+    //   },
+    //   {
+    //     onSuccess(data) {
+    //       const { nonce } = data;
+    //       onSubmit(nonce);
+    //     },
+    //   }
+    // );
+    onSubmit('0814b3fd-3ecf-083a-606b-ed5b8cc87f60');
   };
 
-  const onSubmit = () => {
-    addPayment(
+  const onSubmit = nonce => {
+    addRentRequest(
       {
-        type: 'Rental',
-        amount: duration * car.carModel.price,
-        note: 'Rental transaction',
+        carModel: car.carModel._id,
+        customer: user._id,
+        type: 'hub',
+        startDate: fromDate.toISOString(),
+        endDate: toDate.toISOString(),
+        pickupHub: car.hub._id,
+        pickoffHub: pickOffHub._id,
+        price: car.carModel.price,
+        totalCost: duration * car.carModel.price,
+        description: 'Rental booking',
+        payment: payment._id,
+        nonce,
       },
       {
         onSuccess() {
-          // console.log('come here!!!!');
-          // navigation.navigate(' ');
-          addRentRequest(
-            {
-              carModel: car.carModel._id,
-              customer: user._id,
-              type: 'hub',
-              startDate: fromDate.toISOString(),
-              endDate: toDate.toISOString(),
-              pickupHub: car.hub._id,
-              pickoffHub: pickOffHub._id,
-              price: car.carModel.price,
-              totalCost: duration * car.carModel.price,
-              description: 'Rental booking',
-              payment: payment._id,
-            },
-            {
-              onSuccess() {
-                navigation.navigate('SuccessBookingRental');
-              },
-              onFailure() {},
-            }
-          );
+          navigation.navigate('SuccessBookingRental');
         },
         onFailure() {},
       }
@@ -140,7 +127,7 @@ const RentBookingReview = ({
         ))}
       </View>
       <Button
-        label="Next"
+        label="Payment"
         style={{ marginVertical: scaleVer(16) }}
         onPress={handlePayment}
       />
