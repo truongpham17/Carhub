@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from 'react-native-elements';
 import RemoveIcon from './RemoveIcon';
 import Edit from './Edit';
 import ArrowReturn from './ArrowReturn';
@@ -46,6 +47,8 @@ export function getSvg(svg, props) {
   switch (svg) {
     case 'next':
       return <NextIcon {...props} />;
+    case 'question':
+      return <Icon type="simple-line-icon" name="question" size={16} />;
     default:
       return null;
   }

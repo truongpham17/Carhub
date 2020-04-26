@@ -5,60 +5,92 @@ import {
   formatDayLabel,
   formatPrice,
 } from 'Utils/date';
+import { setPopUpData } from '@redux/actions';
 
-export function getData(lease, user) {
+export function getData(lease, user, dispatch) {
   const daydiff = substractDate(lease.startDate, lease.endDate);
   return [
     {
-      id: 'customer',
+      key: 'customer',
       label: 'Customer',
-      content: user.username,
+      detail: user.fullName,
+      headGroup: true,
+      headTitle: 'Customer Information',
+      headerStyle: { marginTop: 0 },
     },
     {
-      id: 'phone',
+      key: 'phone',
       label: 'Phone',
-      content: user.phone,
+      detail: user.phone,
     },
     {
-      id: 'name',
+      key: 'name',
       label: 'Car name',
-      content: `${lease.infoFromVin[1].value} ${lease.infoFromVin[3].value} ${lease.infoFromVin[4].value}`,
+      detail: `${lease.infoFromVin[1].value} ${lease.infoFromVin[3].value} ${lease.infoFromVin[4].value}`,
+      headGroup: true,
+      headTitle: 'Lease Information',
     },
     {
-      id: 'status',
+      key: 'status',
       label: 'Car status',
-      content: `${lease.usingYears} years, ${lease.odometer} kilometers`,
+      detail: `${lease.usingYears} years, ${lease.odometer} kilometers`,
     },
     {
-      id: 'from',
+      key: 'from',
       label: 'From date',
-      content: formatDate(lease.startDate),
+      detail: formatDate(lease.startDate),
     },
     {
-      id: 'to',
+      key: 'to',
       label: 'To date',
-      content: formatDate(lease.endDate),
+      detail: formatDate(lease.endDate),
     },
     {
-      id: 'duration',
+      key: 'duration',
       label: 'Duration',
-      content: formatDayLabel(daydiff),
+      detail: formatDayLabel(daydiff),
     },
 
     {
-      id: 'location',
+      key: 'location',
       label: 'Hub location',
-      content: lease.selectedHub.address,
+      detail: lease.selectedHub.address,
     },
     {
-      id: 'number',
-      label: 'Card number',
-      content: lease.cardNumber,
+      key: 'number',
+      label: 'Paypal account',
+      detail: lease.cardNumber,
+      pressable: true,
+      nextIcon: 'question',
+      onItemPress() {
+        setPopUpData(dispatch)({
+          popupType: 'confirm',
+          acceptOnly: true,
+          title: 'Paypal email/phone',
+          description: `After finish the leasing period, we will send your profit to this account. Please make sure that it is correctly.`,
+        });
+      },
+      headGroup: true,
+      headTitle: 'Profit Information',
     },
     {
-      id: 'revenue',
+      key: 'revenue',
       label: `You can earn up to`,
-      content: formatPrice(Number(lease.carModel.price) * daydiff),
+      detail: formatPrice(Number(lease.carModel.price) * daydiff),
+      pressable: true,
+      nextIcon: 'question',
+      onItemPress() {
+        setPopUpData(dispatch)({
+          popupType: 'confirm',
+          acceptOnly: true,
+          title: 'How to calculate your profit',
+          description: `The profit you can earn depends on how much days your car has been rented.\nWe cannot promise that your car would be rented.\nYour leasing is duration is 30 days, and the renting fee each day is $ ${
+            lease.carModel.price
+          }, it means you can earn up to ${formatPrice(
+            Number(lease.carModel.price) * daydiff
+          )}.`,
+        });
+      },
     },
   ];
 }

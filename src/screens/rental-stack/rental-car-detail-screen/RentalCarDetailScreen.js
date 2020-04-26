@@ -155,7 +155,7 @@ const RentalCarDetailScreen = ({
       <Description description={car.carModel.description} />
 
       <View style={styles.buttonContainer}>
-        <Button label="GO TO CHECKOUT" onPress={onRequestPayment} />
+        <Button label="Select car" onPress={onRequestPayment} />
       </View>
     </ViewContainer>
   );

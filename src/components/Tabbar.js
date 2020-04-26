@@ -16,17 +16,22 @@ import { scaleVer } from 'Constants/dimensions';
 const TAB_NAME = [
   'AppStack',
   'HistoryStack',
+  'ProfileStack',
   // 'NotificationStack',
 ];
 const routeConfig = [
   {
-    icon: 'magnifying-glass',
-    title: 'Search',
+    icon: 'home',
+    title: 'Home',
   },
 
   {
     icon: 'menu',
     title: 'History',
+  },
+  {
+    icon: 'user',
+    title: 'Profile',
   },
   // {
   //   icon: 'shopping-cart',
@@ -35,7 +40,7 @@ const routeConfig = [
 ];
 
 class TabBar extends React.PureComponent {
-  renderTabIcon = ({ icon, title, onPress, color, type = 'entypo' }) => (
+  renderTabIcon = ({ icon, title, onPress, color, type = 'feather' }) => (
     <TouchableWithoutFeedback onPress={onPress} key={title}>
       <View>
         <Icon name={icon} type={type} size={20} color={color} />

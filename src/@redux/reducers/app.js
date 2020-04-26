@@ -8,6 +8,7 @@ const INITIAL_STATE = {
   popup: {
     title: '',
     description: '',
+    defaultValue: '',
     onDecline: defaultFunction,
     onConfirm: defaultFunction,
     onClose: defaultFunction,
@@ -24,6 +25,7 @@ const TEST = {
     modalVisible: true,
     title: 'hello',
     description: 'hello',
+    defaultValue: '',
     onConfirm(data) {
       console.log(data);
     },

@@ -7,10 +7,11 @@ type PopupType = {
   onConfirm: () => void,
   onClose: () => void,
   modalVisible: Boolean,
-  popupType: 'success' | 'confirm' | 'error' | 'policy' | 'profile',
+  popupType: 'success' | 'confirm' | 'error' | 'policy' | 'profile' | 'prompt',
   grandResponder: Boolean,
   acceptOnly: Boolean,
   confirmLabel: String,
+  defaultValue: String,
 };
 
 export const setPopUpData = dispatch => (data: PopupType) =>
