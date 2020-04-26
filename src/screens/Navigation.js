@@ -36,6 +36,7 @@ import HostScanCameraScreen from './lease-stack/host-scan-camera-screen/HostScan
 
 import AuthScreen from './auth-stack/auth-screen/AuthScreen';
 import SignInScreen from './auth-stack/sign-in-screen/SignInScreen';
+import SignUpScreen from './auth-stack/sign-up-screen/SignUpScreen';
 
 import HistoryScreen from './history-stack/history-screen/HistoryScreen';
 import RentHistoryItemDetailScreen from './history-stack/rental-stack/rent-history-item-detail-screen/RentHistoryItemDetailScreen';
@@ -51,6 +52,7 @@ import SelectTimeScreen from './history-stack/sharing-stack/select-time-screen/S
 import SharingInformationScreen from './history-stack/sharing-stack/sharing-information-screen/SharingInformationScreen';
 
 import ProfileScreen from './profile-stack/profile-screen/ProfileScreen';
+import DetailProfileScreen from './profile-stack/detail-profile-screen/DetailProfileScreen';
 
 import NotificationScreen from './notification-screen/NotificationScreen';
 
@@ -106,18 +108,10 @@ const SharingStack = createStackNavigator(
   }
 );
 
-const NotificationStack = createStackNavigator(
-  {
-    NotificationScreen,
-  },
-  {
-    headerMode: 'none',
-  }
-);
 const ProfileStack = createStackNavigator(
   {
     ProfileScreen,
-    // NotificationScreen,
+    DetailProfileScreen,
   },
   {
     headerMode: 'none',
@@ -147,7 +141,6 @@ const AppStack = createStackNavigator(
     LandingPage,
     RentalStack,
     LeaseStack,
-    ProfileScreen,
     NotificationScreen,
   },
   {
@@ -159,6 +152,7 @@ const MainApp = createBottomTabNavigator(
   {
     AppStack,
     HistoryStack,
+    ProfileStack,
     // RequestDetailScreen,
     // RequestListScreen,
   },
@@ -171,6 +165,7 @@ const MainApp = createBottomTabNavigator(
 const SignInStack = createStackNavigator(
   {
     SignInScreen,
+    SignUpScreen,
   },
   {
     headerMode: 'none',

@@ -3,6 +3,7 @@ import {
   GET_NOTIFICATION_REQUEST,
   GET_NOTIFICATION_SUCCESS,
 } from '@redux/constants/notification';
+import { SIGN_OUT } from '@redux/constants/user';
 
 const INITIAL_STATE = {
   loading: false,
@@ -26,6 +27,9 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
       };
+
+    case SIGN_OUT:
+      return { ...INITIAL_STATE };
     default:
       return { ...state };
   }

@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { ViewContainer, InputForm, Button, ProgressStep } from 'Components';
-import { textStyle } from 'Constants/textStyles';
+import { textStyle, textStyleObject } from 'Constants/textStyles';
 import { signIn, updateUser } from '@redux/actions/user';
 
 import { NavigationType } from 'types';
 import { connect, useDispatch } from 'react-redux';
-import { scaleVer } from 'Constants/dimensions';
+import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { changeTransactionStatus } from 'Utils/database';
+import { appIcon } from 'Assets/images';
+import colors from 'Constants/colors';
+import { shadowStyle } from 'Constants';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -45,38 +48,76 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
   };
 
   return (
-    <ViewContainer requestError={error}>
+    <ViewContainer style={{ backgroundColor: '#F2F2F2' }} safeArea={false}>
+      <Image style={styles.icon} source={appIcon} resizeMode="center" />
       {/* <View style={{ flex: 1 }}> */}
-      <Text
-        style={[
-          textStyle.sectionHeading,
-          { textAlign: 'center', marginBottom: scaleVer(48) },
-        ]}
-      >
-        Sign in
-      </Text>
-      <InputForm
-        label="Username"
-        onChangeText={onChangeUserName}
-        value={username}
-        containerStyle={{ marginBottom: scaleVer(16) }}
-      />
-      <InputForm
-        label="Password"
-        onChangeText={onChangePassword}
-        value={password}
-        secureTextEntry
-      />
-      {/* </View> */}
+      <Text style={styles.title}>Sign in</Text>
+      <View style={styles.badge}>
+        <InputForm
+          label="Username"
+          onChangeText={onChangeUserName}
+          value={username}
+          containerStyle={{ marginBottom: scaleVer(16) }}
+          textInputStyle={styles.textInput}
+          placeholder="Username"
+        />
+        <InputForm
+          label="Password"
+          onChangeText={onChangePassword}
+          value={password}
+          placeholder="Password"
+          secureTextEntry
+          textInputStyle={styles.textInput}
+        />
+      </View>
 
       <Button
         label="Sign in"
         onPress={handleUserLogin}
-        style={{ marginTop: scaleVer(32) }}
+        containerStyle={{ marginTop: scaleVer(64) }}
       />
+      <TouchableOpacity
+        style={{ padding: 4 }}
+        onPress={() => navigation.navigate('SignUpScreen')}
+      >
+        <Text style={styles.signUpLabel}>Create new account</Text>
+      </TouchableOpacity>
     </ViewContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: {
+    width: scaleHor(60),
+    height: scaleHor(60),
+    alignSelf: 'center',
+    marginTop: scaleVer(48),
+  },
+  badge: {
+    backgroundColor: colors.white,
+    ...shadowStyle.ELEVATION_3,
+    padding: 16,
+    borderRadius: 8,
+    marginTop: scaleVer(32),
+  },
+  textInput: {
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: colors.dark80,
+  },
+  title: {
+    ...textStyleObject.sectionHeadingBold,
+    marginBottom: scaleVer(24),
+    color: colors.primary,
+    textAlign: 'center',
+  },
+  signUpLabel: {
+    ...textStyleObject.bodyText,
+    marginTop: scaleVer(12),
+    textAlign: 'center',
+    color: colors.primary,
+  },
+});
 
 export default connect(state => ({ loading: state.user.loading }), {
   signIn,

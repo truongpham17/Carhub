@@ -28,6 +28,7 @@ import {
   CONFIRM_TRANSACTION_SUCCESS,
   CONFIRM_TRANSACTION_FAILURE,
 } from '@redux/constants/transaction';
+import { SIGN_OUT } from '@redux/constants/user';
 
 const INITIAL_STATE = {
   vin: '',
@@ -123,6 +124,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: false };
     case CONFIRM_TRANSACTION_FAILURE:
       return { ...state, loading: false };
+    case SIGN_OUT:
+      return { ...INITIAL_STATE };
     default:
       return { ...state };
   }

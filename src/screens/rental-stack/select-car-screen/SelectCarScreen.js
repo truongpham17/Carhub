@@ -35,6 +35,7 @@ type PropTypes = {
 
 const SelectCarScreen = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
+  const [refresh, setRefresh] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
@@ -49,14 +50,23 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
   const sharingList: [SharingType] = useSelector(state => state.sharing.data);
 
   useEffect(() => {
+    loadCarList();
+  }, []);
+
+  const loadCarList = () => {
+    setRefresh(true);
     getSharing(dispatch)({
       ...rentalSearch,
     });
+
     searchCarList(dispatch)({
       startLocation: rentalSearch.startLocation,
       endLocation: rentalSearch.endLocation,
+      startDate: rentalSearch.startDate,
+      endDate: rentalSearch.endDate,
     });
-  }, []);
+    setRefresh(false);
+  };
 
   const onBackPress = () => {
     navigation.pop();
@@ -98,6 +108,8 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
     >
       <Header />
       <FlatList
+        refreshing={refresh}
+        onRefresh={loadCarList}
         data={formatData(carModels, sharingList)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}

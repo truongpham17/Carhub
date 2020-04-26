@@ -4,6 +4,7 @@ import {
   GET_RENTAL_FAILURE,
   SET_RENT_DETAIL_ID,
 } from '@redux/constants/rental';
+import { SIGN_OUT } from '@redux/constants/user';
 
 const INITIAL_STATE = {
   data: {
@@ -25,6 +26,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: false, error: action.payload };
     case SET_RENT_DETAIL_ID:
       return { ...state, selectedId: action.payload };
+    case SIGN_OUT:
+      return { ...INITIAL_STATE };
     default:
       return { ...state };
   }

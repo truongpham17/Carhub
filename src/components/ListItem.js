@@ -24,6 +24,9 @@ type PropTypes = {
   detail?: string,
   pressable?: boolean,
   containerStyle: StyleProp<ViewStyle>,
+  headGroup?: boolean,
+  headTitle?: string,
+  headerStyle?: StyleProp<ViewStyle>,
 };
 
 const ListItem = ({
@@ -36,6 +39,9 @@ const ListItem = ({
   detail,
   containerStyle,
   pressable = false,
+  headGroup,
+  headTitle,
+  headerStyle,
 }: PropTypes) => {
   const getAction = () => {
     switch (type) {
@@ -71,25 +77,38 @@ const ListItem = ({
     }
   };
   return (
-    <TouchableOpacity
-      style={[
-        styles.container,
-        showSeparator ? styles.separator : {},
-        containerStyle,
-      ]}
-      onPress={onItemPress}
-      disabled={!pressable}
-    >
-      <View style={styles.labelContainer}>
-        {icon && (
-          <View style={{ marginEnd: scaleHor(16), width: scaleHor(16) }}>
-            {getSvg(icon, { fill: colors.dark20 })}
-          </View>
-        )}
-        <Text style={styles.label}>{label}</Text>
-      </View>
-      {getAction()}
-    </TouchableOpacity>
+    <>
+      {headGroup && (
+        <Text
+          style={[
+            textStyle.widgetItem,
+            { marginTop: scaleVer(24) },
+            headerStyle,
+          ]}
+        >
+          {headTitle}
+        </Text>
+      )}
+      <TouchableOpacity
+        style={[
+          styles.container,
+          showSeparator ? styles.separator : {},
+          containerStyle,
+        ]}
+        onPress={onItemPress}
+        disabled={!pressable}
+      >
+        <View style={styles.labelContainer}>
+          {icon && (
+            <View style={{ marginEnd: scaleHor(16), width: scaleHor(16) }}>
+              {getSvg(icon, { fill: colors.dark20 })}
+            </View>
+          )}
+          <Text style={styles.label}>{label}</Text>
+        </View>
+        {getAction()}
+      </TouchableOpacity>
+    </>
   );
 };
 

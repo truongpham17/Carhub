@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { processNotificationInfo } from 'services/notification';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
+import moment from 'moment';
 
 type PropTypes = {
   data: NotificationType,
@@ -18,10 +19,12 @@ type PropTypes = {
 
 const NotificationItem = ({ data, navigation }: PropTypes) => {
   const dispatch = useDispatch();
-  const { actor, detail, createdDate, navigationData } = data;
+  const { actor, detail, createdDate, navigatorData } = data;
+
+  // const minuteDiff = moment().diff(createdDate, 'seconds');
   const onPress = () => {
-    if (!navigationData) return;
-    const { screenName, selectedId } = navigationData;
+    if (!navigatorData) return;
+    const { screenName, selectedId } = navigatorData;
     if (screenName) {
       // navigation.navigate(screenName, { selectedId });
       processNotificationInfo({
@@ -44,8 +47,8 @@ const NotificationItem = ({ data, navigation }: PropTypes) => {
       ) : (
         <Image style={styles.avatar} source={appIcon} resizeMode="center" />
       )}
-      <View>
-        <Text style={textStyle.bodyText}>
+      <View style={{ flex: 1 }}>
+        <Text style={[textStyle.bodyText]}>
           {detail.map(item => (
             <Text
               style={item.detailType === 'bold' ? textStyle.bodyTextBold : {}}
@@ -54,7 +57,11 @@ const NotificationItem = ({ data, navigation }: PropTypes) => {
             </Text>
           ))}
         </Text>
-        <Text style={textStyle.labelRegular}>{formatDate(createdDate)}</Text>
+        <Text style={textStyle.labelRegular}>
+          {/* {minuteDiff < 60
+            ? `${minuteDiff} minutes ago` */}
+          {formatDate(createdDate, true)}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -64,9 +71,9 @@ const styles = StyleSheet.create({
     height: scaleHor(64),
     paddingVertical: scaleVer(12),
     marginHorizontal: scaleHor(4),
-    backgroundColor: colors.white,
     alignItems: 'center',
     flexDirection: 'row',
+    alignSelf: 'stretch',
   },
   avatar: {
     width: scaleHor(60),

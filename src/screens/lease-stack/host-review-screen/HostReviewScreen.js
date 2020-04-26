@@ -42,7 +42,7 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
       }
     );
   };
-  const leaseContract = getData(lease, user);
+  const leaseContract = getData(lease, user, dispatch);
   return (
     <ViewContainer
       haveBackHeader
@@ -56,11 +56,9 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
         renderItem={({ item, index }) => (
           <ListItem
             type="detail"
-            label={item.label}
-            detail={item.content}
             showSeparator={index !== leaseContract.length - 1}
-            key={item.label}
             pressable={false}
+            {...item}
           />
         )}
         keyExtractor={item => item.label}

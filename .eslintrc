@@ -7,7 +7,6 @@
     "no-use-before-define": "off",
     "react/default-props-match-prop-types": "off",
     "react-hooks/exhaustive-deps": "off",
-    "import/no-unresolved": "off",
     "no-unused-expressions": "off"
   },
   "parser": "babel-eslint",

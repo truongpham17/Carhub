@@ -38,24 +38,15 @@ const LandingPage = ({ navigation }: PropTypes) => {
           <Text style={textStyle.bodyText}>Hello, </Text>
           <Text style={textStyle.widgetItem}>{user.fullName}</Text>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Icon
-            name="user"
-            type="feather"
-            color={colors.white}
-            // reverse
-            onPress={() => navigation.navigate('ProfileScreen')}
-            containerStyle={[{ marginEnd: 12 }, styles.icon]}
-          />
-          <Icon
-            name="bell"
-            type="feather"
-            color={colors.white}
-            // reverse
-            containerStyle={styles.icon}
-            onPress={() => navigation.navigate('NotificationScreen')}
-          />
-        </View>
+
+        <Icon
+          name="bell"
+          type="feather"
+          color={colors.white}
+          // reverse
+          containerStyle={styles.icon}
+          onPress={() => navigation.navigate('NotificationScreen')}
+        />
       </View>
       <RentalBadge navigation={navigation} />
       <Seperator />

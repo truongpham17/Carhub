@@ -189,7 +189,6 @@ const HostScreen = ({
   return (
     <ViewContainer
       scrollable
-      haveBack={false}
       haveBackHeader
       title="Host"
       onBackPress={onPressBack}
@@ -242,7 +241,7 @@ const HostScreen = ({
       <Button
         style={{ marginVertical: scaleVer(32) }}
         label="Next step"
-        onPress={handleNextStep}
+        onPress={handleTestImage}
       />
     </ViewContainer>
   );

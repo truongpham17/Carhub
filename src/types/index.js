@@ -82,6 +82,7 @@ export type UserType = {
   email: String,
   phone: String,
   account: String,
+  paypalCard: String,
 };
 
 export type SharingType = {
