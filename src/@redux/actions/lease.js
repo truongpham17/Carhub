@@ -37,6 +37,8 @@ export const checkCarByVin = dispatch => async (data, callback) => {
       method: 'GET',
     });
 
+    console.log(result.data);
+
     const infoFromVin = [];
     const codes = [24, 26, 27, 28, 29, 39, 75];
     codes.forEach(code => {
@@ -46,7 +48,7 @@ export const checkCarByVin = dispatch => async (data, callback) => {
       }
     });
 
-    // console.log(infoFromVin);
+    console.log(infoFromVin);
 
     // const infoFromVin = [
     //   { key: 'Fuel Type - Primary', value: 'Flexible Fuel Vehicle (FFV)' },
@@ -70,7 +72,7 @@ export const checkCarByVin = dispatch => async (data, callback) => {
       callback.onFailure();
     }
   } catch (error) {
-    dispatch({ type: GET_LEASE_FAILURE, payload: error.response.data });
+    dispatch({ type: GET_CAR_BY_VIN_FAILURE, payload: error.response.data });
     callback.onFailure();
   }
 };
@@ -152,7 +154,7 @@ export const addLease = dispatch => async (
     startDate,
     endDate,
     usingYears,
-    VIN,
+    vin,
     customer,
     hub,
     cardNumber,
@@ -162,8 +164,10 @@ export const addLease = dispatch => async (
 ) => {
   try {
     dispatch({ type: ADD_LEASE_REQUEST });
-
     const imagesURL = [];
+    // const imagesURL = [
+    //   'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
+    // ];
 
     await Promise.all(
       images
@@ -177,13 +181,15 @@ export const addLease = dispatch => async (
         })
     );
 
+    // console.log('vin here!!: ', vin);
+
     const result = await query({
       endpoint: 'car/createLeasingCar',
       method: METHODS.post,
       data: {
         customer,
         odometer,
-        VIN,
+        vin,
         carModel: carModel._id,
         usingYears,
         images: imagesURL,

@@ -110,12 +110,12 @@ const ViewContainer = ({
     }, 6000);
   }, [requestError]);
 
-  const renderLoading = () => (
-    <FadedContainer visible={loading}>
-      <LottieView autoPlay source={loadingAnimated} />
-    </FadedContainer>
-  );
-
+  const renderLoading = () =>
+    loading && (
+      <FadedContainer visible>
+        <LottieView autoPlay source={loadingAnimated} />
+      </FadedContainer>
+    );
   const renderBackTitle = () =>
     haveBackHeader && (
       <Header

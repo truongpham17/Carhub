@@ -50,6 +50,7 @@ export const getRentalList = dispatch => async (
       dispatch({ type: GET_RENTAL_FAILURE });
     }
   } catch (error) {
+    console.log(error);
     callback.onFailure();
     dispatch({
       type: GET_RENTAL_FAILURE,

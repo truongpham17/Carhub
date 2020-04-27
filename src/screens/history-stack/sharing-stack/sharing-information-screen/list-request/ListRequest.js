@@ -58,6 +58,14 @@ const ListRequest = ({ newId, navigation }: PropTypes) => {
             });
             getRentalRequestBySharing(dispatch)(sharingInformation._id);
           },
+          onFailure() {
+            setPopUpData(dispatch)({
+              popupType: 'error',
+              title: 'Error',
+              description:
+                'There was an error while accept request. Please try again!',
+            });
+          },
         });
       },
     });

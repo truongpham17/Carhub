@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import {
-  ViewContainer,
-  InputForm,
-  ListItem,
-  Button,
-  ImageSelector,
-} from 'Components';
+import { ViewContainer } from 'Components';
 import { NavigationType, UserType } from 'types';
 import { RNCamera } from 'react-native-camera';
 import RNTextDetector from 'react-native-text-detector';
@@ -16,17 +10,15 @@ import { scanVinCodeByCamera } from '@redux/actions/lease';
 type PropTypes = {
   navigation: NavigationType,
   vin: String,
-  loading: Boolean,
   scanVinCodeByCamera: () => void,
 };
 
 const HostScanCameraScreen = ({
   navigation,
   scanVinCodeByCamera,
-  vin,
-  loading,
 }: PropTypes) => {
   const [camera, setCamera] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onPressBack = () => {
     navigation.pop();
@@ -39,6 +31,7 @@ const HostScanCameraScreen = ({
         base64: true,
         skipProcessing: true,
       };
+      setLoading(true);
       const { uri } = await camera.takePictureAsync(options);
       const visionResp = await RNTextDetector.detectFromUri(uri);
       scanVinCodeByCamera(
@@ -50,6 +43,7 @@ const HostScanCameraScreen = ({
           },
         }
       );
+      setLoading(false);
     } catch (e) {
       console.warn(e);
     }
@@ -113,7 +107,6 @@ const styles = StyleSheet.create({
 
 export default connect(
   state => ({
-    loading: state.lease.loading,
     user: state.user,
     vin: state.lease.vin,
   }),

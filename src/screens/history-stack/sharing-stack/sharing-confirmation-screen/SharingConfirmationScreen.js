@@ -1,12 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { ViewContainer, Button, ProgressStep, ListItem } from 'Components';
 import { RentDetailType, NavigationType } from 'types';
 
-import colors from 'Constants/colors';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { useDispatch, useSelector } from 'react-redux';
-import { shadowStyle } from 'Constants';
 import { formatDate } from 'Utils/date';
 import { textStyle } from 'Constants/textStyles';
 import {
@@ -59,19 +57,23 @@ const SharingConfirmationScreen = ({ navigation }: PropTypes) => {
       },
       {
         onSuccess() {
-          setPopUpData(dispatch)({
-            popupType: 'success',
-            title: 'Sharing successfully',
-            description:
-              'Your sharing request has been sent successfully! We will notify you when some one want to hire your rental car',
-            onConfirm() {
-              getRentalList(dispatch)();
-              cancelPopup(dispatch);
-              navigation.navigate('RentHistoryItemDetailScreen');
-            },
-          });
+          setTimeout(() => {
+            setPopUpData(dispatch)({
+              popupType: 'success',
+              title: 'Sharing successfully',
+              description:
+                'Your sharing request has been sent successfully! We will notify you when some one want to hire your rental car',
+              onConfirm() {
+                console.log('on confirm');
+                getRentalList(dispatch)();
+                cancelPopup(dispatch);
+                navigation.navigate('RentHistoryItemDetailScreen');
+              },
+            });
+          }, 500);
         },
         onFailure() {
+          console.log('on failure!!!!');
           setPopUpData(dispatch)({
             popupType: 'error',
             title: 'Error',

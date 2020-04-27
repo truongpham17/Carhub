@@ -41,7 +41,7 @@ const NotificationItem = ({ data, navigation }: PropTypes) => {
     }
   };
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       {actor ? (
         <Avatar uri={actor.avatar} style={styles.avatar} />
       ) : (

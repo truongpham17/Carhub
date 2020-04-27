@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Alert23,
+} from 'react-native';
 import { ViewContainer, InputForm, DatePicker, Button } from 'Components';
 import { NavigationType } from 'types';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
@@ -81,9 +87,13 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
   const onRequestPayment = () => {};
 
   const onSearchPress = () => {
+    if (!startLocation || !endLocation) {
+      Alert.alert('Please select location');
+      return;
+    }
     setRentalSearch({
-      // startLocation,
-      // endLocation,
+      startLocation,
+      endLocation,
       startDate,
       endDate,
     });
