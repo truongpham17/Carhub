@@ -43,17 +43,16 @@ const ImageSelector = ({
   }
   return (
     <View style={[styles.container, style]}>
+      <TouchableOpacity style={styles.remove} onPress={handleRemovePress}>
+        <Remove />
+      </TouchableOpacity>
       <View style={styles.img}>
         <Image
           source={{ uri: data.uri }}
           style={{ flex: 1 }}
-          resizeMode="center"
+          resizeMode="cover"
         />
       </View>
-
-      <TouchableOpacity style={styles.remove} onPress={handleRemovePress}>
-        <Remove />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -65,6 +64,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 4,
     ...shadowStyle.ELEVATION_3,
+    backgroundColor: colors.white,
+    overflow: 'hidden',
   },
   container: {
     width: scaleHor(130),
@@ -75,6 +76,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 0,
+    zIndex: 2,
+    elevation: 6,
   },
   empty: {
     flex: 1,

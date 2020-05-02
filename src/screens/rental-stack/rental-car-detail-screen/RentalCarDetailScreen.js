@@ -145,10 +145,10 @@ const RentalCarDetailScreen = ({
           },
           {
             icon: { name: 'briefcase' },
-            value: `${car.carModel.numberOfBag} bags`,
+            value: `4 bags`,
           },
           { icon: { name: 'filter' }, value: `${car.carModel.fuelType}` },
-          { icon: { name: 'radio' }, value: `${car.carModel.wheel}` },
+          { icon: { name: 'radio' }, value: 'automatic' },
         ]}
       />
 

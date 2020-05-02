@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ViewContainer } from 'Components';
 import { NavigationType, UserType } from 'types';
 import { RNCamera } from 'react-native-camera';
 import RNTextDetector from 'react-native-text-detector';
-import { scanVinCodeByCamera } from '@redux/actions/lease';
+import { scanVinCodeByCamera, setLeaseInfo } from '@redux/actions/lease';
 
 type PropTypes = {
   navigation: NavigationType,
   vin: String,
-  scanVinCodeByCamera: () => void,
 };
 
-const HostScanCameraScreen = ({
-  navigation,
-  scanVinCodeByCamera,
-}: PropTypes) => {
+const HostScanCameraScreen = ({ navigation }: PropTypes) => {
   const [camera, setCamera] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { type = 'vin' } = navigation.state.params;
+  const dispatch = useDispatch();
 
   const onPressBack = () => {
     navigation.pop();
@@ -31,19 +28,16 @@ const HostScanCameraScreen = ({
         base64: true,
         skipProcessing: true,
       };
-      setLoading(true);
+      setLeaseInfo(dispatch)({ loading: true });
+      navigation.pop();
+
       const { uri } = await camera.takePictureAsync(options);
+
       const visionResp = await RNTextDetector.detectFromUri(uri);
-      scanVinCodeByCamera(
-        { vin: visionResp[0].text },
-        {
-          onSuccess: () => navigation.navigate('HostScreen'),
-          onFailure: () => {
-            console.log('error');
-          },
-        }
-      );
-      setLoading(false);
+      setLeaseInfo(dispatch)({
+        [type]: visionResp[0].text,
+        loading: false,
+      });
     } catch (e) {
       console.warn(e);
     }
@@ -54,7 +48,6 @@ const HostScanCameraScreen = ({
       haveBackHeader
       title="Scan VIN"
       onBackPress={onPressBack}
-      loading={loading}
       style={styles.container}
     >
       <RNCamera
@@ -105,10 +98,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(
-  state => ({
-    user: state.user,
-    vin: state.lease.vin,
-  }),
-  { scanVinCodeByCamera }
-)(HostScanCameraScreen);
+export default connect(state => ({
+  user: state.user,
+  vin: state.lease.vin,
+}))(HostScanCameraScreen);

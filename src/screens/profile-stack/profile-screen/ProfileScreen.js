@@ -55,7 +55,7 @@ const ProfileScreen = ({ navigation }: PropTypes) => {
         onItemPress={() => {
           setPopUpData(dispatch)({
             popupType: 'confirm',
-            title: 'Log out',
+            title: 'Sign out',
             description: 'Are you sure to log out',
             onConfirm() {
               cancelPopup(dispatch);

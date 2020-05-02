@@ -33,8 +33,8 @@ import { SIGN_OUT } from '@redux/constants/user';
 const INITIAL_STATE = {
   vin: '',
   // vin: '2C3CCACG5CH278240',
-  usingYears: null,
-  odometer: null,
+  usingYears: '',
+  odometer: '',
   images: [''],
   infoFromVin: [],
   listPreviousCar: [],
@@ -43,6 +43,7 @@ const INITIAL_STATE = {
   startDate: null,
   endDate: null,
   cardNumber: null,
+  licensePlates: '',
   selectedHub: null,
   data: {
     leases: [],
@@ -96,7 +97,7 @@ export default (state = INITIAL_STATE, action) => {
     case SCAN_VIN_CODE_SUCCESS:
       return { ...state, ...action.payload, loading: false };
     case SET_LEASE_INFO:
-      return { ...state, ...action.payload, loading: false };
+      return { ...state, ...action.payload };
     // Geet Lease List
     case GET_LEASE_REQUEST:
       return { ...state, loading: true };

@@ -19,8 +19,9 @@ type PropTypes = {
   endDate: Date,
   onChangeDate: string => void,
   date: Date,
+  showLabel?: boolean,
 };
-const Item = ({ date, type, onItemPress }: ItemTypes) => {
+const Item = ({ date, type, onItemPress, showLabel = true }: ItemTypes) => {
   const a = 12;
   const momentTime = moment(date.getTime());
   return (
@@ -38,7 +39,12 @@ const Item = ({ date, type, onItemPress }: ItemTypes) => {
     </View>
   );
 };
-const DatePicker = ({ startDate, endDate, onChangeDate }: PropTypes) => {
+const DatePicker = ({
+  startDate,
+  endDate,
+  onChangeDate,
+  showLabel = true,
+}: PropTypes) => {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [type, setType] = useState('');
   const onClosePicker = () => {
@@ -57,7 +63,7 @@ const DatePicker = ({ startDate, endDate, onChangeDate }: PropTypes) => {
 
   return (
     <View style={styles.container}>
-      <Text style={textStyle.widgetItem}>Select date</Text>
+      {showLabel && <Text style={textStyle.widgetItem}>Select date</Text>}
       <View style={styles.content}>
         <Item type="start" date={startDate} onItemPress={onItemPress} />
         <RightArrow />
