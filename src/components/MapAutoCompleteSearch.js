@@ -123,7 +123,7 @@ const MapAutoCompleteSearch = ({
         currentPosition,
         openMapOption ? { description: SELECT_ON_MAPS } : undefined,
       ]}
-      debounce={500} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
+      debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
       // renderLeftButton={() => (
       //   // <Image source={require('path/custom/left-icon')} />
       // )}

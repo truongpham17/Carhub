@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { ViewContainer, ListItem } from 'Components';
 import { NavigationType, SharingType } from 'types';
 import { connect, useDispatch } from 'react-redux';
-import { Avatar } from 'react-native-elements';
-import { scaleVer } from 'Constants/dimensions';
 import moment from 'moment';
 import { setPopUpData } from '@redux/actions';
-import ItemContainer from './ItemContainer';
+import { substractDate } from 'Utils/date';
 
 type PropsType = {
   navigation: NavigationType,
@@ -51,7 +49,10 @@ const SharingDetailScreen = ({
       { label: 'Start Date', detail: startDateFormat },
       { label: 'End Date', detail: endDateFormat },
       { label: 'Price per day', detail: sharing.price },
-      { label: 'Total', detail: sharing.totalCost },
+      {
+        label: 'Total',
+        detail: substractDate(sharing.fromDate, sharing.toDate) * sharing.price,
+      },
       { label: 'Location', detail: sharing.address },
       {
         label: 'Car return address',

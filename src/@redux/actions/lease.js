@@ -28,48 +28,59 @@ import {
 import axios from 'axios';
 import firebase from 'react-native-firebase';
 
-export const checkCarByVin = dispatch => async (data, callback) => {
+export const checkCarByVin = dispatch => async (
+  data,
+  callback = INITIAL_CALLBACK
+) => {
   try {
     dispatch({ type: GET_CAR_BY_VIN_REQUEST });
 
-    const result = await axios({
-      url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`,
-      method: 'GET',
-    });
+    // const result = await axios({
+    //   url: `https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${data.vin}?format=json`,
+    //   method: 'GET',
+    // });
 
-    console.log(result.data);
+    // const infoFromVin = [];
+    // const codes = [24, 26, 27, 28, 29, 39, 75];
+    // codes.forEach(code => {
+    //   const item = result.data.Results.find(data => data.VariableId === code);
+    //   if (item) {
+    //     infoFromVin.push({ key: item.Variable, value: item.Value });
+    //   }
+    // });
 
-    const infoFromVin = [];
-    const codes = [24, 26, 27, 28, 29, 39, 75];
-    codes.forEach(code => {
-      const item = result.data.Results.find(data => data.VariableId === code);
-      if (item) {
-        infoFromVin.push({ key: item.Variable, value: item.Value });
-      }
-    });
+    const infoFromVin = [
+      { key: 'Fuel Type - Primary', value: 'Flexible Fuel Vehicle (FFV)' },
 
-    console.log(infoFromVin);
-
-    // const infoFromVin = [
-    //   { key: 'Fuel Type - Primary', value: 'Flexible Fuel Vehicle (FFV)' },
-
-    //   { key: 'Make', value: 'CHRYSLER' },
-    //   { key: 'Manufacturer Name', value: 'FCA CANADA INC.' },
-    //   { key: 'Model', value: '300' },
-    //   { key: 'Model Year', value: '2012' },
-    //   { key: 'Vehicle Type', value: 'PASSENGER CAR' },
-    //   { key: 'Plant Country', value: null },
-    // ];
+      { key: 'Make', value: 'CHRYSLER' },
+      { key: 'Manufacturer Name', value: 'FCA CANADA INC.' },
+      { key: 'Model', value: '300' },
+      { key: 'Model Year', value: '2012' },
+      { key: 'Vehicle Type', value: 'PASSENGER CAR' },
+      { key: 'Plant Country', value: null },
+    ];
 
     if (infoFromVin[1].value && infoFromVin[3].value) {
-      dispatch({
-        type: GET_CAR_BY_VIN_SUCCESS,
-        payload: { ...data, infoFromVin },
+      const name = `${infoFromVin[1].value} ${infoFromVin[3].value} ${infoFromVin[4].value}`;
+
+      const response = await query({
+        endpoint: `carModel/findByName/${name}`,
+        method: METHODS.get,
       });
-      callback.onSuccess();
+      if (response.status === 200) {
+        const carModel = response.data;
+        dispatch({
+          type: GET_CAR_BY_VIN_SUCCESS,
+          payload: { ...data, infoFromVin, carModel },
+        });
+        callback.onSuccess();
+      } else {
+        dispatch({ type: GET_CAR_BY_VIN_FAILURE });
+        callback.onFailure(false);
+      }
     } else {
       dispatch({ type: GET_CAR_BY_VIN_FAILURE });
-      callback.onFailure();
+      callback.onFailure(true);
     }
   } catch (error) {
     dispatch({ type: GET_CAR_BY_VIN_FAILURE, payload: error.response.data });
@@ -159,6 +170,7 @@ export const addLease = dispatch => async (
     hub,
     cardNumber,
     carModel,
+    licensePlates,
   },
   callback
 ) => {
@@ -169,17 +181,17 @@ export const addLease = dispatch => async (
     //   'https://c.ndtvimg.com/2019-08/k8519lf8_bugatti-centodieci-unveiled-at-pebble-beach-car-show_625x300_17_August_19.jpg',
     // ];
 
-    await Promise.all(
-      images
-        .filter((_, i) => i > 0)
-        .map(async element => {
-          const snapshot = await firebase
-            .storage()
-            .ref(`lease-car/${customer}/${Date.now()}`)
-            .putFile(element.uri);
-          imagesURL.push(await snapshot.downloadURL);
-        })
-    );
+    // await Promise.all(
+    //   images
+    //     .filter((_, i) => i > 0)
+    //     .map(async element => {
+    //       const snapshot = await firebase
+    //         .storage()
+    //         .ref(`lease-car/${customer}/${Date.now()}`)
+    //         .putFile(element.uri);
+    //       imagesURL.push(await snapshot.downloadURL);
+    //     })
+    // );
 
     // console.log('vin here!!: ', vin);
 
@@ -192,7 +204,10 @@ export const addLease = dispatch => async (
         vin,
         carModel: carModel._id,
         usingYears,
-        images: imagesURL,
+        images: [
+          'https://static2.yan.vn/YanNews/201912/201912230158147914-d849b6f2-f3fe-4638-a57b-012769abd8d5.jpeg',
+        ],
+        licensePlates,
       },
     });
     if (result.status === 201 || result.status === 200) {
@@ -235,7 +250,7 @@ export const getLeaseList = dispatch => async (callback = INITIAL_CALLBACK) => {
     const result = await query({ endpoint: ENDPOINTS.lease });
     // console.warn(result.data);
     if (result.status === STATUS.OK) {
-      console.log(result.data);
+      console.log(';ease: ', result.data);
       dispatch({ type: GET_LEASE_SUCCESS, payload: result.data });
       callback.onSuccess();
     } else {

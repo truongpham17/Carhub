@@ -33,6 +33,7 @@ import HostReviewScreen from './lease-stack/host-review-screen/HostReviewScreen'
 import HostHubScreen from './lease-stack/host-hub-screen/HostHubScreen';
 import HostListCarScreen from './lease-stack/host-list-car-screen/HostListCarScreen';
 import HostScanCameraScreen from './lease-stack/host-scan-camera-screen/HostScanCameraScreen';
+import CardSelectScreen from './lease-stack/card-select-screen/CardSelectScreen';
 
 import AuthScreen from './auth-stack/auth-screen/AuthScreen';
 import SignInScreen from './auth-stack/sign-in-screen/SignInScreen';
@@ -87,6 +88,7 @@ const LeaseStack = createStackNavigator(
     HostListCarScreen,
     SelectMapScreen,
     HostScanCameraScreen,
+    CardSelectScreen,
   },
   {
     headerMode: 'none',

@@ -5,10 +5,17 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  View,
 } from 'react-native';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import { ViewContainer, InputForm, Button, ImageSelector } from 'Components';
-import { textStyle } from 'Constants/textStyles';
+import {
+  ViewContainer,
+  InputForm,
+  Button,
+  ImageSelector,
+  ProgressStep,
+} from 'Components';
+import { textStyle, textStyleObject } from 'Constants/textStyles';
 import { NavigationType, UserType } from 'types';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { shadowStyle } from 'Constants';
@@ -23,6 +30,8 @@ import Clarifai from 'clarifai';
 import { CLARIFY_KEY } from 'Constants/key';
 import { setPopUpData } from '@redux/actions';
 import Seperator from './Seperator';
+import VinExplainModal from './VinExplainModal';
+import ProgressLeaseStep from '../ProgressLeaseStep';
 
 const clarifai = new Clarifai.App({
   apiKey: CLARIFY_KEY,
@@ -32,24 +41,20 @@ process.nextTick = setImmediate;
 
 type PropTypes = {
   navigation: NavigationType,
-  loading: Boolean,
-  user: UserType,
-  vin: String,
-  usingYears: String,
-  odometer: String,
-  images: [],
 };
 
-const HostScreen = ({
-  navigation,
-  loading,
-  user,
-  vin,
-  usingYears,
-  odometer,
-  images,
-}: PropTypes) => {
+const HostScreen = ({ navigation }: PropTypes) => {
   const [loadingRecognize, setLoading] = useState(false);
+  const [VINExplainVisible, setVINExplainVisible] = useState(false);
+  const {
+    loading,
+    vin,
+    usingYears,
+    odometer,
+    images,
+    licensePlates,
+  } = useSelector(state => state.lease);
+  const user = useSelector(state => state.user);
   const dispatch = useDispatch();
   const base64Refs = useRef([]);
 
@@ -60,25 +65,16 @@ const HostScreen = ({
     return predictions;
   };
 
-  const handleChangeVin = vin => {
-    setLeaseInfo(dispatch)({ vin });
+  const handleChangeValue = (value, type) => {
+    setLeaseInfo(dispatch)({ [type]: value });
   };
-  const handleChangeUsingYears = usingYears => {
-    setLeaseInfo(dispatch)({ usingYears });
-  };
-  const handleChangeOdometers = odometer => {
-    setLeaseInfo(dispatch)({ odometer });
-  };
+
   const handleAddImage = () => {
     selectImage(async image => {
       setLeaseInfo(dispatch)({
         images: [...images, { uri: image.uri, key: image.key }],
       });
-      // setImages(images => [...images, { uri: image.uri, key: image.key }]);
       base64Refs.current.push({ data: image.data, key: image.key });
-      // console.log('start analyze data');
-      // const result = await predict(image.data);
-      // console.log(result);
     });
   };
 
@@ -86,7 +82,6 @@ const HostScreen = ({
     setLeaseInfo(dispatch)({
       images: images.filter(image => image.key !== key),
     });
-    // setImages(images => images.filter(image => image.key !== key));
     base64Refs.current = base64Refs.current.filter(image => image.key !== key);
   };
 
@@ -161,14 +156,21 @@ const HostScreen = ({
       },
       {
         onSuccess: () => navigation.navigate('HostHubScreen'),
-        onFailure: () => {
-          Alert.alert(
-            'Car is not found',
-            'Your VIN code maybe wrong. Please input again',
-            [{ text: 'OK', onPress: () => console.log('OK') }],
-            { cancelable: false }
-          );
-          console.log('error');
+        onFailure: isVINError => {
+          if (isVINError) {
+            setPopUpData(dispatch)({
+              popupType: 'error',
+              title: 'VIN is not valid',
+              description: 'Your VIN code maybe wrong. Please try again',
+            });
+          } else {
+            setPopUpData(dispatch)({
+              popupType: 'confirm',
+              title: 'Car model not support',
+              description:
+                'Sorry, this car model currently not support in our system. Please contact us if you need help',
+            });
+          }
         },
       }
     );
@@ -185,8 +187,9 @@ const HostScreen = ({
       }
     );
   };
-  const handleScan = () => {
-    navigation.navigate('HostScanCameraScreen');
+
+  const handleScan = type => {
+    navigation.navigate('HostScanCameraScreen', { type });
   };
 
   return (
@@ -197,31 +200,47 @@ const HostScreen = ({
       onBackPress={onPressBack}
       loading={loading || loadingRecognize}
     >
-      <TouchableOpacity style={styles.container} onPress={handleScan}>
-        <Text style={textStyle.bodyTextBold}> Scan VIN Code </Text>
-      </TouchableOpacity>
-      <Seperator />
+      <ProgressLeaseStep step={0} />
+      <Text style={styles.title}>Input car information</Text>
       <InputForm
-        label="VIN"
+        icon={{ name: 'camera', type: 'feather' }}
+        label="VIN (*)"
         value={vin}
-        onChangeText={handleChangeVin}
-        placeholder="Type VIN..."
-        containerStyle={{ marginVertical: scaleVer(16) }}
+        onIconPress={() => handleScan('vin')}
+        onChangeText={text => handleChangeValue(text, 'vin')}
+        placeholder="Type VIN"
+        containerStyle={styles.input}
+      />
+      <Text
+        style={{ textAlign: 'right' }}
+        onPress={() => setVINExplainVisible(true)}
+      >
+        What is VIN?
+      </Text>
+      <InputForm
+        // icon={{ name: 'camera', type: 'feather' }}
+        label="License plates (*)"
+        icon={{ name: 'camera', type: 'feather' }}
+        value={licensePlates}
+        onIconPress={() => handleScan('licensePlates')}
+        onChangeText={text => handleChangeValue(text, 'licensePlates')}
+        placeholder="Type License plates"
+        containerStyle={styles.input}
       />
       <InputForm
-        label="Using years"
+        label="Using years (*)"
         value={usingYears}
-        onChangeText={handleChangeUsingYears}
+        onChangeText={text => handleChangeValue(text, 'usingYears')}
         placeholder="Type using years..."
-        containerStyle={{ marginVertical: scaleVer(16) }}
+        containerStyle={styles.input}
         keyboardType="numeric"
       />
       <InputForm
-        label="Odometers"
+        label="Odometers (*)"
         value={odometer}
-        onChangeText={handleChangeOdometers}
+        onChangeText={text => handleChangeValue(text, 'odometer')}
         placeholder="Type odometer..."
-        containerStyle={{ marginVertical: scaleVer(16) }}
+        containerStyle={styles.input}
         keyboardType="numeric"
       />
       <ScrollView horizontal>
@@ -241,10 +260,19 @@ const HostScreen = ({
           Choose your previous car >>
         </Text>
       </TouchableOpacity>
-      <Button
-        style={{ marginVertical: scaleVer(32) }}
-        label="Next step"
-        onPress={handleTestImage}
+
+      <View
+        style={{
+          flex: 1,
+          marginBottom: scaleVer(12),
+          justifyContent: 'flex-end',
+        }}
+      >
+        <Button label="Next step" onPress={handleNextStep} />
+      </View>
+      <VinExplainModal
+        modalVisible={VINExplainVisible}
+        onClose={() => setVINExplainVisible(false)}
       />
     </ViewContainer>
   );
@@ -260,13 +288,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginVertical: scaleVer(15),
   },
+  title: {
+    textAlign: 'center',
+    ...textStyleObject.widgetItem,
+    marginTop: scaleVer(16),
+  },
+  input: { marginVertical: scaleVer(8) },
 });
 
-export default connect(state => ({
-  loading: state.lease.loading,
-  user: state.user,
-  vin: state.lease.vin,
-  usingYears: state.lease.usingYears,
-  odometer: state.lease.odometer,
-  images: state.lease.images,
-}))(HostScreen);
+export default connect(state => ({}))(HostScreen);
