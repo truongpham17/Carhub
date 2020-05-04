@@ -19,6 +19,8 @@ const TAB_NAME = [
   'ProfileStack',
   // 'NotificationStack',
 ];
+
+const INITIAL_SCREEN = ['LandingPage', 'HistoryScreen', 'ProfileScreen'];
 const routeConfig = [
   {
     icon: 'home',

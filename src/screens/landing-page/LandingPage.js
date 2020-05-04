@@ -23,7 +23,7 @@ const LandingPage = ({ navigation }: PropTypes) => {
   const user: UserType = useSelector(state => state.user);
 
   return (
-    <View style={styles.container}>
+    <ViewContainer style={styles.container} safeArea={false}>
       <Image
         style={{
           width: dimension.SCREEN_WIDTH,
@@ -51,7 +51,7 @@ const LandingPage = ({ navigation }: PropTypes) => {
       <RentalBadge navigation={navigation} />
       <Seperator />
       <HostBadge navigation={navigation} />
-    </View>
+    </ViewContainer>
   );
 };
 

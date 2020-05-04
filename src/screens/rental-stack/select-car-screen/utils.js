@@ -11,7 +11,7 @@ export function formatData(
     name: sharing.rental.carModel.name,
     type: sharing.rental.carModel.type,
     distance: sharing.distance,
-    discount: sharing.price / sharing.rental.carModel.price,
+    discount: 1 - sharing.price / sharing.rental.carModel.price,
     rating: 3,
     configs: [
       {

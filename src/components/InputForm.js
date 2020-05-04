@@ -8,9 +8,10 @@ import {
   ViewStyle,
   TouchableOpacity,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { textStyleObject } from 'Constants/textStyles';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
-import { Calendar } from 'Assets/svgs';
+import { Calendar, getSvg } from 'Assets/svgs';
 import { defaultFunction } from 'Utils/common';
 
 import RNPickerSelect from 'react-native-picker-select';
@@ -36,6 +37,8 @@ type PropTypes = {
   onTextFocus: () => void,
   keyboardType: 'default' | 'numeric',
   secureTextEntry: boolean,
+  icon?: {},
+  onIconPress?: () => void,
 };
 
 const InputForm = ({
@@ -53,6 +56,8 @@ const InputForm = ({
   keyboardType,
   onTextFocus = defaultFunction,
   secureTextEntry,
+  icon,
+  onIconPress,
 }: PropTypes) => {
   const [inputHover, setInputHover] = useState(false);
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -68,24 +73,31 @@ const InputForm = ({
     switch (type) {
       case 'textinput':
         return (
-          <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            style={[
-              styles.textInput,
-              textInputStyle,
-              multiline ? { paddingTop: scaleVer(8) } : {},
-              error ? styles.error : {},
-              inputHover ? { borderColor: colors.primary } : {},
-            ]}
-            multiline={multiline}
-            placeholder={placeholder}
-            autoFocus={autoFocus}
-            onFocus={handleTextInputFocus}
-            onBlur={handleTextInputBlur}
-            keyboardType={keyboardType}
-            secureTextEntry={secureTextEntry}
-          />
+          <View>
+            <TextInput
+              value={value}
+              onChangeText={onChangeText}
+              style={[
+                styles.textInput,
+                textInputStyle,
+                multiline ? { paddingTop: scaleVer(8) } : {},
+                error ? styles.error : {},
+                inputHover ? { borderColor: colors.primary } : {},
+              ]}
+              multiline={multiline}
+              placeholder={placeholder}
+              autoFocus={autoFocus}
+              onFocus={handleTextInputFocus}
+              onBlur={handleTextInputBlur}
+              keyboardType={keyboardType}
+              secureTextEntry={secureTextEntry}
+            />
+            {icon && (
+              <TouchableOpacity style={styles.icon} onPress={onIconPress}>
+                <Icon {...icon} />
+              </TouchableOpacity>
+            )}
+          </View>
         );
       case 'calendar':
         return (
@@ -200,5 +212,10 @@ const styles = StyleSheet.create({
   },
   error: {
     borderColor: colors.primary,
+  },
+  icon: {
+    position: 'absolute',
+    top: 8,
+    right: 16,
   },
 });

@@ -15,6 +15,7 @@ export function paypalService({ token, amount }, callback = INITIAL_CALLBACK) {
       callback.onSuccess(result);
     })
     .catch(error => {
-      callback.onFailure();
+      console.log(error);
+      // callback.onFailure();
     });
 }

@@ -71,6 +71,13 @@ const SelectMapScreen = ({
 
     const { lat, lng } = selectPosition;
 
+    // setRegion({
+    //   latitude: lat,
+    //   longitude: lng,
+    //   latitudeDelta: 0.0622,
+    //   longitudeDelta: 0.0221,
+    // });
+
     const selectHub = hubList.find(
       item => item.geometry.lat === lat && item.geometry.lng === lng
     );
@@ -89,6 +96,12 @@ const SelectMapScreen = ({
   const onPressMap = data => {
     const { coordinate } = data;
     setSelectPosition({ lat: coordinate.latitude, lng: coordinate.longitude });
+    setRegion({
+      latitude: coordinate.latitude,
+      longitude: coordinate.longitude,
+      latitudeDelta: 0.0622,
+      longitudeDelta: 0.0221,
+    });
   };
 
   useEffect(() => {
@@ -166,6 +179,17 @@ const SelectMapScreen = ({
         return 'Select';
     }
   };
+
+  const onSelectedHub = (hub: HubType) => {
+    setSelectedHub(hub);
+    setRegion({
+      latitude: hub.geometry.lat,
+      longitude: hub.geometry.lng,
+      latitudeDelta: 0.0622,
+      longitudeDelta: 0.0221,
+    });
+  };
+
   const renderHubMarker = (hub: HubType) => {
     const coordinate = {
       latitude: hub.geometry.lat,
@@ -177,7 +201,7 @@ const SelectMapScreen = ({
         coordinate={coordinate}
         title={hub.name}
         description={hub.description}
-        onPress={() => setSelectedHub(hub)}
+        onPress={() => onSelectedHub(hub)}
       />
     );
   };

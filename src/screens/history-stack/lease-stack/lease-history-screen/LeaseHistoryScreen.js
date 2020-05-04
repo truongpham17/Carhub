@@ -21,9 +21,7 @@ const LeaseHistoryScreen = ({ navigation }: PropsType) => {
   }, []);
 
   const onGetDetail = id => {
-    // setLeaseDetailId(dispatch)(id);
     navigation.navigate('LeaseHistoryItemDetailScreen', { selectedId: id });
-    // setRefreshing(true);
   };
   // eslint-disable-next-line react/prop-types
   const handleRenderItem = ({ item }) => (
