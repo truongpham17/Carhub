@@ -98,6 +98,8 @@ const HostScreen = ({ navigation }: PropTypes) => {
       Alert.alert('Please input using year', 'Using years must be a number');
     } else if (isNaN(odometer) || !odometer) {
       Alert.alert('Please input odometer', 'Odometers must be a number');
+    } else if (!licensePlates) {
+      Alert.alert('Please input license plates!');
     } else {
       return true;
     }
@@ -138,15 +140,14 @@ const HostScreen = ({ navigation }: PropTypes) => {
         title: 'Cannot recognize your car',
         description:
           'It seem like you choose the wrong images of your car, we can not recognize them, please try again!',
-        modalVisible: true,
       });
     } else {
-      console.log('successfully recognize');
       handleNextStep();
     }
   };
 
   const handleNextStep = () => {
+    if (!validateData()) return;
     checkCarByVin(dispatch)(
       {
         vin,
