@@ -3,7 +3,12 @@ import { formatDate, substractDate } from 'Utils/date';
 
 import moment from 'moment';
 import colors from 'Constants/colors';
-import { setPopUpData, confirmTransaction, getLeaseList } from '@redux/actions';
+import {
+  setPopUpData,
+  confirmTransaction,
+  getLeaseList,
+  cancelPopup,
+} from '@redux/actions';
 import firebase from 'react-native-firebase';
 import {
   WAITING_FOR_CONFIRM,
