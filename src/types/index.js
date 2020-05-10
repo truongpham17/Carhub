@@ -134,7 +134,7 @@ export type CarType = {
   price: Number,
   feature: String,
   VIN: String,
-  usingYears: Number,
+  usingYear: Number,
   valueData: [{ value: String }],
   licensePlates: string,
 };

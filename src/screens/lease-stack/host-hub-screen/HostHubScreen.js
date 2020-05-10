@@ -15,6 +15,8 @@ import { checkCarModelAvailable, setLeaseInfo } from '@redux/actions/lease';
 import moment from 'moment';
 import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
+import { setPopUpData } from '@redux/actions';
+import { formatDate, substractDate } from 'Utils/date';
 import ProgressLeaseStep from '../ProgressLeaseStep';
 
 type PropTypes = () => {
@@ -39,14 +41,23 @@ const HostHubScreen = ({ loading, navigation, infoFromVin }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = () => {
+    let a = null;
     // return navigation.navigate('CardSelectScreen');
     if (!selectedHub) {
-      Alert.alert('Please choose a hub');
-    } else if (startDate >= endDate) {
-      Alert.alert('The selected date is wrong');
+      a = 'Please choose a hub';
+    } else if (startDate >= endDate || substractDate(startDate, endDate) < 3) {
+      a = 'The selected date is wrong';
+    } else if (formatDate(startDate) < formatDate(Date.now())) {
+      a = 'Start date is invalid';
     } else {
       setLeaseInfo(dispatch)({ startDate, endDate, selectedHub });
       navigation.navigate('CardSelectScreen');
+    }
+    if (a) {
+      setPopUpData(dispatch)({
+        title: a,
+        acceptOnly: true,
+      });
     }
   };
   const handleChangeDate = (type, date) => {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ViewContainer, Button, ListItem } from 'Components';
 import { NavigationType } from 'types';
 import { scaleVer } from 'Constants/dimensions';
-import { addLease, setPopUpData } from '@redux/actions';
+import { addLease, setPopUpData, setLeaseInfo } from '@redux/actions';
 import firebase from 'react-native-firebase';
 import 'react-native-get-random-values';
 import { getData } from './utils';
@@ -22,6 +22,7 @@ const HostReviewScreen = ({ navigation }: PropTypes) => {
     navigation.pop();
   };
   const handleNextStep = async () => {
+    console.log({ ...lease, customer: user._id, hub: lease.selectedHub._id });
     addLease(dispatch)(
       { ...lease, customer: user._id, hub: lease.selectedHub._id },
       {

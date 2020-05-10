@@ -17,6 +17,15 @@ export default {
       'You have to pay in advance to request hiring this car. If you cancel request, your money will be refund, but you will lost some money because of Paypal transaction fee.',
     ],
   },
+  REQUEST_TAKE_CAR: {
+    title:
+      'Please carefully read these policies before you decide to rquest take your car back.',
+    content: [
+      'You are trying to request taking your car back sooner than the end date in the contract',
+      'Once you request take back, you cannot earn profit from your car',
+      'If you get car late, we will count as penalty fee, which is $10 per day.',
+    ],
+  },
 };
 
 export const RECOMMEND_PRICE_FOR_SHARING = 0.6;

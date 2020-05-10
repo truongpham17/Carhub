@@ -28,7 +28,7 @@ const CarItem = ({ data, choosePreviousCar }: PropTypes) => {
     choosePreviousCar(
       {
         vin: data.VIN,
-        usingYears: data.usingYears,
+        usingYear: data.usingYear,
         odometer: data.odometer,
       },
       {

@@ -3,16 +3,27 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
+import { formatDate } from 'Utils/date';
 
-const Header = () => (
+type HeaderProps = {
+  startLocation: {
+    address: string,
+  },
+  startDate: Date,
+  endDate: Date,
+};
+
+const Header = ({ data }: { data: HeaderProps }) => (
   <View style={styles.header}>
     <View>
-      <Text style={textStyle.widgetItem}>Ho Chi Minh, District 4</Text>
-      <Text style={textStyle.bodyText}>Aug 20 - Sep 20</Text>
+      <Text style={textStyle.widgetItem}>{data.startLocation.address}</Text>
+      <Text style={textStyle.bodyText}>
+        {formatDate(data.startDate)} - {formatDate(data.endDate)}
+      </Text>
     </View>
-    <TouchableOpacity style={styles.button}>
+    {/* <TouchableOpacity style={styles.button}>
       <Text style={[textStyle.bodyText, { color: colors.dark40 }]}>Filter</Text>
-    </TouchableOpacity>
+    </TouchableOpacity> */}
   </View>
 );
 

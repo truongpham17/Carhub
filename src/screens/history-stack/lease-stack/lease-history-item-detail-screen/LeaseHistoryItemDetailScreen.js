@@ -4,7 +4,6 @@ import { ViewContainer, ListItem, Button, QRCodeGenModal } from 'Components';
 import { NavigationType, LeaseDetailType } from 'types';
 import { useSelector, useDispatch } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
-import { updateLeaseStatus } from '@redux/actions/lease';
 import { WAITING_FOR_SCAN } from 'Constants/status';
 import { changeTransactionStatus } from 'Utils/database';
 import { setPopUpData } from '@redux/actions';
@@ -107,7 +106,7 @@ const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
       case 'ACCEPTED':
         return onRequestTransaction();
       case 'PENDING':
-        return handleCancelRequest();
+        return handleCancelRequest(leaseDetail, dispatch);
       default:
         return null;
     }
@@ -133,7 +132,7 @@ const LeaseHistoryItemDetailScreen = ({ navigation }: PropTypes) => {
       haveBackHeader
       title="Detail"
       onBackPress={onBackPress}
-      scrollable
+      // scrollable
       loading={loading}
     >
       <View style={{ flex: 1 }}>

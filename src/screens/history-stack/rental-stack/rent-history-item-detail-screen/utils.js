@@ -10,6 +10,7 @@ import {
   TRANSACTION_ERROR,
   USER_CANCEL,
   WAITING_FOR_USER_CONFIRM_NEXT,
+  HUB_REJECT_TRASACTION,
 } from 'Constants/status';
 import { RentDetailType } from 'types';
 import firebase from 'react-native-firebase';
@@ -30,8 +31,8 @@ export function getActionLabel(status) {
     case 'OVERDUE':
     case 'SHARE_REQUEST/CURRENT':
       return 'RETURN CAR';
-    case 'PAST':
-      return 'HIRE THIS CAR';
+    // case 'PAST':
+    //   return 'HIRE THIS CAR';
     case 'SHARING':
       return 'SHARING DETAIL';
     case 'SHARED':
@@ -39,7 +40,7 @@ export function getActionLabel(status) {
     case 'SHARE_REQUEST/ACCEPTED':
       return 'Confirm receive car';
     default:
-      return 'RETURN CAR';
+      return null;
   }
 }
 
@@ -69,6 +70,9 @@ export function getShowingData(rentDetail) {
   ];
   if (typeOfDate) {
     attrs.splice(6, 1, { value: daysdiff, label: typeOfDate });
+  }
+  if (rentDetail.status === 'DECLINED') {
+    attrs.push({ value: rentDetail.message, label: 'Decline reason' });
   }
   return attrs;
 }
@@ -201,10 +205,25 @@ export function listenFirebaseStatus({
             description:
               'Return car to hub successfully! Thank you for using our service',
             onConfirm() {
+              cancelPopup(dispatch);
               getRentalList(dispatch)();
             },
           });
 
+          break;
+        }
+
+        case HUB_REJECT_TRASACTION: {
+          setPopUpData(dispatch)({
+            title: 'The transaction rejected',
+            description:
+              'The transaction has been rejected by Hub. Your deposit will be refunded',
+            acceptOnly: 'true',
+            onConfirm() {
+              cancelPopup(dispatch);
+              getRentalList(dispatch)();
+            },
+          });
           break;
         }
         case CANCEL:

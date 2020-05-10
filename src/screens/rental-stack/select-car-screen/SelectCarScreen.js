@@ -97,7 +97,7 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
   );
 
   const keyExtractor = (item, index) => item._id;
-
+  console.log(rentalSearch);
   return (
     <ViewContainer
       haveBackHeader
@@ -106,7 +106,7 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
       loading={loading}
       style={{ paddingHorizontal: 0 }}
     >
-      <Header />
+      <Header data={rentalSearch} />
       <FlatList
         refreshing={refresh}
         onRefresh={loadCarList}

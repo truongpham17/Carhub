@@ -49,7 +49,7 @@ const HostScreen = ({ navigation }: PropTypes) => {
   const {
     loading,
     vin,
-    usingYears,
+    usingYear,
     odometer,
     images,
     licensePlates,
@@ -90,16 +90,23 @@ const HostScreen = ({ navigation }: PropTypes) => {
   };
 
   const validateData = () => {
+    let a = null;
     if (images.length === 1) {
-      Alert.alert('Please add your car images');
+      a = 'Please add your car images';
     } else if (!vin) {
-      Alert.alert('Please input VIN');
-    } else if (isNaN(usingYears) || !usingYears) {
-      Alert.alert('Please input using year', 'Using years must be a number');
+      a = 'Please input VIN';
+    } else if (isNaN(usingYear) || !usingYear || usingYear > 20) {
+      a = ('Please input using year', 'Using years must be a number');
     } else if (isNaN(odometer) || !odometer) {
-      Alert.alert('Please input odometer', 'Odometers must be a number');
+      a = ('Please input odometer', 'Odometers must be a number');
     } else if (!licensePlates) {
-      Alert.alert('Please input license plates!');
+      a = 'Please input license plates!';
+    }
+    if (a) {
+      setPopUpData(dispatch)({
+        acceptOnly: true,
+        title: a,
+      });
     } else {
       return true;
     }
@@ -151,7 +158,7 @@ const HostScreen = ({ navigation }: PropTypes) => {
     checkCarByVin(dispatch)(
       {
         vin,
-        usingYears,
+        usingYear,
         odometer,
         images,
       },
@@ -230,8 +237,8 @@ const HostScreen = ({ navigation }: PropTypes) => {
       />
       <InputForm
         label="Using years (*)"
-        value={usingYears}
-        onChangeText={text => handleChangeValue(text, 'usingYears')}
+        value={usingYear}
+        onChangeText={text => handleChangeValue(text, 'usingYear')}
         placeholder="Type using years..."
         containerStyle={styles.input}
         keyboardType="numeric"
@@ -269,7 +276,7 @@ const HostScreen = ({ navigation }: PropTypes) => {
           justifyContent: 'flex-end',
         }}
       >
-        <Button label="Next step" onPress={handleNextStep} />
+        <Button label="Next step" onPress={handleTestImage} />
       </View>
       <VinExplainModal
         modalVisible={VINExplainVisible}

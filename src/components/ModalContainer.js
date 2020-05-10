@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Modal } from 'react-native';
 import { pure } from 'recompose';
+import { defaultFunction } from 'Utils/common';
 
 type PropTypes = {
   children: NodeList,
@@ -13,7 +14,7 @@ type PropTypes = {
 
 const ModalContainer = ({
   children,
-  onClose,
+  onClose = defaultFunction,
   modalVisible,
   position = 'center',
   animationType = 'fade',

@@ -2,13 +2,14 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ViewContainer, ProgressStep, ListItem, Button } from 'Components';
 
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import { addPayment } from '@redux/actions/payment';
 import { addRentRequest } from '@redux/actions/car';
 import { NavigationType, CarModel, HubType, UserType } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 import { paypalService } from 'services/paypal';
+import { setPopUpData, cancelPopup } from '@redux/actions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -37,6 +38,7 @@ const RentBookingReview = ({
   payment,
   addRentRequest,
 }: PropTypes) => {
+  const dispatch = useDispatch();
   const momentFromDate = moment(fromDate);
   const momentToDate = moment(toDate);
   const duration = momentToDate.diff(momentFromDate, 'days');
@@ -64,7 +66,7 @@ const RentBookingReview = ({
     paypalService(
       {
         token: paymentToken,
-        amount: duration * Number(car.carModel.price),
+        amount: Math.round(duration * car.carModel.price * 0.3),
       },
       {
         onSuccess(data) {
@@ -100,6 +102,18 @@ const RentBookingReview = ({
     );
   };
 
+  const showPopup = () => {
+    setPopUpData(dispatch)({
+      title: 'Pay fee in advance',
+      description:
+        'To prevent spamming, customer need to pay deposit with 30% of total renting fee. Press OK to continue',
+      onConfirm() {
+        cancelPopup(dispatch);
+        handlePayment();
+      },
+    });
+  };
+
   return (
     <ViewContainer
       haveBackHeader
@@ -128,7 +142,7 @@ const RentBookingReview = ({
       <Button
         label="Payment"
         style={{ marginVertical: scaleVer(16) }}
-        onPress={handlePayment}
+        onPress={showPopup}
       />
     </ViewContainer>
   );
