@@ -55,12 +55,13 @@ export function getData(lease: LeaseDetailType) {
   if (status === 'PENDING' || status === 'PAST') {
     attrs.splice(7, 1);
   }
-  if (!['PENDING', 'DECLINED', 'ACCEPTED'].includes(status)) {
-    attrs.splice(1, 0, {
-      value: lease.car.licensePlates,
-      label: 'License Plate',
-    });
-  }
+
+  // if (!['PENDING', 'DECLINED', 'ACCEPTED'].includes(status)) {
+  //   attrs.splice(1, 0, {
+  //     value: lease.car.licensePlates,
+  //     label: 'License Plate',
+  //   });
+  // }
 
   if (['AVAILABLE', 'HIRING', 'WAIT_TO_RETURN'].includes(status)) {
     attrs.splice(3, 1, {

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { substractDate } from 'Utils/date';
+import { substractDate, formatDate } from 'Utils/date';
 import { changeTransactionStatus, changeSharingStatus } from 'Utils/database';
 import {
   WAITING_FOR_SCAN,
@@ -39,34 +39,57 @@ export function getActionLabel(status) {
       return 'VIEW SHARING';
     case 'SHARE_REQUEST/ACCEPTED':
       return 'Confirm receive car';
+
+    // case 'SHARE_REQUEST/CANCEL':
+    //   return 'f sdfs';
     default:
-      return null;
+      return '';
   }
 }
 
-export function getShowingData(rentDetail) {
+export function getShowingData(rentDetail: RentDetailType) {
   let typeOfDate = '';
   if (rentDetail.status === 'CURRENT') {
     typeOfDate = 'Days left';
   } else if (rentDetail.status === 'OVERDUE') {
     typeOfDate = 'Days overdue';
   }
-  const startDateFormat = moment(rentDetail.startDate).format('D MMMM, YYYY');
+  // const startDateFormat = moment(rentDetail.startDate).format('D MMMM, YYYY');
   const duration = substractDate(rentDetail.startDate, rentDetail.endDate);
   const daysdiff = Math.abs(substractDate(new Date(), rentDetail.endDate));
 
   const attrs = [
-    { value: rentDetail.carModel.name, label: 'Car name' },
     {
-      value: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
+      key: 'customer',
+      detail: rentDetail.carModel.name,
+      label: 'Car name',
+      headGroup: true,
+      headTitle: 'Car Information',
+      headerStyle: { marginTop: 0 },
+    },
+    {
+      detail: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
       label: 'License Plate',
     },
-    { value: startDateFormat, label: 'Date Of Hire' },
-    { value: `${duration} days`, label: 'Duration' },
-    { value: `${rentDetail.price} $`, label: 'Price Per Day' },
-    { value: `${rentDetail.totalCost} $`, label: 'Total' },
-    { value: rentDetail.pickupHub.name, label: 'Store' },
-    { value: rentDetail.status, label: 'Status' },
+
+    {
+      key: 'rental',
+      detail: formatDate(rentDetail.startDate),
+      label: 'Start date',
+      headGroup: true,
+      headTitle: 'Rental Information',
+      // headerStyle: { marginTop: 0 },
+    },
+
+    // { detail: formatDate(rentDetail.startDate), label: 'Starting date' },
+    { detail: formatDate(rentDetail.endDate), label: 'End date' },
+    { detail: `${duration} days`, label: 'Duration' },
+    { detail: `${rentDetail.price} $`, label: 'Price Per Day' },
+    { detail: `${rentDetail.totalCost} $`, label: 'Total' },
+    { detail: rentDetail.deposit, label: 'Deposit' },
+    { detail: rentDetail.pickupHub.name, label: 'Pick up hub' },
+    { detail: rentDetail.pickoffHub.name, label: 'Pick off hub' },
+    { detail: rentDetail.status, label: 'Status' },
   ];
   if (typeOfDate) {
     attrs.splice(6, 1, { value: daysdiff, label: typeOfDate });
@@ -74,6 +97,14 @@ export function getShowingData(rentDetail) {
   if (rentDetail.status === 'DECLINED') {
     attrs.push({ value: rentDetail.message, label: 'Decline reason' });
   }
+
+  // if(rentDetail.status === 'SHARED') {
+  //   attrs.push({
+  //     value: rentDetail.sh
+  //   })
+  // }
+
+  console.log(rentDetail);
   return attrs;
 }
 
@@ -95,7 +126,7 @@ export function generateQRCodeValue(id) {
   return {
     id,
     type: 'rental',
-    expired: Date.now() + 1 * 60000,
+    expired: Date.now(),
   };
 }
 

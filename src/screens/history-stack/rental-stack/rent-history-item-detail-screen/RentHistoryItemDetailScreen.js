@@ -85,6 +85,9 @@ const RentHistoryItemDetailScreen = ({
           });
           setOpenListener(true);
         }
+        /**
+         * @implements
+         */
 
         setValueForQR(JSON.stringify({ id: rentDetail.shareRequest }));
         setQrCodeModalVisible(true);
@@ -170,7 +173,7 @@ const RentHistoryItemDetailScreen = ({
       haveBackHeader
       title="Detail"
       onBackPress={onBackPress}
-      // scrollable
+      scrollable
       style={{ paddingBottom: scaleVer(16) }}
       loading={loading || sharingLoading}
     >
@@ -178,11 +181,10 @@ const RentHistoryItemDetailScreen = ({
         {showAttr.map((item, index) => (
           <ListItem
             key={index.toString()}
-            label={item.label}
-            detail={item.value}
             type="detail"
             pressable={false}
             showSeparator={index !== showAttr.length - 1}
+            {...item}
           />
         ))}
         <TouchableOpacity
@@ -199,9 +201,13 @@ const RentHistoryItemDetailScreen = ({
         </TouchableOpacity>
       </View>
 
-      {!['DECLINED', 'SHARE_REQUEST/PENDING', 'CANCEL', 'PAST'].includes(
-        rentDetail.status
-      ) && (
+      {![
+        'DECLINED',
+        'SHARE_REQUEST/PENDING',
+        'CANCEL',
+        'PAST',
+        'SHARE_REQUEST/PAST',
+      ].includes(rentDetail.status) && (
         <Button
           label={getActionLabel(rentDetail.status)}
           onPress={handleActionButton}

@@ -172,11 +172,13 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
           />
         ))}
       </View>
-      <Button
-        label="Send request"
-        onPress={handleSendRequest}
-        style={{ marginBottom: scaleVer(12) }}
-      />
+      {sharing.rental.customer._id !== user._id && (
+        <Button
+          label="Send request"
+          onPress={handleSendRequest}
+          style={{ marginBottom: scaleVer(12) }}
+        />
+      )}
     </ViewContainer>
   );
 };

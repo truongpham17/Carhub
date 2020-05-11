@@ -91,6 +91,7 @@ const RentBookingReview = ({
         totalCost: duration * car.carModel.price,
         description: 'Rental booking',
         payment: payment._id,
+        deposit: Math.round(duration * car.carModel.price * 0.3),
         nonce,
       },
       {

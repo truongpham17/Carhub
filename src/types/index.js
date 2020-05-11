@@ -21,6 +21,7 @@ export type RentDetailType = {
   car: CarType,
   shareRequest: string,
   numberDeclined: number,
+  deposit: number,
 };
 
 export type CustomNotification = {

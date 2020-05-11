@@ -34,12 +34,16 @@ const RentHistoryItem = ({ rentDetail, onGetDetail }: PropTypes) => {
 
   const getStatus = status => {
     const arr = status.split('/');
+    console.log(arr);
     if (arr.length > 1) {
       if (arr[1] === 'ACCEPTED') {
         return 'WAITING';
       }
       if (arr[1] === 'CURRENT') {
         return 'CURRENT';
+      }
+      if (arr[1] === 'PAST') {
+        return 'PAST';
       }
       return 'PENDING';
     }
