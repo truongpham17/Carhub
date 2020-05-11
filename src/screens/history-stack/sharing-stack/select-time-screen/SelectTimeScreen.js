@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RECOMMEND_PRICE_FOR_SHARING } from 'Constants/policy';
 import { shadowStyle } from 'Constants';
 import { formatDate } from 'Utils/date';
-import { setSharingData } from '@redux/actions';
+import { setSharingData, setPopUpData } from '@redux/actions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -36,6 +36,13 @@ const SelectTimeScreen = ({ navigation }: PropTypes) => {
   };
 
   const handleNextStep = () => {
+    if (formatDate(date) < formatDate(new Date())) {
+      setPopUpData(dispatch)({
+        acceptOnly: true,
+        title: 'Selected day is invalid',
+      });
+      return;
+    }
     setSharingData(dispatch)({ time: date });
     navigation.navigate('SelectPriceScreen');
   };

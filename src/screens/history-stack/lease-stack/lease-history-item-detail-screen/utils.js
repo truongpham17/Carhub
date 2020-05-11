@@ -1,9 +1,15 @@
 import { LeaseDetailType } from 'types';
-import { formatDate, substractDate } from 'Utils/date';
+import { formatDate, substractDate, formatPrice } from 'Utils/date';
 
 import moment from 'moment';
+import policy from 'Constants/policy';
 import colors from 'Constants/colors';
-import { setPopUpData, confirmTransaction, getLeaseList } from '@redux/actions';
+import {
+  setPopUpData,
+  confirmTransaction,
+  getLeaseList,
+  cancelPopup,
+} from '@redux/actions';
 import firebase from 'react-native-firebase';
 import {
   WAITING_FOR_CONFIRM,
@@ -11,6 +17,10 @@ import {
   WAITING_FOR_USER_CONFIRM,
   CANCEL,
   USER_CANCEL,
+  WAITING_USER_TRANSFER_CAR,
+  USER_ACCEPT_TRANSFER_CAR,
+  HUB_REJECT_TRASACTION,
+  HUB_REJECT_TRASACTION_LEASE,
 } from 'Constants/status';
 import { changeTransactionStatus } from 'Utils/database';
 
@@ -28,6 +38,7 @@ export function getData(lease: LeaseDetailType) {
   const duration = substractDate(lease.startDate, lease.endDate);
   const attrs = [
     { value: lease.car.carModel.name, label: 'Car Name' },
+    { value: lease.car.licensePlates, label: 'License plates' },
     { value: formatDate(lease.startDate), label: 'From date' },
     { value: formatDate(lease.endDate), label: 'To date' },
     { value: `${duration} day(s)`, label: 'Duration' },
@@ -44,17 +55,31 @@ export function getData(lease: LeaseDetailType) {
   if (status === 'PENDING' || status === 'PAST') {
     attrs.splice(7, 1);
   }
-  if (!['PENDING', 'DECLINED', 'ACCEPTED'].includes(status)) {
-    attrs.splice(1, 0, {
-      value: lease.car.licensePlates,
-      label: 'License Plate',
-    });
-  }
+
+  // if (!['PENDING', 'DECLINED', 'ACCEPTED'].includes(status)) {
+  //   attrs.splice(1, 0, {
+  //     value: lease.car.licensePlates,
+  //     label: 'License Plate',
+  //   });
+  // }
 
   if (['AVAILABLE', 'HIRING', 'WAIT_TO_RETURN'].includes(status)) {
     attrs.splice(3, 1, {
       label: 'Days left',
       value: substractDate(new Date(), lease.endDate),
+    });
+  }
+  if (status === 'DECLINED') {
+    attrs.push({
+      label: 'Decline reason',
+      value: lease.message,
+    });
+  }
+
+  if (status === 'WAIT_TO_RETURN') {
+    attrs.push({
+      label: 'Penalty fee',
+      value: formatPrice(10 * substractDate(lease.updatedAt, new Date())),
     });
   }
   return attrs;
@@ -97,15 +122,25 @@ export function handleRequestReceive(lease, dispatch) {
     title: 'Request take your car back',
     description: 'Are you sure to request to take your car back?',
     onConfirm() {
-      cancelPopup(dispatch);
-      confirmTransaction(dispatch)(
-        { toStatus: 'WAIT_TO_RETURN', id: lease._id, type: 'lease' },
-        {
-          onSuccess() {
-            getLeaseList(dispatch)();
-          },
-        }
-      );
+      setPopUpData(dispatch)({
+        popupType: 'policy',
+        title: 'Request take car',
+        description: policy.REQUEST_TAKE_CAR,
+        onDecline() {
+          cancelPopup(dispatch);
+          // navigation.pop();
+        },
+        onConfirm() {
+          confirmTransaction(dispatch)(
+            { toStatus: 'WAIT_TO_RETURN', id: lease._id, type: 'lease' },
+            {
+              onSuccess() {
+                getLeaseList(dispatch)();
+              },
+            }
+          );
+        },
+      });
     },
   });
 }
@@ -137,7 +172,6 @@ export function handleCancelRequest(lease, dispatch) {
 export function listenFirebaseStatus({
   lease,
   dispatch,
-  navigation,
   onCloseModal,
 }: {
   lease: LeaseDetailType,
@@ -188,6 +222,18 @@ export function listenFirebaseStatus({
           });
           break;
         }
+        // employee
+        case HUB_REJECT_TRASACTION_LEASE:
+          onCloseModal();
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Hub reject receive car',
+            description: 'Your car has been rejected to receive',
+            onConfirm() {
+              getLeaseList(dispatch)();
+            },
+          });
+          break;
         // employee press cancel receive car!
         case CANCEL: {
           onCloseModal();
@@ -221,6 +267,21 @@ export function listenFirebaseStatus({
 
           break;
         }
+
+        case WAITING_USER_TRANSFER_CAR:
+          setPopUpData(dispatch)({
+            popupType: 'confirm',
+            title: 'Confirm placing car',
+            description: `Confirm placing the ${lease.car.carModel.name} at hub?`,
+            onConfirm() {
+              changeTransactionStatus(lease._id, USER_ACCEPT_TRANSFER_CAR);
+            },
+            onDecline() {
+              changeTransactionStatus(lease._id, USER_CANCEL);
+            },
+          });
+          break;
+
         default: {
           console.log('error');
         }

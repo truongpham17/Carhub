@@ -56,7 +56,7 @@ const SuccessBookingRental = ({
       startLocation: {},
       endLocation: {},
     });
-    navigation.navigate('SearchCarScreen');
+    navigation.navigate('LandingPage');
   };
 
   return (

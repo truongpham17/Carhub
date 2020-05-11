@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ViewContainer } from 'Components';
 import { NavigationType, UserType } from 'types';
@@ -14,6 +14,7 @@ type PropTypes = {
 
 const HostScanCameraScreen = ({ navigation }: PropTypes) => {
   const [camera, setCamera] = useState('');
+  const loading = useSelector(state => state.lease.loading);
   const { type = 'vin' } = navigation.state.params;
   const dispatch = useDispatch();
 
@@ -29,7 +30,6 @@ const HostScanCameraScreen = ({ navigation }: PropTypes) => {
         skipProcessing: true,
       };
       setLeaseInfo(dispatch)({ loading: true });
-      navigation.pop();
 
       const { uri } = await camera.takePictureAsync(options);
 
@@ -38,6 +38,7 @@ const HostScanCameraScreen = ({ navigation }: PropTypes) => {
         [type]: visionResp[0].text,
         loading: false,
       });
+      navigation.pop();
     } catch (e) {
       console.warn(e);
     }
@@ -47,6 +48,7 @@ const HostScanCameraScreen = ({ navigation }: PropTypes) => {
       scrollable
       haveBackHeader
       title="Scan VIN"
+      loading={loading}
       onBackPress={onPressBack}
       style={styles.container}
     >

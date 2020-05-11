@@ -13,10 +13,11 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setPickOffHub } from '@redux/actions/car';
 import { textStyle } from 'Constants/textStyles';
 import { dimension } from 'Constants';
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { paypalService } from 'services/paypal';
 import { formatDate, substractDate } from 'Utils/date';
+import { setPopUpData } from '@redux/actions';
 import Header from './Header';
 import ImageSlider from './ImageSlider';
 import Item from './Item';
@@ -46,6 +47,7 @@ const RentalCarDetailScreen = ({
   setPickOffHub,
 }: PropsType) => {
   const [returnHub, setReturnHub]: [HubType] = useState();
+  const dispatch = useDispatch();
   const car = carModels.find(item => item.carModel._id === id);
 
   useEffect(() => {
@@ -61,7 +63,10 @@ const RentalCarDetailScreen = ({
   };
 
   const onRequestPayment = () => {
-    if (!returnHub) return;
+    if (!returnHub) {
+      setPopUpData(dispatch)({ title: 'Please select hub', acceptOnly: true });
+      return;
+    }
 
     setPickOffHub(returnHub);
 
@@ -95,7 +100,10 @@ const RentalCarDetailScreen = ({
         star={4}
         trip={20}
         price={car.carModel.price}
-        total={500}
+        total={
+          Number(car.carModel.price) *
+          substractDate(rentalSearch.startDate, rentalSearch.endDate)
+        }
       />
       <Item
         title="Trip dates"
@@ -131,8 +139,8 @@ const RentalCarDetailScreen = ({
         data={[
           { value: 'Free cancellation', style: textStyle.bodyTextBold },
           {
-            value: `Full refund before ${moment(rentalSearch)
-              .add(3, 'day')
+            value: `Full refund before ${moment(rentalSearch.startDate)
+              .subtract(2, 'day')
               .format('DD MMM')}, 10:00 AM`,
           },
         ]}

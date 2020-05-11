@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Alert, Text, TouchableOpacity } from 'react-native';
-import {
-  ViewContainer,
-  ListItem,
-  Button,
-  QRCodeGenModal,
-  alert,
-} from 'Components';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { ViewContainer, ListItem, Button, QRCodeGenModal } from 'Components';
 import { NavigationType, RentDetailType, CarType } from 'types';
 import { connect, useDispatch, useSelector } from 'react-redux';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
@@ -91,6 +85,9 @@ const RentHistoryItemDetailScreen = ({
           });
           setOpenListener(true);
         }
+        /**
+         * @implements
+         */
 
         setValueForQR(JSON.stringify({ id: rentDetail.shareRequest }));
         setQrCodeModalVisible(true);
@@ -149,6 +146,28 @@ const RentHistoryItemDetailScreen = ({
     });
   };
 
+  const onCancelBooking = () => {
+    setPopUpData(dispatch)({
+      title: 'Cancel booking',
+      description: 'Are you sure to cancel this booking?',
+      onConfirm() {
+        cancelPopup(dispatch);
+        confirmTransaction(dispatch)(
+          {
+            id: rentDetail._id,
+            type: 'rental',
+            toStatus: 'CANCEL',
+          },
+          {
+            onSuccess() {
+              getRentalList(dispatch)();
+            },
+          }
+        );
+      },
+    });
+  };
+
   return (
     <ViewContainer
       haveBackHeader
@@ -158,32 +177,50 @@ const RentHistoryItemDetailScreen = ({
       style={{ paddingBottom: scaleVer(16) }}
       loading={loading || sharingLoading}
     >
-      {showAttr.map((item, index) => (
-        <ListItem
-          key={index.toString()}
-          label={item.label}
-          detail={item.value}
-          type="detail"
-          pressable={false}
-          showSeparator={index !== showAttr.length - 1}
-        />
-      ))}
+      <View style={{ flex: 1 }}>
+        {showAttr.map((item, index) => (
+          <ListItem
+            key={index.toString()}
+            type="detail"
+            pressable={false}
+            showSeparator={index !== showAttr.length - 1}
+            {...item}
+          />
+        ))}
+        <TouchableOpacity
+          style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
+          onPress={() =>
+            navigation.navigate('TimeLineScreen', { id: rentDetail._id })
+          }
+        >
+          <Text
+            style={[textStyle.bodyTextBold, { color: colors.successLight }]}
+          >
+            Time line
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity
-        style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
-        onPress={() =>
-          navigation.navigate('TimeLineScreen', { id: rentDetail._id })
-        }
-      >
-        <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
-          Time line
-        </Text>
-      </TouchableOpacity>
-      {!['DECLINED', 'SHARE_REQUEST/PENDING'].includes(rentDetail.status) && (
+      {![
+        'DECLINED',
+        'SHARE_REQUEST/PENDING',
+        'CANCEL',
+        'PAST',
+        'SHARE_REQUEST/PAST',
+      ].includes(rentDetail.status) && (
         <Button
           label={getActionLabel(rentDetail.status)}
           onPress={handleActionButton}
           style={styles.button}
+        />
+      )}
+      {rentDetail.status === 'UPCOMING' && (
+        <Button
+          label="Cancel Booking"
+          onPress={onCancelBooking}
+          style={styles.button}
+          colorStart={colors.errorLight}
+          colorEnd={colors.error}
         />
       )}
 

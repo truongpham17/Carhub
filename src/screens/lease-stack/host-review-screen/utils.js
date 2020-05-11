@@ -33,7 +33,7 @@ export function getData(lease, user, dispatch) {
     {
       key: 'status',
       label: 'Car status',
-      detail: `${lease.usingYears} years, ${lease.odometer} kilometers`,
+      detail: `${lease.usingYear} years, ${lease.odometer} kilometers`,
     },
     {
       key: 'from',

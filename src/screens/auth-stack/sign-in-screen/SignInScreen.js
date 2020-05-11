@@ -11,6 +11,7 @@ import { changeTransactionStatus } from 'Utils/database';
 import { appIcon } from 'Assets/images';
 import colors from 'Constants/colors';
 import { shadowStyle } from 'Constants';
+import { setPopUpData } from '@redux/actions';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -19,9 +20,9 @@ type PropTypes = {
 };
 
 const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const onChangeUserName = username => {
     setUsername(username);
@@ -41,7 +42,11 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
           navigation.navigate('MainApp');
         },
         onFailure() {
-          setError(true);
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Fail to login',
+            description: 'Wrong user name or password!',
+          });
         },
       }
     );
@@ -51,7 +56,7 @@ const SignInScreen = ({ navigation, loading, signIn }: PropTypes) => {
     <ViewContainer
       style={{ backgroundColor: '#F2F2F2' }}
       safeArea={false}
-      loading={loading}
+      // loading={loading}
     >
       <Image style={styles.icon} source={appIcon} resizeMode="center" />
       {/* <View style={{ flex: 1 }}> */}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 import { ViewContainer, Avatar } from 'Components';
 import { Icon } from 'react-native-elements';
@@ -11,6 +11,8 @@ import colors from 'Constants/colors';
 import { scaleHor, scaleVer } from 'Constants/dimensions';
 import { carBackground } from 'Assets/images';
 import { dimension } from 'Constants';
+import firebase from 'react-native-firebase';
+import { updateUser, getPaymentToken } from '@redux/actions';
 import Seperator from './Seperator';
 import RentalBadge from './RentalBadge';
 import HostBadge from './HostBadge';
@@ -20,8 +22,26 @@ type PropTypes = {
 };
 
 const LandingPage = ({ navigation }: PropTypes) => {
-  const user: UserType = useSelector(state => state.user);
+  const dispatch = useDispatch();
 
+  const paymentToken = useSelector(state => state.payment.paymentToken);
+  const user: UserType = useSelector(state => state.user);
+  useEffect(() => {
+    firebase
+      .messaging()
+      .getToken()
+      .then(token => {
+        if (token) {
+          console.log(token);
+          if (token !== user.fcmToken) {
+            updateUser(dispatch)({ id: user._id, fcmToken: token });
+          }
+        }
+      });
+    if (!paymentToken) {
+      getPaymentToken(dispatch)();
+    }
+  }, []);
   return (
     <ViewContainer style={styles.container} safeArea={false}>
       <Image
