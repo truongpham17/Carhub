@@ -260,14 +260,14 @@ const HostScreen = ({ navigation }: PropTypes) => {
           />
         ))}
       </ScrollView>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{ alignSelf: 'flex-end', marginBottom: scaleVer(16) }}
         onPress={handlePreviousCar}
       >
         <Text style={[textStyle.bodyTextBold, { color: colors.successLight }]}>
           Choose your previous car >>
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <View
         style={{

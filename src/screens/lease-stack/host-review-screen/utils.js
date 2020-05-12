@@ -9,6 +9,9 @@ import { setPopUpData } from '@redux/actions';
 import remoteConfig from 'Constants/remote-config';
 
 export function getData(lease, user, dispatch) {
+  console.log(lease.carModel.price);
+  console.log(remoteConfig.lease_rate);
+  console.log(daydiff);
   const daydiff = substractDate(lease.startDate, lease.endDate);
   return [
     {

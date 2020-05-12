@@ -15,6 +15,7 @@ import firebase from 'react-native-firebase';
 import { updateUser, getPaymentToken } from '@redux/actions';
 import Seperator from './Seperator';
 import RentalBadge from './RentalBadge';
+import { checkRemoteConfig } from './utils';
 import HostBadge from './HostBadge';
 
 type PropTypes = {
@@ -23,6 +24,11 @@ type PropTypes = {
 
 const LandingPage = ({ navigation }: PropTypes) => {
   const dispatch = useDispatch();
+  useEffect(() => {
+    setTimeout(() => {
+      checkRemoteConfig();
+    }, 1000);
+  }, []);
 
   const paymentToken = useSelector(state => state.payment.paymentToken);
   const user: UserType = useSelector(state => state.user);

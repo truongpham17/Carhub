@@ -85,6 +85,25 @@ try {
       // continue booting app
     })
     .catch(console.error);
+
+  firebase
+    .config()
+    .fetch()
+    .then(() => firebase.config().activateFetched())
+    .then(activated => {
+      if (!activated) console.log('Fetched data not activated');
+      return firebase.config().getValue('lease_rate');
+    })
+    .then(snapshot => {
+      const usd_vnd = snapshot.val();
+
+      if (usd_vnd) {
+        config.usd_vnd = Number(usd_vnd);
+      }
+
+      // continue booting app
+    })
+    .catch(console.error);
 } catch (error) {
   console.log(error);
   console.log('err');
