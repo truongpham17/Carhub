@@ -91,7 +91,11 @@ export function getShowingData(rentDetail: RentDetailType) {
         // headerStyle: { marginTop: 0 },
       },
       { detail: `${formatDate(substract)}`, label: 'Duration', key: 'fds' },
-      { key: '31231', detail: formatPrice(substract * sharing.price) },
+      {
+        key: '31231',
+        label: 'Total',
+        detail: formatPrice(substract * sharing.price),
+      },
     ];
   }
 
