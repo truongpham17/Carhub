@@ -47,6 +47,8 @@ const RentHistoryItemDetailScreen = ({
   const showAttr = getShowingData(rentDetail);
   const sharingLoading = useSelector(state => state.sharing.loading);
 
+  console.log(rentDetail.sharing);
+
   // const { data } = rentDetail;
   const onBackPress = () => {
     navigation.pop();
