@@ -60,44 +60,39 @@ export function getShowingData(rentDetail: RentDetailType) {
 
   const { sharing } = rentDetail;
 
-  // if (sharing) {
-  //   const substract = substractDate(sharing.fromDate, sharing.toDate);
-  //   return [
-  //     {
-  //       key: 'car',
-  //       detail: rentDetail.carModel.name,
-  //       label: 'Car name',
-  //       headGroup: true,
-  //       headTitle: 'Car Information',
-  //       headerStyle: { marginTop: 0 },
-  //     },
-  //     {
-  //       detail: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
-  //       label: 'License Plate',
-  //     },
+  if (sharing) {
+    return [
+      {
+        key: 'customer',
+        detail: rentDetail.carModel.name,
+        label: 'Car name',
+        headGroup: true,
+        headTitle: 'Car Information',
+        headerStyle: { marginTop: 0 },
+      },
+      {
+        detail: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
+        label: 'License Plate',
+      },
 
-  //     {
-  //       key: 'rental',
-  //       detail: formatDate(sharing.fromDate),
-  //       label: 'Start date',
-  //       headGroup: true,
-  //       headTitle: 'Sharing Information',
-  //       // headerStyle: { marginTop: 0 },
-  //     },
-  //     {
-  //       key: '23',
-  //       detail: formatDate(sharing.toDate),
-  //       label: 'End date',
-  //       // headerStyle: { marginTop: 0 },
-  //     },
-  //     { detail: `${substract} days`, label: 'Duration', key: 'fds' },
-  //     {
-  //       key: '31231',
-  //       label: 'Total',
-  //       detail: formatPrice(substract * sharing.price),
-  //     },
-  //   ];
-  // }
+      {
+        key: 'rental',
+        detail: formatDate(rentDetail.startDate),
+        label: 'Start date',
+        headGroup: true,
+        headTitle: 'Rental Information',
+        // headerStyle: { marginTop: 0 },
+      },
+
+      // { detail: formatDate(rentDetail.startDate), label: 'Starting date' },
+      { detail: formatDate(rentDetail.endDate), label: 'End date' },
+      { detail: `${duration} days`, label: 'Duration' },
+      { detail: formatPrice(rentDetail.price), label: 'Price Per Day' },
+      { detail: formatPrice(rentDetail.totalCost), label: 'Total' },
+      { detail: formatPrice(rentDetail.deposit), label: 'Deposit' },
+      { detail: rentDetail.status, label: 'Status' },
+    ];
+  }
 
   // console.log('asfsd', sharing);
 
