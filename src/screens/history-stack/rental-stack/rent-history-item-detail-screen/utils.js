@@ -58,6 +58,49 @@ export function getShowingData(rentDetail: RentDetailType) {
   const duration = substractDate(rentDetail.startDate, rentDetail.endDate);
   const daysdiff = Math.abs(substractDate(new Date(), rentDetail.endDate));
 
+  const { sharing } = rentDetail;
+
+  // if (sharing) {
+  //   const substract = substractDate(sharing.fromDate, sharing.toDate);
+  //   return [
+  //     {
+  //       key: 'car',
+  //       detail: rentDetail.carModel.name,
+  //       label: 'Car name',
+  //       headGroup: true,
+  //       headTitle: 'Car Information',
+  //       headerStyle: { marginTop: 0 },
+  //     },
+  //     {
+  //       detail: rentDetail.car ? rentDetail.car.licensePlates : 'Not specified',
+  //       label: 'License Plate',
+  //     },
+
+  //     {
+  //       key: 'rental',
+  //       detail: formatDate(sharing.fromDate),
+  //       label: 'Start date',
+  //       headGroup: true,
+  //       headTitle: 'Sharing Information',
+  //       // headerStyle: { marginTop: 0 },
+  //     },
+  //     {
+  //       key: '23',
+  //       detail: formatDate(sharing.toDate),
+  //       label: 'End date',
+  //       // headerStyle: { marginTop: 0 },
+  //     },
+  //     { detail: `${substract} days`, label: 'Duration', key: 'fds' },
+  //     {
+  //       key: '31231',
+  //       label: 'Total',
+  //       detail: formatPrice(substract * sharing.price),
+  //     },
+  //   ];
+  // }
+
+  // console.log('asfsd', sharing);
+
   const attrs = [
     {
       key: 'customer',

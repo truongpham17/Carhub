@@ -33,7 +33,7 @@ const RequestItem = ({
 }: PropTypes) => {
   console.log('data at request item:', data);
   const dispatch = useDispatch();
-  const daydiffs = substractDate(data.sharing.fromDate, data.sharing.toDate);
+  const daydiffs = substractDate(data.fromDate, data.toDate);
   const attrs = [
     {
       label: 'Name',
@@ -47,8 +47,8 @@ const RequestItem = ({
       },
       nextIcon: 'next',
     },
-    { label: 'From date', detail: formatDate(data.sharing.fromDate) },
-    { label: 'To date', detail: formatDate(data.sharing.toDate) },
+    { label: 'From date', detail: formatDate(data.fromDate) },
+    { label: 'To date', detail: formatDate(data.toDate) },
     { label: 'Duration', detail: formatDayLabel(daydiffs) },
     { label: 'Total earn', detail: formatPrice(daydiffs * data.sharing.price) },
     { label: 'Message', detail: data.message },
