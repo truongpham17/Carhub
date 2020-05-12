@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { SharingType, RentDetailType, NavigationType } from 'types';
-import { formatDate } from 'Utils/date';
+import { formatDate, formatPrice } from 'Utils/date';
 import { ListItem, Button } from 'Components';
 import { textStyle } from 'Constants/textStyles';
 import { scaleVer } from 'Constants/dimensions';
@@ -45,7 +45,9 @@ const Information = ({ navigation }: PropTypes) => {
     },
     {
       label: 'Sharing price',
-      value: sharingInformation.price ? sharingInformation.price : '',
+      value: sharingInformation.price
+        ? formatPrice(sharingInformation.price)
+        : '',
     },
     {
       label: 'Address',
