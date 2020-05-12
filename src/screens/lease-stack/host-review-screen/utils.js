@@ -9,6 +9,9 @@ import { setPopUpData } from '@redux/actions';
 import remoteConfig from 'Constants/remote-config';
 
 export function getData(lease, user, dispatch) {
+  console.log(lease.carModel.price);
+  console.log(remoteConfig.lease_rate);
+  console.log(daydiff);
   const daydiff = substractDate(lease.startDate, lease.endDate);
   return [
     {
@@ -87,10 +90,10 @@ export function getData(lease, user, dispatch) {
           popupType: 'confirm',
           acceptOnly: true,
           title: 'How to calculate your profit',
-          description: `The profit you can earn depends on how much days your car has been rented.\nWe cannot promise that your car would be rented.\nYour leasing is duration is 30 days, and the renting fee each day is $ ${
+          description: `The profit you can earn depends on how much days your car has been rented.\nWe cannot promise that your car would be rented.\nYour leasing is duration is 30 days, and the renting fee each day is ${formatPrice(
             lease.carModel.price
-          }, it means you can earn up to ${formatPrice(
-            Number(lease.carModel.price * remoteConfig.lease_rate) * daydiff
+          )}, it means you can earn up to ${formatPrice(
+            lease.carModel.price * remoteConfig.lease_rate * daydiff
           )}.`,
         });
       },

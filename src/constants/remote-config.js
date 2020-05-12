@@ -6,6 +6,8 @@ class RemoteConfig {
   rent_deposit: String;
 
   lease_rate: String;
+
+  usd_vnd: String;
 }
 
 const remoteConfig = new RemoteConfig();

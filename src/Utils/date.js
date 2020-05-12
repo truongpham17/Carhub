@@ -11,7 +11,7 @@ export function substractDate(fromDate, toDate) {
 }
 
 export function formatPrice(price) {
-  return `${numberWithCommas((Number(price) * 23000) / 1000000)}M VND`;
+  return `$ ${Math.round(Number(price))}`;
 }
 
 function numberWithCommas(x) {
