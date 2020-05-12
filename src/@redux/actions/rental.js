@@ -41,6 +41,7 @@ export const getRentalList = dispatch => async (
               ...item.sharing.rental,
               status: `SHARE_REQUEST/${item.status}`,
               shareRequest: item._id,
+              sharing: item.sharing,
             })),
           ],
         },
