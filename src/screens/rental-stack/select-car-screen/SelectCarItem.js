@@ -25,6 +25,7 @@ type PropTypes = {
   rentalType: 'SHARING' | 'HUB',
   onPressInfo: () => void,
   discount?: number,
+  quantity: number,
 };
 
 const ConfigItem = ({ icon, value, special }) => (
@@ -50,6 +51,7 @@ const SelectCarItem = ({
   rentalType,
   onPressInfo,
   discount,
+  quantity,
 }: PropTypes) => (
   <View style={styles.container}>
     <View style={{ overflow: 'hidden' }}>
@@ -83,14 +85,16 @@ const SelectCarItem = ({
           </View>
           <View style={{ alignItems: 'flex-end' }}>
             <View style={styles.rating}>
-              <Text style={textStyle.widgetItem}>{rating}</Text>
-
-              <Rating
+              {/* <Text style={textStyle.widgetItem}>{rating}</Text> */}
+              <Text style={textStyle.widgetItem}>
+                {quantity} <Text style={textStyle.bodyText}>car left</Text>
+              </Text>
+              {/* <Rating
                 imageSize={20}
                 readonly
                 startingValue={rating}
                 style={{ paddingStart: scaleHor(8) }}
-              />
+              /> */}
             </View>
             <Text style={textStyle.bodyText}>
               Distance:{' '}

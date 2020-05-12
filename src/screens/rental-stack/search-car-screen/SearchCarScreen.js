@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { ViewContainer, InputForm, DatePicker, Button } from 'Components';
 import { NavigationType } from 'types';
+import remoteConfig from 'Constants/remote-config';
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { setRentalSearch } from '@redux/actions/car';
 import moment from 'moment';
@@ -28,6 +29,7 @@ type PropTypes = {
 };
 
 const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
+  console.log(remoteConfig);
   const onBackPress = () => {};
   const dispatch = useDispatch();
   const user = useSelector(state => state.user);

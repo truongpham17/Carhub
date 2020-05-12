@@ -10,6 +10,8 @@ import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 import { paypalService } from 'services/paypal';
 import { setPopUpData, cancelPopup } from '@redux/actions';
+import { formatPrice } from 'Utils/date';
+import remoteConfig from 'Constants/remote-config';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -48,13 +50,14 @@ const RentBookingReview = ({
     { label: 'Car name', value: car.carModel.name },
     { label: 'From date', value: momentFromDate.format('DD MMM YYYY') },
     { label: 'To date', value: momentToDate.format('DD MMM YYYY') },
+
+    { label: 'Price per day', value: formatPrice(car.carModel.price) },
+    { label: 'Extra price', value: `0 VND` },
     {
       label: 'Duration',
       value: `${duration} days`,
     },
-    { label: 'Price per day', value: car.carModel.price },
-    { label: 'Extra price', value: `0 $` },
-    { label: 'Total', value: `${duration * car.carModel.price}$` },
+    { label: 'Total', value: `${formatPrice(duration * car.carModel.price)}` },
     { label: 'Pick-up hub location', value: car.hub.address },
     { label: 'Pick-off hub location', value: pickOffHub.address },
   ];
@@ -102,12 +105,14 @@ const RentBookingReview = ({
       }
     );
   };
+  console.log(remoteConfig);
 
   const showPopup = () => {
     setPopUpData(dispatch)({
       title: 'Pay fee in advance',
-      description:
-        'To prevent spamming, customer need to pay deposit with 30% of total renting fee. Press OK to continue',
+      description: `To prevent spamming, customer need to pay deposit with ${Number(
+        remoteConfig.rent_deposit
+      ) * 100}% of total renting fee. Press OK to continue`,
       onConfirm() {
         cancelPopup(dispatch);
         handlePayment();

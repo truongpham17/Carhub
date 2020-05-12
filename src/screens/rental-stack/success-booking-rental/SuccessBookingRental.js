@@ -9,6 +9,7 @@ import { NavigationType, CarType, HubType, UserType, CarModel } from 'types';
 import moment from 'moment';
 import { scaleVer } from 'Constants/dimensions';
 import { textStyle, textStyleObject } from 'Constants/textStyles';
+import { formatPrice } from 'Utils/date';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -44,9 +45,9 @@ const SuccessBookingRental = ({
       label: 'Duration',
       value: `${duration} days`,
     },
-    { label: 'Price per day', value: car.carModel.price },
-    { label: 'Extra price', value: `0 $` },
-    { label: 'Total', value: `${duration * car.carModel.price}$` },
+    { label: 'Price per day', value: formatPrice(car.carModel.price) },
+    { label: 'Extra price', value: `0 VND` },
+    { label: 'Total', value: `${formatPrice(duration * car.carModel.price)}` },
     { label: 'Pick-up hub location', value: car.hub.address },
     { label: 'Pick-off hub location', value: pickOffHub.address },
   ];

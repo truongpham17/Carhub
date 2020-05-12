@@ -43,10 +43,10 @@ export function getData(lease: LeaseDetailType) {
     { value: formatDate(lease.endDate), label: 'To date' },
     { value: `${duration} day(s)`, label: 'Duration' },
     {
-      value: lease.price > 0 ? `$ ${lease.price}` : `$ 0`,
+      value: lease.price > 0 ? formatPrice(lease.price) : formatPrice(0),
       label: 'Price Per Day',
     },
-    { value: `$ ${lease.totalEarn}`, label: 'Total earn' },
+    { value: formatPrice(lease.totalEarn), label: 'Total earn' },
     // lease.hub.name
     { value: lease.hub.name, label: 'Hub' },
     { value: getStatus(status), label: 'Status' },

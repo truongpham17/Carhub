@@ -1,4 +1,5 @@
 import { HubType, CarModel, SharingType } from 'types';
+import { formatPrice } from 'Utils/date';
 
 export function formatData(
   carModels: [{ hub: HubType, carModel: CarModel }],
@@ -32,9 +33,11 @@ export function formatData(
       {
         icon: 'dollar-sign',
         type: 'price',
-        value: `${sharing.price}$/day`,
+        // value: /
+        value: `${formatPrice(sharing.price)}/day`,
       },
     ],
+    quantity: 1,
   }));
 
   const carModelInfos = carModels
@@ -47,6 +50,7 @@ export function formatData(
       name: info.carModel.name,
       type: info.carModel.type,
       distance: info.hub.distance,
+      quantity: info.carModel.quantity,
       rating: 3,
       configs: [
         {
@@ -67,7 +71,8 @@ export function formatData(
         {
           icon: 'dollar-sign',
           type: 'price',
-          value: `${info.carModel.price}$/day`,
+          // value: `${info.carModel.price}$/day`,
+          value: `${formatPrice(info.carModel.price)}/day`,
         },
       ],
     }));

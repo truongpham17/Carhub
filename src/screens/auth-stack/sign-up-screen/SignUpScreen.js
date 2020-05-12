@@ -75,7 +75,7 @@ const SignUpScreen = ({ navigation, loading }: PropTypes) => {
     <ViewContainer
       style={{ backgroundColor: '#F2F2F2', flex: 1 }}
       safeArea={false}
-      loading={loading}
+      // loading={loading}
       scrollable
     >
       <Image style={styles.icon} source={appIcon} resizeMode="center" />

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { substractDate, formatDate } from 'Utils/date';
+import { substractDate, formatDate, formatPrice } from 'Utils/date';
 import { changeTransactionStatus, changeSharingStatus } from 'Utils/database';
 import {
   WAITING_FOR_SCAN,
@@ -12,7 +12,7 @@ import {
   WAITING_FOR_USER_CONFIRM_NEXT,
   HUB_REJECT_TRASACTION,
 } from 'Constants/status';
-import { RentDetailType } from 'types';
+import { RentDetailType, CarType } from 'types';
 import firebase from 'react-native-firebase';
 import {
   getRentalList,
@@ -84,18 +84,19 @@ export function getShowingData(rentDetail: RentDetailType) {
     // { detail: formatDate(rentDetail.startDate), label: 'Starting date' },
     { detail: formatDate(rentDetail.endDate), label: 'End date' },
     { detail: `${duration} days`, label: 'Duration' },
-    { detail: `${rentDetail.price} $`, label: 'Price Per Day' },
-    { detail: `${rentDetail.totalCost} $`, label: 'Total' },
-    { detail: rentDetail.deposit, label: 'Deposit' },
+    { detail: formatPrice(rentDetail.price), label: 'Price Per Day' },
+    { detail: formatPrice(rentDetail.totalCost), label: 'Total' },
+    { detail: formatPrice(rentDetail.deposit), label: 'Deposit' },
     { detail: rentDetail.pickupHub.name, label: 'Pick up hub' },
     { detail: rentDetail.pickoffHub.name, label: 'Pick off hub' },
     { detail: rentDetail.status, label: 'Status' },
   ];
   if (typeOfDate) {
-    attrs.splice(6, 1, { value: daysdiff, label: typeOfDate });
+    attrs.push({ detail: daysdiff, label: typeOfDate });
+    // attrs.splice(6, 1, { detail: daysdiff, label: typeOfDate });
   }
   if (rentDetail.status === 'DECLINED') {
-    attrs.push({ value: rentDetail.message, label: 'Decline reason' });
+    attrs.push({ detail: rentDetail.message, label: 'Decline reason' });
   }
 
   // if(rentDetail.status === 'SHARED') {
@@ -104,7 +105,6 @@ export function getShowingData(rentDetail: RentDetailType) {
   //   })
   // }
 
-  console.log(rentDetail);
   return attrs;
 }
 
@@ -162,13 +162,36 @@ export function listenFirebaseStatus({
         case WAITING_FOR_USER_CONFIRM: {
           onCloseModal();
           const { car } = val;
-          console.log(car);
-          if (!car || car === 'undefined') return;
-          const carDetail = await getCar(car);
+          if (!car || car === 'undefined') {
+            return setPopUpData(dispatch)({
+              acceptOnly: true,
+              title: 'Cannot recognize car!',
+            });
+          }
+
+          const carDetail: CarType = await getCar(car);
+
+          let description = `Are you sure to take the ${carDetail.carModel.name} with license plates: ${carDetail.licensePlates}?`;
+          if (carDetail.carModel._id !== rental.carModel._id) {
+            description += `Current price: ${formatPrice(
+              rental.carModel.price
+            )}`;
+            description += `\nNew price: ${formatPrice(
+              carDetail.carModel.price
+            )}`;
+            const increase = carDetail.carModel.price - rental.carModel.price;
+            if (increase > 0) {
+              description += `\nIncrease fee: +${formatPrice(increase)}`;
+            } else {
+              description += `\nDecrease fee: -${formatPrice(
+                Math.abs(increase)
+              )}`;
+            }
+          }
           if (carDetail) {
             setPopUpData(dispatch)({
               title: 'Confirm take car?',
-              description: `Are you sure to take the ${carDetail.carModel.name} with license plates: ${carDetail.licensePlates}?`,
+              description,
               onDecline() {
                 setPopUpData(dispatch)({
                   title: 'Are you sure to decline?',
