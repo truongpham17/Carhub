@@ -11,6 +11,7 @@ import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { connect } from 'react-redux';
 import { MarkerIcon } from 'Assets/svgs';
 import { GOOGLE_KEY } from 'Constants/key';
+import { getCurrentPosition } from 'services/maps';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -44,6 +45,23 @@ const SelectMapScreen = ({
   });
 
   const [selectedHub, setSelectedHub] = useState(null);
+
+  useEffect(() => {
+    getHubList();
+
+    // getCurrentPosition(
+    //   (data: GeoLocationType) => {
+    //     console.log(data);
+    //     // setCurretPosition(position => ({
+    //     //   ...position,
+    //     //   latitude: data.geometry.lat,
+    //     //   longitude: data.geometry.lng,
+    //     // }));
+    //   },
+
+    //   error => console.log(error)
+    // );
+  }, []);
 
   const { callback, type = 'location' } = navigation.state.params;
 
@@ -103,22 +121,6 @@ const SelectMapScreen = ({
       longitudeDelta: 0.0221,
     });
   };
-
-  useEffect(() => {
-    getHubList();
-
-    // getCurrentPosition(
-    //   (data: GeoLocationType) => {
-    //     setCurretPosition(position => ({
-    //       ...position,
-    //       latitude: data.geometry.lat,
-    //       longitude: data.geometry.lng,
-    //     }));
-    //   },
-
-    //   error => console.log(error)
-    // );
-  }, []);
 
   const onBackPress = () => {
     navigation.pop();

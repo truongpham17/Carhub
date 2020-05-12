@@ -33,7 +33,7 @@ import { SIGN_OUT } from '@redux/constants/user';
 const INITIAL_STATE = {
   vin: '',
   // vin: '2C3CCACG5CH278240',
-  usingYears: '',
+  usingYear: '',
   odometer: '',
   images: [''],
   infoFromVin: [],
@@ -83,10 +83,11 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: false,
-        vin: null,
-        usingYears: null,
-        odometer: null,
+        vin: '',
+        usingYear: '',
+        odometer: '',
         images: [''],
+        licensePlates: '',
       };
     case ADD_LEASE_FAILURE:
       return {

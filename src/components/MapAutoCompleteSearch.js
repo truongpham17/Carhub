@@ -31,13 +31,15 @@ const MapAutoCompleteSearch = ({
   });
   const mapRef = useRef();
 
+  console.log(currentPosition);
+
   useEffect(() => {
-    getCurrentPosition(
-      data => {
-        setCurretPosition({ ...data, description: CURRENT_LOCATION });
-      },
-      error => console.log(error)
-    );
+    // getCurrentPosition(
+    //   data => {
+    //     setCurretPosition({ ...data, description: CURRENT_LOCATION });
+    //   },
+    //   error => console.log(error)
+    // );
   }, []);
 
   const onSelect = (data, details) => {
@@ -120,7 +122,7 @@ const MapAutoCompleteSearch = ({
         'administrative_area_level_3',
       ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
       predefinedPlaces={[
-        currentPosition,
+        // currentPosition,
         openMapOption ? { description: SELECT_ON_MAPS } : undefined,
       ]}
       debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.

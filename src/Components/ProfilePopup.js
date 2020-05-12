@@ -61,7 +61,7 @@ const ProfilePopup = ({ description, onConfirm }: PropTypes) => (
       />
     </View>
     <Button
-      label="Cancel"
+      label="Close"
       onPress={onConfirm}
       gradient={false}
       style={{ backgroundColor: colors.tintColor }}

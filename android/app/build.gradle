@@ -130,7 +130,7 @@ android {
     defaultConfig {
         applicationId "com.carhub"
         minSdkVersion 22
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion rootProject.ext.compileSdkVersion
         versionCode 1
         versionName "1.0"
     missingDimensionStrategy 'react-native-camera', 'mlkit'

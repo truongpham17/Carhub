@@ -17,8 +17,9 @@ import { shadowStyle } from 'Constants';
 import colors from 'Constants/colors';
 import firebase from 'react-native-firebase';
 import { updateUser } from '@redux/actions/user';
-import { getPaymentToken } from '@redux/actions';
+import { getPaymentToken, setPopUpData } from '@redux/actions';
 import { paypalService } from 'services/paypal';
+import { substractDate, formatDate } from 'Utils/date';
 import Seperator from './Seperator';
 
 type PropTypes = {
@@ -84,21 +85,29 @@ const SearchCarScreen = ({ navigation, setRentalSearch }: PropTypes) => {
     });
   };
 
-  const onRequestPayment = () => {};
-
   const onSearchPress = () => {
+    let a = null;
     if (!startLocation || !endLocation) {
-      Alert.alert('Please select location');
+      a = 'Please select location';
+    } else if (startDate >= endDate) {
+      a = 'The selected date is wrong';
+    } else if (formatDate(startDate) < formatDate(Date.now())) {
+      a = 'Start date is invalid';
+    }
+
+    if (a) {
+      setPopUpData(dispatch)({ title: a, acceptOnly: 'true' });
       return;
     }
+
     setRentalSearch({
       startLocation,
       endLocation,
       startDate,
       endDate,
     });
-    setStartLocation(null);
-    setEndLocation(null);
+    // setStartLocation(null);
+    // setEndLocation(null);
     navigation.navigate('SelectCarScreen');
   };
   return (

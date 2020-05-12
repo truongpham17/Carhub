@@ -14,6 +14,7 @@ import { sendSharingRequest } from '@redux/actions/sharing';
 
 import { setPopUpData, cancelPopup } from '@redux/actions';
 import policy from 'Constants/policy';
+import { paypalService } from 'services/paypal';
 
 type PropsType = {
   navigation: NavigationType,
@@ -21,6 +22,8 @@ type PropsType = {
 
 const ViewSharingInformation = ({ navigation }: PropsType) => {
   const dispatch = useDispatch();
+
+  const paymentToken = useSelector(state => state.payment.paymentToken);
 
   const sharingList: [SharingType] = useSelector(state => state.sharing.data);
   const { startDate, endDate } = useSelector(state => state.car.rentalSearch);
@@ -55,45 +58,64 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
   }, []);
 
   // const changesharing = sharing => setsharing(sharing);
-
+  const handlePayment = () => {
+    paypalService(
+      {
+        token: paymentToken,
+        amount: Math.round(sharing.price * 0.3 * daysdiff),
+      },
+      {
+        onSuccess(data) {
+          const { nonce } = data;
+          onSubmit(nonce);
+        },
+      }
+    );
+  };
   const handleSendRequest = () => {
     setPopUpData(dispatch)({
-      title: 'Send request',
-      description: 'Send request to take this sharing car?',
+      title: 'Pay fee in advance',
+      description:
+        'To prevent spamming, customer need to pay deposit with 30% of total sharing fee. Press OK to continue',
       onConfirm() {
         cancelPopup(dispatch);
-        sendSharingRequest(dispatch)(
-          {
-            sharing: sharing._id,
-            customer: user._id,
-            fromDate: startDate.toISOString(),
-            toDate: endDate.toISOString(),
-          },
-          {
-            onSuccess() {
-              setPopUpData(dispatch)({
-                popupType: 'success',
-                title: 'Success',
-                description:
-                  'Success sent request to hire this sharing car. We will notify you when the request be accepted',
-                onConfirm() {
-                  cancelPopup(dispatch);
-                  navigation.pop(2);
-                  navigation.navigate('HistoryScreen');
-                },
-              });
-            },
-            onFailure(msg) {
-              setPopUpData(dispatch)({
-                popupType: 'error',
-                title: 'Error',
-                description: `There was some error while senting your request. Please try again!\nMessage: ${msg}`,
-              });
-            },
-          }
-        );
+        handlePayment();
       },
     });
+  };
+
+  const onSubmit = () => {
+    cancelPopup(dispatch);
+    sendSharingRequest(dispatch)(
+      {
+        sharing: sharing._id,
+        customer: user._id,
+        fromDate: startDate.toISOString(),
+        toDate: endDate.toISOString(),
+      },
+      {
+        onSuccess() {
+          setPopUpData(dispatch)({
+            popupType: 'success',
+            title: 'Success',
+            description:
+              'Success sent request to hire this sharing car. We will notify you when the request be accepted',
+            onConfirm() {
+              cancelPopup(dispatch);
+              navigation.pop(2);
+              navigation.navigate('HistoryScreen');
+            },
+          });
+        },
+        onFailure(msg) {
+          setPopUpData(dispatch)({
+            popupType: 'error',
+            title: 'Error',
+            description: `There was some error while senting your request. Please try again!\nMessage: ${msg}`,
+          });
+        },
+      }
+    );
   };
 
   const daysdiff = substractDate(startDate, endDate);
@@ -150,11 +172,13 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
           />
         ))}
       </View>
-      <Button
-        label="Send request"
-        onPress={handleSendRequest}
-        style={{ marginBottom: scaleVer(12) }}
-      />
+      {sharing.rental.customer._id !== user._id && (
+        <Button
+          label="Send request"
+          onPress={handleSendRequest}
+          style={{ marginBottom: scaleVer(12) }}
+        />
+      )}
     </ViewContainer>
   );
 };

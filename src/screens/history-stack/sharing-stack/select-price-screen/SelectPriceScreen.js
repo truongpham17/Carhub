@@ -68,7 +68,7 @@ const SelectPriceScreen = ({ navigation }: PropTypes) => {
           <Slider
             value={price}
             onValueChange={setPrice}
-            minimumValue={0}
+            minimumValue={1}
             maximumValue={Number(rentDetail.price)}
             step={1}
             thumbTintColor={colors.secondary}

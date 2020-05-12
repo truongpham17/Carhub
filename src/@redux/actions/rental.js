@@ -19,6 +19,7 @@ export const getRentalList = dispatch => async (
   callback = INITIAL_CALLBACK
 ) => {
   try {
+    console.log('come here!!!!!');
     dispatch({
       type: GET_RENTAL_REQUEST,
     });
@@ -27,7 +28,7 @@ export const getRentalList = dispatch => async (
       endpoint: `${ENDPOINTS.rentalRequest}/customer`,
     });
 
-    console.log('sharing day, ahihi', sharing.data);
+    console.log(sharing.data);
 
     if (result.status === STATUS.OK) {
       dispatch({

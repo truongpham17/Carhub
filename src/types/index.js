@@ -21,6 +21,7 @@ export type RentDetailType = {
   car: CarType,
   shareRequest: string,
   numberDeclined: number,
+  deposit: number,
 };
 
 export type CustomNotification = {
@@ -134,7 +135,7 @@ export type CarType = {
   price: Number,
   feature: String,
   VIN: String,
-  usingYears: Number,
+  usingYear: Number,
   valueData: [{ value: String }],
   licensePlates: string,
 };
