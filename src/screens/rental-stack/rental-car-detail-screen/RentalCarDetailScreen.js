@@ -16,7 +16,7 @@ import { dimension } from 'Constants';
 import { connect, useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import { paypalService } from 'services/paypal';
-import { formatDate, substractDate } from 'Utils/date';
+import { formatDate, substractDate, formatPrice } from 'Utils/date';
 import { setPopUpData } from '@redux/actions';
 import Header from './Header';
 import ImageSlider from './ImageSlider';
@@ -99,11 +99,11 @@ const RentalCarDetailScreen = ({
         type={car.carModel.type}
         star={4}
         trip={20}
-        price={car.carModel.price}
-        total={
+        price={formatPrice(car.carModel.price)}
+        total={formatPrice(
           Number(car.carModel.price) *
-          substractDate(rentalSearch.startDate, rentalSearch.endDate)
-        }
+            substractDate(rentalSearch.startDate, rentalSearch.endDate)
+        )}
       />
       <Item
         title="Trip dates"

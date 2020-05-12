@@ -95,6 +95,7 @@ const SelectCarScreen = ({ navigation }: PropTypes) => {
       }}
     />
   );
+  console.log(formatData(carModels, sharingList));
 
   const keyExtractor = (item, index) => item._id;
   console.log(rentalSearch);

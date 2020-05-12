@@ -15,6 +15,7 @@ import { sendSharingRequest } from '@redux/actions/sharing';
 import { setPopUpData, cancelPopup } from '@redux/actions';
 import policy from 'Constants/policy';
 import { paypalService } from 'services/paypal';
+import remoteConfig from 'Constants/remote-config';
 
 type PropsType = {
   navigation: NavigationType,
@@ -75,8 +76,8 @@ const ViewSharingInformation = ({ navigation }: PropsType) => {
   const handleSendRequest = () => {
     setPopUpData(dispatch)({
       title: 'Pay fee in advance',
-      description:
-        'To prevent spamming, customer need to pay deposit with 30% of total sharing fee. Press OK to continue',
+      description: `To prevent spamming, customer need to pay deposit with ${remoteConfig.share_deposit *
+        100}% of total sharing fee. Press OK to continue`,
       onConfirm() {
         cancelPopup(dispatch);
         handlePayment();

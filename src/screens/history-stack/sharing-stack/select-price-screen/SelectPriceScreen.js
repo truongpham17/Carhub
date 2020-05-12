@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RECOMMEND_PRICE_FOR_SHARING } from 'Constants/policy';
 import { shadowStyle } from 'Constants';
 import { setSharingData } from '@redux/actions';
+import { formatPrice } from 'Utils/date';
+import remoteConfig from 'Constants/remote-config';
 
 type PropTypes = {
   navigation: NavigationType,
@@ -29,7 +31,7 @@ const SelectPriceScreen = ({ navigation }: PropTypes) => {
   );
 
   const [price, setPrice] = useState(
-    rentDetail.price * RECOMMEND_PRICE_FOR_SHARING
+    rentDetail.price * remoteConfig.share_default_rate
   );
 
   const onBackPress = () => {
@@ -63,7 +65,7 @@ const SelectPriceScreen = ({ navigation }: PropTypes) => {
         <View style={styles.priceContainer}>
           <View style={styles.title}>
             <Text style={textStyle.bodyTextBold}>Sharing price</Text>
-            <Text style={textStyle.widgetItem}>$ {price}</Text>
+            <Text style={textStyle.widgetItem}>{formatPrice(price)}</Text>
           </View>
           <Slider
             value={price}

@@ -9,6 +9,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage; // <-- Add this line
+
 import java.util.List;
 
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
@@ -39,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new RNFirebaseCrashlyticsPackage());
       packages.add(new RNFirebaseDatabasePackage());
       packages.add(new RNFirebaseStoragePackage());
+      packages.add(new RNFirebaseRemoteConfigPackage()); // <-- Add this line
 
 
       // Packages that cannot be autolinked yet can be added manually here, for
