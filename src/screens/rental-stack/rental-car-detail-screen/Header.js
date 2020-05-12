@@ -31,7 +31,7 @@ const Header = ({ name, type, price, star, trip, total }: PropTypes) => (
         <Text style={textStyle.bodyTextBold}>{star} stars</Text> ({trip} trips)
       </Text>
       <Text>
-        Total: <Text style={textStyle.widgetItem}>{formatPrice(total)}</Text>
+        Total: <Text style={textStyle.widgetItem}>{total}</Text>
       </Text>
     </View>
   </View>
