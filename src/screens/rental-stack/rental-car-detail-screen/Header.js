@@ -4,6 +4,7 @@ import { scaleVer } from 'Constants/dimensions';
 import { textStyle } from 'Constants/textStyles';
 import colors from 'Constants/colors';
 import Separator from 'Components/Separator';
+import { formatPrice } from 'Utils/date';
 
 type PropTypes = {
   name: String,
@@ -30,7 +31,7 @@ const Header = ({ name, type, price, star, trip, total }: PropTypes) => (
         <Text style={textStyle.bodyTextBold}>{star} stars</Text> ({trip} trips)
       </Text>
       <Text>
-        Total: <Text style={textStyle.widgetItem}>{total}$</Text>
+        Total: <Text style={textStyle.widgetItem}>{formatPrice(total)}</Text>
       </Text>
     </View>
   </View>

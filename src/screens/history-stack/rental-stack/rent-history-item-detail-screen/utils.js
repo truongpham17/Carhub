@@ -12,7 +12,7 @@ import {
   WAITING_FOR_USER_CONFIRM_NEXT,
   HUB_REJECT_TRASACTION,
 } from 'Constants/status';
-import { RentDetailType, CarType } from 'types';
+import { RentDetailType, CarType, SharingType } from 'types';
 import firebase from 'react-native-firebase';
 import {
   getRentalList,
