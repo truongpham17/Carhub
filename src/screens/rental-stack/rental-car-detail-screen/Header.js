@@ -22,7 +22,7 @@ const Header = ({ name, type, price, star, trip, total }: PropTypes) => (
         <Text style={[textStyle.label, { color: colors.dark40 }]}>{type}</Text>
       </View>
       <View>
-        <Text style={textStyle.widgetItem}>{price}$/day</Text>
+        <Text style={textStyle.widgetItem}>{price}/day</Text>
       </View>
     </View>
     <View style={styles.itemContainer}>

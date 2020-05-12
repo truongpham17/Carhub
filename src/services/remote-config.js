@@ -1,7 +1,6 @@
 import firebase from 'react-native-firebase';
 import config from 'Constants/remote-config';
 
-console.log('1312312312312');
 try {
   // firebase.config().enableDeveloperMode();
 

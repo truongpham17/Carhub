@@ -3,7 +3,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import store, { persistor } from './src/@redux/store';
 import Navigation from './src/screens/Navigation';
-import './src/services/remote-config';
+
+// import './src/services/remote-config';
 
 const App = () => (
   <Provider store={store}>
