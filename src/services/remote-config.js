@@ -22,7 +22,7 @@ try {
       const share_default_rate = snapshot.val();
 
       if (share_default_rate) {
-        config.share_default_rate = share_default_rate;
+        config.share_default_rate = Number(share_default_rate);
       }
 
       // continue booting app
@@ -41,7 +41,7 @@ try {
       const share_deposit = snapshot.val();
 
       if (share_deposit) {
-        config.share_deposit = share_deposit;
+        config.share_deposit = Number(share_deposit);
       }
 
       // continue booting app
@@ -60,7 +60,7 @@ try {
       const rent_deposit = snapshot.val();
 
       if (rent_deposit) {
-        config.rent_deposit = rent_deposit;
+        config.rent_deposit = Number(rent_deposit);
       }
 
       // continue booting app
@@ -79,7 +79,7 @@ try {
       const lease_rate = snapshot.val();
 
       if (lease_rate) {
-        config.lease_rate = lease_rate;
+        config.lease_rate = Number(lease_rate);
       }
 
       // continue booting app
