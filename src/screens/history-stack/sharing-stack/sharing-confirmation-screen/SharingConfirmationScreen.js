@@ -55,7 +55,7 @@ const SharingConfirmationScreen = ({ navigation }: PropTypes) => {
         geometry: sharingRequestData.address.geometry,
         fromDate: sharingRequestData.time,
         toDate: rentDetail.endDate,
-        price: formatPrice(Math.round(Number(sharingRequestData.price))),
+        price: Math.round(Number(sharingRequestData.price)),
         rental: rentDetail._id,
       },
       {
