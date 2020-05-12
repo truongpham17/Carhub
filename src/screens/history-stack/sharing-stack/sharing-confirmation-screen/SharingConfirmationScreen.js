@@ -5,7 +5,7 @@ import { RentDetailType, NavigationType } from 'types';
 
 import { scaleVer, scaleHor } from 'Constants/dimensions';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDate } from 'Utils/date';
+import { formatDate, formatPrice } from 'Utils/date';
 import { textStyle } from 'Constants/textStyles';
 import {
   createSharing,
@@ -37,7 +37,10 @@ const SharingConfirmationScreen = ({ navigation }: PropTypes) => {
       value: formatDate(sharingRequestData.time),
     },
     { label: 'To', value: formatDate(rentDetail.endDate) },
-    { label: 'Sharing price', value: sharingRequestData.price },
+    {
+      label: 'Sharing price',
+      value: formatPrice(Math.round(Number(sharingRequestData.price))),
+    },
     { label: 'Address', value: sharingRequestData.address.address },
   ];
 
@@ -52,7 +55,7 @@ const SharingConfirmationScreen = ({ navigation }: PropTypes) => {
         geometry: sharingRequestData.address.geometry,
         fromDate: sharingRequestData.time,
         toDate: rentDetail.endDate,
-        price: sharingRequestData.price,
+        price: formatPrice(Math.round(Number(sharingRequestData.price))),
         rental: rentDetail._id,
       },
       {

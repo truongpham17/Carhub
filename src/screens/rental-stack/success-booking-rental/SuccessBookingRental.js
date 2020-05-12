@@ -46,7 +46,7 @@ const SuccessBookingRental = ({
       value: `${duration} days`,
     },
     { label: 'Price per day', value: formatPrice(car.carModel.price) },
-    { label: 'Extra price', value: `0 VND` },
+    { label: 'Extra price', value: `$ 0` },
     { label: 'Total', value: `${formatPrice(duration * car.carModel.price)}` },
     { label: 'Pick-up hub location', value: car.hub.address },
     { label: 'Pick-off hub location', value: pickOffHub.address },

@@ -52,7 +52,7 @@ const RentBookingReview = ({
     { label: 'To date', value: momentToDate.format('DD MMM YYYY') },
 
     { label: 'Price per day', value: formatPrice(car.carModel.price) },
-    { label: 'Extra price', value: `0 VND` },
+    { label: 'Extra price', value: `$ 0` },
     {
       label: 'Duration',
       value: `${duration} days`,
